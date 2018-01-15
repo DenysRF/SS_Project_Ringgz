@@ -27,7 +27,7 @@ public class Field {
     // Set the content of a field
     public void setFieldContent(Piece piece) {
         place = piece.getSize();
-        if (fieldContent[place].equals(null)) {
+        if (fieldContent[place] == null) {
             fieldContent[place] = piece;
         }
     }
@@ -36,29 +36,26 @@ public class Field {
     // Checks whether the piece fits in the field
     public boolean isValidMove(Piece piece) {
         place = piece.getSize();
-        if (isEmpty() || fieldContent[place].equals(null) && fieldContent[0].equals(null)) {
+        if (isEmpty() || fieldContent[place] == null && fieldContent[0] == null) {
             return true;
         } else {
             return false;
         }
     }
 
-    // Checks if anything fits in the field at all
-    public boolean isFull() {
-        int count = 0;
-        for (Piece p : fieldContent) {
-            if (p instanceof Base) {
-                return true;
-            }
-            if (p instanceof Piece) {
-                count++;
-            }
-        }
-        if (count == MAX_SPACE) {
-            return true;
-        }
-        return false;
-    }
+//    // Checks if anything fits in the field at all
+//    public boolean isFull() {
+//        int count = 0;
+//        for (Piece p : fieldContent) {
+//            if (p instanceof Base) {
+//                return true;
+//            }
+//            if (p instanceof Piece) {
+//                count++;
+//            }
+//        }
+//        return(count == MAX_SPACE);
+//    }
 
     public boolean isEmpty() {
         int count = 0;
