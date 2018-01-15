@@ -9,18 +9,30 @@ public abstract class Player {
     private String name;
 
     // Array of available pieces consisting of rings and bases
-    private Piece[] pieces;
+    private Piece[] primaryPieces;
+    private Piece[] secondaryPieces;
 
-    public Player(String name, Piece[] pieces) {
+    public Player(String name, Piece[] primaryPieces) {
         this.name = name;
-        this.pieces = pieces;
+        this.primaryPieces = primaryPieces;
+    }
+
+    // 3 and 4 player games will have secondarypieces
+    public Player(String name, Piece[] primaryPieces, Piece[] secondaryPieces) {
+        this.name = name;
+        this.primaryPieces = primaryPieces;
+        this.secondaryPieces = secondaryPieces;
     }
 
     public String getName() {
         return name;
     }
 
-    public Piece[] getPieces() {
-        return pieces;
+    public Piece[] getPrimaryPieces() {
+        return primaryPieces;
+    }
+
+    public Piece[] getSecondaryPieces() {
+        return secondaryPieces;
     }
 }
