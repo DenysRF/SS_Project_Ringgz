@@ -1,12 +1,16 @@
 package Players;
 
-public class ComputerPlayer {
+import GameObjects.Piece;
 
-    public ComputerPlayer(String name, Piece[] pieces) {
+import java.util.List;
+
+public class ComputerPlayer extends Player {
+
+    public ComputerPlayer(String name, List<Piece> pieces) {
         super(name, pieces);
     }
 
-    public ComputerPlayer(String name, Piece[] primaryPieces, Piece[] secondaryPieces) {
+    public ComputerPlayer(String name, List<Piece> primaryPieces, List<Piece> secondaryPieces) {
         super(name, primaryPieces, secondaryPieces);
     }
 

@@ -2,6 +2,9 @@ package Players;
 
 import GameObjects.Piece;
 
+import java.util.List;
+import java.util.Map;
+
 // Abstract Player class, holds shared data of human- and computer player
 public abstract class Player {
 
@@ -9,30 +12,50 @@ public abstract class Player {
     private String name;
 
     // Array of available pieces consisting of rings and bases
-    private Piece[] primaryPieces;
-    private Piece[] secondaryPieces;
+    private Map<Integer, List<Piece>> primaryPieces;
+    private Map<Integer, List<Piece>> secondaryPieces;
 
-    public Player(String name, Piece[] primaryPieces) {
+    public Player(String name, int noOfPlayers) {
         this.name = name;
-        this.primaryPieces = primaryPieces;
-    }
-
-    // 3 and 4 player games will have secondarypieces
-    public Player(String name, Piece[] primaryPieces, Piece[] secondaryPieces) {
-        this.name = name;
-        this.primaryPieces = primaryPieces;
-        this.secondaryPieces = secondaryPieces;
+        makePieces(noOfPlayers);
     }
 
     public String getName() {
         return name;
     }
 
-    public Piece[] getPrimaryPieces() {
+    public Map<Integer, List<Piece>> getPrimaryPieces() {
         return primaryPieces;
     }
 
-    public Piece[] getSecondaryPieces() {
+    public Map<Integer, List<Piece>> getSecondaryPieces() {
         return secondaryPieces;
+    }
+
+    public boolean gameOver() {
+        // TODO
+        return false;
+    }
+
+    private void makePieces(int noOfPlayers) {
+        switch (noOfPlayers) {
+            case 2:
+                // fill for 2 players
+                return;
+            case 3:
+                // fill for 3 players
+                return;
+            case 4:
+                // fill for 4 players
+                return;
+        }
+    }
+
+    public void makeMove() {
+        // TODO
+    }
+
+    public void setStart() {
+        // TODO
     }
 }

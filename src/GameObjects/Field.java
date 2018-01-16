@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 public class Field {
 
-    public static final int MAX_SPACE = 5;
+    public static final int MAX_SPACE = 6;
 
     private Piece[] fieldContent;
 
@@ -23,13 +23,13 @@ public class Field {
 
     // Set the content of a field
     public void setFieldContent(Piece piece) {
-        // TODO
+        fieldContent[0] = piece;
     }
 
     // Checks whether the piece fits in the field
     public boolean isValidMove(Piece piece) {
         // TODO
-        return false;
+        return true;
     }
 
     // Checks if anything fits in the field at all
@@ -37,7 +37,7 @@ public class Field {
         int count = 0;
         for (Piece p : fieldContent) {
             count++;
-            if (p instanceof Base) {
+            if (p.getSize() == Piece.BASE || p.getSize() == Piece.START) {
                 return true;
             }
         }
@@ -52,5 +52,4 @@ public class Field {
         // TODO
         return null;
     }
-
 }
