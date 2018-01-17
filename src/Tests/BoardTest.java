@@ -4,14 +4,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import GameObjects.Field;
+import Game.Model.Field;
 import org.junit.Before;
 import org.junit.Test;
 
-import GameObjects.Board;
-import GameObjects.Piece;
-import Players.HumanPlayer;
-import Players.Player;
+import Game.Model.Board;
+import Game.Model.Piece;
+import Game.Players.HumanPlayer;
+import Game.Players.Player;
 
 import java.util.ArrayList;
 import java.util.List;

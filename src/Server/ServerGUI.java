@@ -1,5 +1,7 @@
 package Server;
 
+import Interface.MessageUI;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,7 +11,7 @@ import java.awt.event.WindowEvent;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-public class ServerGUI extends JFrame implements ActionListener, ServerMessageUI {
+public class ServerGUI extends JFrame implements ActionListener, MessageUI {
 
     private JButton bListen;
     private JTextField tfPort;

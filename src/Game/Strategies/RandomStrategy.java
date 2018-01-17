@@ -1,4 +1,4 @@
-package Strategies;
+package Game.Strategies;
 
 public class RandomStrategy {
 }

@@ -1,6 +1,6 @@
-package GameObjects;
+package Game.Model;
 
-import Players.Player;
+import Game.Players.Player;
 
 import java.util.Arrays;
 

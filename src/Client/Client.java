@@ -1,5 +1,7 @@
 package Client;
 
+import Interface.MessageUI;
+
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -7,12 +9,12 @@ import java.net.Socket;
 public class Client extends Thread {
 
     private String clientName;
-    private ClientMessageUI mui;
+    private MessageUI mui;
     private Socket socket;
     private BufferedReader in;
     private BufferedWriter out;
 
-    public Client(String clientName, InetAddress host, int port, ClientMessageUI mui)
+    public Client(String clientName, InetAddress host, int port, MessageUI mui)
             throws IOException {
         this.clientName = clientName;
         this.mui = mui;

@@ -1,6 +1,6 @@
-package Players;
+package Game.Players;
 
-import GameObjects.Piece;
+import Game.Model.Piece;
 
 import java.util.List;
 import java.util.Map;
