@@ -4,10 +4,6 @@ import Players.Player;
 
 public class Piece {
 
-
-    private Player owner;
-    private int size;
-    private int colour;
     public static final int BASE = 0;
     public static final int SMALL = 1;
     public static final int MEDIUM = 2;
@@ -15,23 +11,28 @@ public class Piece {
     public static final int HUGE = 4;
     public static final int START = 5;
 
+    private Player owner;
+    private int size;
+    private boolean primary;
 
-    public Piece(Player owner, int Size, int colour) {
-        this.owner = owner;
+    public Piece(int size, boolean primary) {
         this.size = size;
-        this.colour = colour;
+        this.primary = primary;
     }
 
     public Player getOwner() {
         return owner;
     }
 
+    public void setOwner(Player owner) {
+        this.owner = owner;
+    }
+
     public int getSize() {
         return size;
     }
 
-    public int getColour() {
-        return colour;
+    public boolean isPrimary() {
+        return primary;
     }
-
 }

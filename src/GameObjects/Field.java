@@ -68,7 +68,11 @@ public class Field {
             for (int count = 1; count < MAX_SPACE - 1; count++) {
                 if (!fieldContent[count].getOwner().equals(null)) {
                     owner = fieldContent[count].getOwner();
-                    colour = fieldContent[count].getColour();
+                    if (fieldContent[count].isPrimary()) {
+                        colour = 0;
+                    } else {
+                        colour = 1;
+                    }
                     if (score.containsKey(owner)) {
                         int[] tempscore = score.get(owner);
                         tempscore[colour] = tempscore[colour] + 1;
@@ -99,7 +103,7 @@ public class Field {
                 return null;
             }
 
-        }else{
+        } else {
             return null;
         }
     }
