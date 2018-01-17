@@ -18,10 +18,45 @@ public class Ringgz {
 
         if (args.length < 2 || args.length > 4) {
             System.err.println("Give player names as arguments\nA game can only feature 2, 3 or 4 players");
+            System.exit(0);
         }
 
         // Only HumanPlayers for now
-        Player[] players = new Player[args.length];
+        HumanPlayer[] players = new HumanPlayer[args.length];
+
+        // TODO implement colors prints
+        // Define Colors client side
+        int sets = 2;
+        if (args.length == 4) {
+            sets = 1;
+        }
+        // Two-dimensional array [index of Player][0 for primary / 1 for secondary]
+        String[][] colors = new String[args.length][sets];
+        for (int i = 0; i < players.length; i++) {
+            String p = "X";
+            String s = "x";
+            // Uppercase for primary, lowercase for secondary
+            switch (i) {
+                case 0:
+                    p = "R";
+                    s = "r";
+                    break;
+                case 1:
+                    p = "B";
+                    s = "b";
+                    break;
+                case 2:
+                    p = "Y";
+                    s = "y";
+                    break;
+                case 3:
+                    p = "G";
+                    s = "r";
+                    break;
+            }
+            colors[i][0] = p;
+            colors[i][1] = s;
+        }
 
         Scanner in = new Scanner(System.in);
 
@@ -35,6 +70,11 @@ public class Ringgz {
             Board board = new Board(players);
             // Index of Player[] whose turn it is
             int currentPlayer = 0;
+
+            // Announce colors
+            for (int i = 0; i < players.length; i++) {
+                print(players[0] + " is color:\n\tprimary " + colors[i][0] + "\n\tsecondary "+ colors[i][1]);
+            }
 
             // First Player will set the StartBase
             board.printBoard();
@@ -61,19 +101,24 @@ public class Ringgz {
                 print(players[i].getName() + ": " + score);
             }
 
-            while (true) {
+            boolean answered = true;
+            while (answered) {
                 print("Play again? (y/n)");
                 String s;
                 s = in.nextLine();
                 switch (s) {
                     case "y":
                         print("Playing again");
+                        board.reset();
+                        answered = false;
                         break;
                     case "n":
+                        answered = false;
                         playAgain = false;
                         break;
                     default:
                         print("Re-type your answer");
+                        break;
                 }
             }
         }

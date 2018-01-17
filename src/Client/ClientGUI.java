@@ -124,6 +124,6 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
     }
 
     public static void main(String[] args) {
-        new Client.ClientGUI();
+        new ClientGUI();
     }
 }

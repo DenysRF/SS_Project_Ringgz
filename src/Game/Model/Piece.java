@@ -13,7 +13,6 @@ public class Piece {
 
     private Player owner;
     private int size;
-    private String color;
     private boolean primary;
 
     public Piece(int size, boolean primary) {
@@ -31,5 +30,9 @@ public class Piece {
 
     public int getSize() {
         return size;
+    }
+
+    public boolean isPrimary() {
+        return primary;
     }
 }

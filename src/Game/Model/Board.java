@@ -12,28 +12,28 @@ public class Board {
     private Field[] fields;
     private Player[] players;
 
-        // Constructor fills the board with empty fields
+    // Constructor fills the board with empty fields
     public Board(Player[] players) {
-            fields = new Field[DIM*DIM];
-            this.players = players;
-            for (int i = 0; i < DIM*DIM; i++) {
-                fields[i] = new Field();
-            }
+        fields = new Field[DIM * DIM];
+        this.players = players;
+        for (int i = 0; i < DIM * DIM; i++) {
+            fields[i] = new Field();
         }
+    }
 
-        // Convert coordinates into index
-        public int index(int x, int y) {
-            return x * DIM + y;
-        }
+    // Convert coordinates into index
+    public int index(int x, int y) {
+        return x * DIM + y;
+    }
 
-        // Return the field at index i
-        public Field getField(int i) {
-            return fields[i];
-        }
+    // Return the field at index i
+    public Field getField(int i) {
+        return fields[i];
+    }
 
-        // Return the field at coordinates x,y
-        public Field getField(int x, int y) {
-            return fields[index(x, y)];
+    // Return the field at coordinates x,y
+    public Field getField(int x, int y) {
+        return fields[index(x, y)];
     }
 
 
@@ -44,8 +44,8 @@ public class Board {
         }
     }
 
-    public List<Field> getAdjacentFields(Field field) {
-        List<Field> adjacentFields = new ArrayList<>();
+    public Field[] getAdjacentFields(Field field) {
+        Field[] adjacentFields = null;
         for (int i = 0; i < fields.length; i++) {
             if (fields[i].equals(field)) {
 
@@ -59,8 +59,8 @@ public class Board {
     Return Field[] where a player given their pieces
     can place a piece
      */
-    public List<Field> getValidFields(Player player) {
-        List<Field> validFields = new ArrayList<>();
+    public Field[] getValidFields(Player player) {
+        Field[] validFields = null;
         return validFields;
     }
 
@@ -87,13 +87,36 @@ public class Board {
 
     // Reset this board
     public void reset() {
-        fields = new Field[DIM*DIM];
-        for (int i = 0; i < DIM*DIM; i++) {
+        fields = new Field[DIM * DIM];
+        for (int i = 0; i < DIM * DIM; i++) {
             fields[i] = new Field();
         }
     }
 
     public Player[] getPlayers() {
         return players;
+    }
+
+    // Prints _ if fieldContent empty and X if taken
+    // TODO specify Owner and 'color'
+    public void printBoard() {
+        for (int i = 0; i < DIM * DIM; i++) {
+            System.out.print("[");
+
+            // A field can hold 5 different pieces
+            for (int j = 0; j < 5; j++) {
+                if (fields[i].getFieldContent()[0] != null) {
+                    System.out.print("X");
+                } else {
+                    System.out.print("_");
+
+                }
+            }
+            if (i % DIM == DIM - 1) {
+                System.out.println("]");
+            } else {
+                System.out.print("]");
+            }
+        }
     }
 }

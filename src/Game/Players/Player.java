@@ -9,11 +9,11 @@ import java.util.Map;
 public abstract class Player {
 
     // Name of the player
-    private String name;
+    protected String name;
 
     // Array of available pieces consisting of rings and bases
-    private Map<Integer, List<Piece>> primaryPieces;
-    private Map<Integer, List<Piece>> secondaryPieces;
+    protected Map<Integer, List<Piece>> primaryPieces;
+    protected Map<Integer, List<Piece>> secondaryPieces;
 
     public Player(String name, int noOfPlayers) {
         this.name = name;
@@ -51,10 +51,12 @@ public abstract class Player {
         }
     }
 
+    // Tell the player to make a move
     public void makeMove() {
         // TODO
     }
 
+    // Tell the player to set the starting Base
     public void setStart() {
         // TODO
     }

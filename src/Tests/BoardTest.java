@@ -36,17 +36,17 @@ public class BoardTest {
                 primaryPieces.add(new Piece(Piece.BASE, true));
                 primaryPieces.add((new Piece(Piece.SMALL, true)));
                 primaryPieces.add(new Piece(Piece.MEDIUM, true));
-                primaryPieces.add(new Piece(Piece.LARGE, true));
+                primaryPieces.add(new Piece(Piece.BIG, true));
                 primaryPieces.add(new Piece(Piece.HUGE, true));
 
                 secondaryPieces.add(new Piece(Piece.BASE, false));
                 secondaryPieces.add((new Piece(Piece.SMALL, false)));
                 secondaryPieces.add(new Piece(Piece.MEDIUM, false));
-                secondaryPieces.add(new Piece(Piece.LARGE, false));
+                secondaryPieces.add(new Piece(Piece.BIG, false));
                 secondaryPieces.add(new Piece(Piece.HUGE, false));
             }
 
-            players[i] = new HumanPlayer("speler " + i, primaryPieces, secondaryPieces);
+            players[i] = new HumanPlayer("speler " + i, players.length);
             for (Piece pp : primaryPieces) {
                 pp.setOwner(players[i]);
             }
