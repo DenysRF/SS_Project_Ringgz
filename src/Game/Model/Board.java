@@ -39,9 +39,9 @@ public class Board {
 
     // Set a piece in a field at index i
     public void setField(Piece piece, int i) {
-        if (getField(i).isValidMove(piece)) {
+        //if (getField(i).isValidMove(piece)) {
             fields[i].setFieldContent(piece);
-        }
+        //}
     }
 
     // Get the all fields that make up the "territory of a player"
@@ -129,7 +129,7 @@ public class Board {
                         }
                     } else {
                         for (int o = 0; o < players.length; o++) {
-                            if (fields[i].getFieldContent()[j].getOwner().equals(players[o])) {
+                            if (fields[i].getFieldContent()[j].getOwner() == players[o]) {
                                 if (fields[i].getFieldContent()[j].isPrimary()) {
                                     mark = colors[o][0];
                                 } else if (!fields[i].getFieldContent()[j].isPrimary()) {
