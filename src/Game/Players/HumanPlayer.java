@@ -7,8 +7,13 @@ public class HumanPlayer extends Player {
     }
 
     public void printPieceCollection() {
+        System.out.println(name + "'s pieces:\nPrimary:");
         for (Integer p : primaryPieces.keySet()) {
-            System.out.println(p + ": " + primaryPieces.get(p).size());
+            System.out.println("\t" + p + ": " + primaryPieces.get(p).size());
+        }
+        System.out.println("Secondary:");
+        for (Integer p : secondaryPieces.keySet()) {
+            System.out.println("\t" + p + ": " + secondaryPieces.get(p).size());
         }
     }
 }

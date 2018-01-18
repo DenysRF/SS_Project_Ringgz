@@ -33,26 +33,20 @@ public class BoardTest {
 
             for (int j = 0; j < 3; j++) {
 
-                primaryPieces.add(new Piece(Piece.BASE, true));
-                primaryPieces.add((new Piece(Piece.SMALL, true)));
-                primaryPieces.add(new Piece(Piece.MEDIUM, true));
-                primaryPieces.add(new Piece(Piece.BIG, true));
-                primaryPieces.add(new Piece(Piece.HUGE, true));
+                primaryPieces.add(new Piece(Piece.BASE, true, players[i]));
+                primaryPieces.add((new Piece(Piece.SMALL, true, players[i])));
+                primaryPieces.add(new Piece(Piece.MEDIUM, true, players[i]));
+                primaryPieces.add(new Piece(Piece.BIG, true, players[i]));
+                primaryPieces.add(new Piece(Piece.HUGE, true, players[i]));
 
-                secondaryPieces.add(new Piece(Piece.BASE, false));
-                secondaryPieces.add((new Piece(Piece.SMALL, false)));
-                secondaryPieces.add(new Piece(Piece.MEDIUM, false));
-                secondaryPieces.add(new Piece(Piece.BIG, false));
-                secondaryPieces.add(new Piece(Piece.HUGE, false));
+                secondaryPieces.add(new Piece(Piece.BASE, false, players[i]));
+                secondaryPieces.add((new Piece(Piece.SMALL, false, players[i])));
+                secondaryPieces.add(new Piece(Piece.MEDIUM, false, players[i]));
+                secondaryPieces.add(new Piece(Piece.BIG, false, players[i]));
+                secondaryPieces.add(new Piece(Piece.HUGE, false, players[i]));
             }
 
             players[i] = new HumanPlayer("speler " + i, players.length);
-            for (Piece pp : primaryPieces) {
-                pp.setOwner(players[i]);
-            }
-            for (Piece sp : secondaryPieces) {
-                sp.setOwner(players[i]);
-            }
         }
         board = new Board(players);
     }

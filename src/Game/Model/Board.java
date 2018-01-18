@@ -23,7 +23,7 @@ public class Board {
 
     // Convert coordinates into index
     public int index(int x, int y) {
-        return x * DIM + y;
+        return x + (y * DIM);
     }
 
     // Return the field at index i
@@ -44,14 +44,27 @@ public class Board {
         }
     }
 
+    // Get the all fields that make up the "territory of a player"
     public Field[] getAdjacentFields(Field field) {
+        // TODO
         Field[] adjacentFields = null;
-        for (int i = 0; i < fields.length; i++) {
-            if (fields[i].equals(field)) {
+        // Look for field that matches argument
+        for (int x = 0; x < DIM; x++) {
+            for (int y = 0 ; y < DIM; y++) {
+                if (getField(x, y).equals(field)) {
+                    // TODO Initialize Field[]
+                    // and get adjacent fields
 
-                //adjacentFields.add(fields[])
+                }
             }
         }
+
+//        for (int i = 0; i < fields.length; i++) {
+//            if (fields[i].equals(field)) {
+//
+//                adjacentFields.
+//            }
+//        }
         return adjacentFields;
     }
 
@@ -60,6 +73,7 @@ public class Board {
     can place a piece
      */
     public Field[] getValidFields(Player player) {
+        // TODO
         Field[] validFields = null;
         return validFields;
     }
@@ -97,19 +111,37 @@ public class Board {
         return players;
     }
 
-    // Prints _ if fieldContent empty and X if taken
-    // TODO specify Owner and 'color'
-    public void printBoard() {
+    public void printBoard(Player[] players, String[][] colors) {
         for (int i = 0; i < DIM * DIM; i++) {
             System.out.print("[");
 
-            // A field can hold 5 different pieces
-            for (int j = 0; j < 5; j++) {
-                if (fields[i].getFieldContent()[0] != null) {
-                    System.out.print("X");
-                } else {
-                    System.out.print("_");
-
+            // A field can hold 6 different pieces
+            // iterators: i for fields in board, j for pieces in field
+            // and o comparing player[] with the owner of the piece
+            // "_" for empty space
+            for (int j = 0; j < 6; j++) {
+                String mark = "_";
+                // Start Base has no owner and is stored at index 5
+                if (fields[i].getFieldContent()[j] != null) {
+                    if (j == 5) {
+                        if (fields[i].getFieldContent()[j] != null) {
+                            mark = "O";
+                        }
+                    } else {
+                        for (int o = 0; o < players.length; o++) {
+                            if (fields[i].getFieldContent()[j].getOwner().equals(players[o])) {
+                                if (fields[i].getFieldContent()[j].isPrimary()) {
+                                    mark = colors[o][0];
+                                } else if (!fields[i].getFieldContent()[j].isPrimary()) {
+                                    mark = colors[o][1];
+                                }
+                            }
+                        }
+                    }
+                }
+                System.out.print(mark);
+                if (!(j % 6 == 6 - 1)) {
+                    System.out.print(".");
                 }
             }
             if (i % DIM == DIM - 1) {

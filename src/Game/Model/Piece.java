@@ -15,17 +15,18 @@ public class Piece {
     private int size;
     private boolean primary;
 
-    public Piece(int size, boolean primary) {
+    public Piece(int size, boolean primary, Player owner) {
         this.size = size;
         this.primary = primary;
+        this.owner = owner;
+    }
+
+    public Piece(int size) {
+        this.size = size;
     }
 
     public Player getOwner() {
         return owner;
-    }
-
-    public void setOwner(Player owner) {
-        this.owner = owner;
     }
 
     public int getSize() {

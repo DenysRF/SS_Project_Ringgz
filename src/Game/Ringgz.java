@@ -1,6 +1,7 @@
 package Game;
 
 import Game.Model.Board;
+import Game.Model.Piece;
 import Game.Players.HumanPlayer;
 import Game.Players.Player;
 
@@ -8,13 +9,49 @@ import java.util.Scanner;
 
 public class Ringgz {
 
-    public static void print(String s) {
+    private static void print(String s) {
         System.out.println(s);
+    }
+
+    // TODO check if the field is valid
+    private static int readMove(Scanner in) {
+        print("Type index of where you want to place the piece: ");
+        return Integer.parseInt(in.nextLine());
+    }
+
+    // TODO check if piece in collection
+    private static Piece choosePiece(Scanner in, Player p) {
+        int color = -1;
+        int size = -1;
+        while(!(color == 0 || color == 1)) {
+            print("Choose a Piece from your collection\n\tPrimary or secondary?(0/1)");
+            color = Integer.parseInt(in.nextLine());
+            if (!(color == 0 || color == 1)) {
+                print("Enter '1' for your primary color and '2' for secondary");
+            }
+        }
+        while(!(size >= 0 && size <=4)) {
+            print("Choose the size of the Piece\n\t" +
+                    "(Base = 0, Small = 1, Medium = 2, Big = 3, Huge = 4)");
+            size = Integer.parseInt(in.nextLine());
+            if (!(size >= 0 && size <=4)) {
+                print("Wrong input, (0, 1, 2, 3, 4)");
+            }
+        }
+
+        Piece piece = null;
+
+        if (color == 0) {
+            piece = p.getPrimaryPieces().get(size).get(0);
+        } else if (color == 1) {
+            piece = p.getSecondaryPieces().get(size).get(0);
+        }
+
+        return piece;
     }
 
 
     public static void main(String[] args) {
-
 
         if (args.length < 2 || args.length > 4) {
             System.err.println("Give player names as arguments\nA game can only feature 2, 3 or 4 players");
@@ -24,7 +61,6 @@ public class Ringgz {
         // Only HumanPlayers for now
         HumanPlayer[] players = new HumanPlayer[args.length];
 
-        // TODO implement colors prints
         // Define Colors client side
         int sets = 2;
         if (args.length == 4) {
@@ -73,22 +109,24 @@ public class Ringgz {
 
             // Announce colors
             for (int i = 0; i < players.length; i++) {
-                print(players[0] + " is color:\n\tprimary " + colors[i][0] + "\n\tsecondary "+ colors[i][1]);
+                print(players[i].getName() + " is color:\n\tprimary " + colors[i][0] + "\n\tsecondary "+ colors[i][1]);
             }
 
             // First Player will set the StartBase
-            board.printBoard();
+            board.printBoard(players, colors);
             print(players[currentPlayer].getName() + " may set the StartBase");
-            players[currentPlayer].setStart();
+            players[currentPlayer].setStart(readMove(in), board);
             currentPlayer = (currentPlayer + 1) % players.length;
 
             // Play game until the Game is over
             while (!board.gameOver()) {
                 if (!players[currentPlayer].gameOver()) {
-                    board.printBoard();
+                    board.printBoard(players, colors);
                     print(players[currentPlayer].getName() + "'s turn");
                     players[currentPlayer].printPieceCollection();
-                    players[currentPlayer].makeMove();
+                    Piece piece = choosePiece(in, players[currentPlayer]);
+                    // TODO check if move is valid
+                    players[currentPlayer].makeMove(readMove(in), piece, board);
                 }
                 currentPlayer = (currentPlayer + 1) % players.length;
             }
@@ -98,7 +136,7 @@ public class Ringgz {
 
             for (int i = 0; i < players.length; i++) {
                 int score = board.getScore(players[i]);
-                print(players[i].getName() + ": " + score);
+                print("\t" + players[i].getName() + ": " + score);
             }
 
             boolean answered = true;
