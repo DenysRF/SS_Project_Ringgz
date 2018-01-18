@@ -1,13 +1,10 @@
-//package Players;
-//
-//public class ComputerPlayer {
-//
-//    public ComputerPlayer(String name, Piece[] pieces) {
-//        super(name, pieces);
-//    }
-//
-//    public ComputerPlayer(String name, Piece[] primaryPieces, Piece[] secondaryPieces) {
-//        super(name, primaryPieces, secondaryPieces);
-//    }
-//
-//}
+package Players;
+
+public class ComputerPlayer extends Player{
+
+
+    public ComputerPlayer(String name, int noOfPlayers) {
+        super(name, noOfPlayers);
+    }
+
+}
