@@ -39,7 +39,6 @@ public abstract class Player {
     }
 
     public boolean gameOver() {
-        // TODO
         return false;
     }
 
