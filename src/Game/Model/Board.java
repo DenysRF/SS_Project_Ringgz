@@ -152,7 +152,7 @@ public class Board {
     public int getScore(Player player) {
         int score = 0;
         for (Field f : fields) {
-            if (f.majority().equals(player)) {
+            if (f.majority(players.length).equals(player)) {
                 score++;
             }
         }
