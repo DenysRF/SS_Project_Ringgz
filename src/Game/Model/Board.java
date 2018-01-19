@@ -94,7 +94,7 @@ public class Board {
                         adjacentFields.add(getField(x - 1, y));
                         adjacentFields.add(getField(x, y));
                         adjacentFields.add(getField(x + 1, y));
-                        adjacentFields.add(getField(x + 1, y + 1));
+                        adjacentFields.add(getField(x, y + 1));
                     }
 
                 }
