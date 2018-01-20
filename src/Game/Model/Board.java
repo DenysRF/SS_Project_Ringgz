@@ -45,54 +45,122 @@ public class Board {
     }
 
     // Get the all fields that make up the "territory of a player"
-    public Field[] getAdjacentFields(Field field) {
-        // TODO
-        Field[] adjacentFields = null;
+    public List<Field> getAdjacentFields(Field field) {
+        List<Field> adjacentFields = new ArrayList<>();
         // Look for field that matches argument
+
+        //possibly we want to refactor this code
         for (int x = 0; x < DIM; x++) {
-            for (int y = 0 ; y < DIM; y++) {
+            for (int y = 0; y < DIM; y++) {
                 if (getField(x, y).equals(field)) {
-                    // TODO Initialize Field[]
-                    // and get adjacent fields
+                    if (x == 0 && y == 0) {
+                        adjacentFields.add(getField(x, y));
+                        adjacentFields.add(getField(x, y + 1));
+                        adjacentFields.add(getField(x + 1, y));
+                    } else if (x == 0 && (y > 0 && y < DIM)) {
+                        adjacentFields.add(getField(x, y - 1));
+                        adjacentFields.add(getField(x, y));
+                        adjacentFields.add(getField(x, y + 1));
+                        adjacentFields.add(getField(x + 1, y));
+                    } else if ((x > 0 && x < DIM) && y == 0) {
+                        adjacentFields.add(getField(x - 1, y));
+                        adjacentFields.add(getField(x, y));
+                        adjacentFields.add(getField(x + 1, y));
+                        adjacentFields.add(getField(x, y + 1));
+                    } else if (x == DIM - 1 && y == 0) {
+                        adjacentFields.add(getField(DIM - 2, 0));
+                        adjacentFields.add(getField(DIM - 1, 0));
+                        adjacentFields.add(getField(DIM - 1, 1));
+                    } else if (x == 0 && y == DIM - 1) {
+                        adjacentFields.add(getField(x, y - 1));
+                        adjacentFields.add(getField(x, y));
+                        adjacentFields.add(getField(x + 1, y));
+                    } else if (x == DIM - 1 && (y > 0 && y < DIM)) {
+                        adjacentFields.add(getField(x, y - 1));
+                        adjacentFields.add(getField(x, y));
+                        adjacentFields.add(getField(x, y + 1));
+                        adjacentFields.add(getField(x - 1, y));
+                    } else if ((x > 0 && x < DIM) && y == DIM - 1) {
+                        adjacentFields.add(getField(x - 1, y));
+                        adjacentFields.add(getField(x, y));
+                        adjacentFields.add(getField(x + 1, y));
+                        adjacentFields.add(getField(x, y - 1));
+                    } else if (x == DIM - 1 && y == DIM - 1) {
+                        adjacentFields.add(getField(x - 1, y));
+                        adjacentFields.add(getField(x, y));
+                        adjacentFields.add(getField(x, y - 1));
+                    } else if (x != 0 && x != DIM - 1 && y != 0 && y != DIM - 1) {
+                        adjacentFields.add(getField(x, y - 1));
+                        adjacentFields.add(getField(x - 1, y));
+                        adjacentFields.add(getField(x, y));
+                        adjacentFields.add(getField(x + 1, y));
+                        adjacentFields.add(getField(x, y + 1));
+                    }
 
                 }
             }
         }
-
-//        for (int i = 0; i < fields.length; i++) {
-//            if (fields[i].equals(field)) {
-//
-//                adjacentFields.
-//            }
-//        }
         return adjacentFields;
     }
+
 
     /*
     Return Field[] where a player given their pieces
     can place a piece
      */
-    public Field[] getValidFields(Player player) {
-        // TODO
-        Field[] validFields = null;
+    public List<Field> getValidFields(Player player) {
+        // TODO: StartBase
+        List<Field> validFields = new ArrayList<>();
+        boolean add = true;
+        //first you iterate over every field
+        for (int x = 0; x < DIM; x++) {
+            for (int y = 0; y < DIM; y++) {
+                //now you iterate over every piece in a field
+                for (int i = 0; i < Field.MAX_SPACE; i++) {
+                    //now you iterate over every
+                    if (getField(x, y).getFieldContent()[i].getOwner().equals(player)) {
+                        for (int k = 0; k < getAdjacentFields(getField(x, y)).size(); k++) {
+                            for (int l = 0; l < validFields.size(); l++) {
+                                if (validFields.get(l).equals(getAdjacentFields(getField(x, y)).get(k))) {
+                                    add = false;
+                                }
+                            }
+                            if (add) {
+                                validFields.set(validFields.size(), getAdjacentFields(getField(x, y)).get(k));
+                            }
+                            add = true;
+                        }
+                    }
+                }
+            }
+        }
         return validFields;
     }
 
     // Return true if no players are able to make a move
     public boolean gameOver() {
+        int GameOverPlayers = 0;
         for (Player p : players) {
-            if (!p.gameOver()) {
-                return false;
+            if (getValidFields(p).isEmpty()) {
+                GameOverPlayers++;
             }
         }
-        return true;
+        return(GameOverPlayers == players.length);
+    }
+
+    // Return true if this Player cannot make any moves
+    public boolean gameOver(Player player) {
+        if (getValidFields(player).isEmpty()) {
+            return true;
+        }
+        return false;
     }
 
     // Return the current point score of a player
     public int getScore(Player player) {
         int score = 0;
         for (Field f : fields) {
-            if (f.majority().equals(player)) {
+            if (f.majority(players.length).equals(player)) {
                 score++;
             }
         }

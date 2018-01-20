@@ -120,7 +120,7 @@ public class Ringgz {
 
             // Play game until the Game is over
             while (!board.gameOver()) {
-                if (!players[currentPlayer].gameOver()) {
+                if (!board.gameOver(players[currentPlayer])) {
                     board.printBoard(players, colors);
                     print(players[currentPlayer].getName() + "'s turn");
                     players[currentPlayer].printPieceCollection();
