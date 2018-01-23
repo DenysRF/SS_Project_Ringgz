@@ -78,8 +78,8 @@ public class Field {
                             int[] tempscore = score.get(owner);
                             tempscore[colour] = (tempscore[colour] + 1);
                             score.put(owner, tempscore);
-                        } else{
-                            int[] tempscore =  {0,0};
+                        } else {
+                            int[] tempscore = {0, 0};
                             tempscore[colour] = 1;
                             score.put(owner, tempscore);
                         }
@@ -105,7 +105,7 @@ public class Field {
             Map<Player, Integer> score = new HashMap<>();
             if (fieldContent[Piece.BASE] == null && fieldContent[Piece.START] == null) {
                 for (int count = 1; count < MAX_SPACE - 1; count++) {
-                    if (fieldContent[count].getOwner() != null) {
+                    if (fieldContent[count] != null && fieldContent[count].getOwner() != null) {
                         owner = fieldContent[count].getOwner();
                         if (fieldContent[count].isPrimary()) {
                             if (score.containsKey(owner)) {

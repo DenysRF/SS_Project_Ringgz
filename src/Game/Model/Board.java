@@ -118,7 +118,7 @@ public class Board {
                 //now you iterate over every piece in a field
                 for (int i = 0; i < Field.MAX_SPACE; i++) {
                     //now you iterate over every
-                    if (getField(x, y).getFieldContent()[i].getOwner().equals(player)) {
+                    if (getField(x, y).getFieldContent()[i] != null && (getField(x, y).getFieldContent()[i].getSize() == Piece.START || getField(x, y).getFieldContent()[i].getOwner().equals(player))) {
                         for (int k = 0; k < getAdjacentFields(getField(x, y)).size(); k++) {
                             for (int l = 0; l < validFields.size(); l++) {
                                 if (validFields.get(l).equals(getAdjacentFields(getField(x, y)).get(k))) {
@@ -126,7 +126,7 @@ public class Board {
                                 }
                             }
                             if (add) {
-                                validFields.set(validFields.size(), getAdjacentFields(getField(x, y)).get(k));
+                                validFields.add(getAdjacentFields(getField(x, y)).get(k));
                             }
                             add = true;
                         }
@@ -146,7 +146,7 @@ public class Board {
                 GameOverPlayers++;
             }
         }
-        return(GameOverPlayers == players.length);
+        return (GameOverPlayers == players.length);
     }
 
     // Return true if this Player cannot make any moves
@@ -161,7 +161,7 @@ public class Board {
     public int getScore(Player player) {
         int score = 0;
         for (Field f : fields) {
-            if (f.majority(players.length).equals(player)) {
+            if (f.majority(players.length) != null && f.majority(players.length).equals(player)) {
                 score++;
             }
         }
