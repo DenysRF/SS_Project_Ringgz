@@ -21,6 +21,7 @@ public class Piece {
         this.owner = owner;
     }
 
+    // Only used for Start
     public Piece(int size) {
         this.size = size;
     }

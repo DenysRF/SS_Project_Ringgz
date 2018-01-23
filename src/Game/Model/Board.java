@@ -103,13 +103,14 @@ public class Board {
         return adjacentFields;
     }
 
+
     /*
     Return Field[] where a player given their pieces
     can place a piece
      */
-    public Field[] getValidFields(Player player) {
-        // TODO
-        Field[] validFields = null;
+    public List<Field> getValidFields(Player player) {
+        // TODO: StartBase
+        List<Field> validFields = new ArrayList<>();
         boolean add = true;
         //first you iterate over every field
         for (int x = 0; x < DIM; x++) {
@@ -119,13 +120,13 @@ public class Board {
                     //now you iterate over every
                     if (getField(x, y).getFieldContent()[i].getOwner().equals(player)) {
                         for (int k = 0; k < getAdjacentFields(getField(x, y)).size(); k++) {
-                            for (int l = 0; l < validFields.length; l++) {
-                                if (validFields[l].equals(getAdjacentFields(getField(x, y)).get(k))) {
+                            for (int l = 0; l < validFields.size(); l++) {
+                                if (validFields.get(l).equals(getAdjacentFields(getField(x, y)).get(k))) {
                                     add = false;
                                 }
                             }
                             if (add) {
-                                validFields[validFields.length] = getAdjacentFields(getField(x, y)).get(k);
+                                validFields.set(validFields.size(), getAdjacentFields(getField(x, y)).get(k));
                             }
                             add = true;
                         }
@@ -141,11 +142,19 @@ public class Board {
     public boolean gameOver() {
         int GameOverPlayers = 0;
         for (Player p : players) {
-            if (getValidFields(p).equals(null)) {
+            if (getValidFields(p).isEmpty()) {
                 GameOverPlayers++;
             }
         }
         return(GameOverPlayers == players.length);
+    }
+
+    // Return true if this Player cannot make any moves
+    public boolean gameOver(Player player) {
+        if (getValidFields(player).isEmpty()) {
+            return true;
+        }
+        return false;
     }
 
     // Return the current point score of a player
@@ -189,7 +198,7 @@ public class Board {
                         }
                     } else {
                         for (int o = 0; o < players.length; o++) {
-                            if (fields[i].getFieldContent()[j].getOwner().equals(players[o])) {
+                            if (fields[i].getFieldContent()[j].getOwner() == players[o]) {
                                 if (fields[i].getFieldContent()[j].isPrimary()) {
                                     mark = colors[o][0];
                                 } else if (!fields[i].getFieldContent()[j].isPrimary()) {

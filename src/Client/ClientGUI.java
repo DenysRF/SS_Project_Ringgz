@@ -8,17 +8,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class ClientGUI extends JFrame implements ActionListener, MessageUI {
 
     private JButton bConnect;
-    private JTextField tfPort;
-    private JTextField tfName;
-    private JTextField tfHost;
+    private JTextField tfPort, tfName, tfHost;
     private JTextArea taMessages;
-    private JRadioButton rbTwoPlayers;
-    private JRadioButton rbThreePlayers;
-    private JRadioButton rbFourPlayers;
+    private JRadioButton rbTwoPlayers, rbThreePlayers, rbFourPlayers;
+    private JComboBox<String[]> pColorList, sColorList;
+
+    private String[] colors = {"BLUE", "RED", "GREEN", "PURPLE"};
+
+    private Client client;
 
     public ClientGUI() {
         super("Ringgz Client");
@@ -90,6 +94,7 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
         group.add(rbTwoPlayers);
         group.add(rbThreePlayers);
         group.add(rbFourPlayers);
+        group.setSelected(rbTwoPlayers.getModel(), true);
 
         pCount.add(lbCount);
         pCount.add(rbTwoPlayers);
@@ -97,30 +102,130 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
         pCount.add(rbFourPlayers);
 
 
+        JLabel lbPColors = new JLabel("Choose your primary color");
+        JLabel lbSColors = new JLabel("Choose your secondary color");
+        JPanel pColors = new JPanel(new BorderLayout());
+        JPanel pPColor = new JPanel(new BorderLayout());
+        JPanel pSColor = new JPanel(new BorderLayout());
 
-//        JLabel lbColors = new JLabel("Choose your colors");
-//        JPanel pColors = new JPanel(new FlowLayout());
-//        pColors.add(lbColors, BorderLayout.NORTH);
+        pColorList = new JComboBox(colors);
+        pColorList.setSelectedIndex(0);
+        pColorList.addActionListener(this);
+        pPColor.add(lbPColors, BorderLayout.NORTH);
+        pPColor.add(pColorList);
+
+        sColorList = new JComboBox(colors);
+        sColorList.setSelectedIndex(1);
+        sColorList.addActionListener(this);
+        pSColor.add(lbSColors, BorderLayout.NORTH);
+        pSColor.add(sColorList);
+
+        pColors.add(pPColor, BorderLayout.NORTH);
+        pColors.add(pSColor, BorderLayout.SOUTH);
 
         p2.add(pCount);
-       // p2.add(pColors);
+        p2.add(pColors);
+
+        // Panel p3 - TextArea
+        JPanel p3 = new JPanel();
+        taMessages = new JTextArea("", 15, 50);
+        taMessages.setEditable(false);
+        p3.add(taMessages);
 
         // Add to container
         Container cc = getContentPane();
-        cc.setLayout(new GridLayout(3, 1));
+        cc.setLayout(new FlowLayout());
         cc.add(p1);
         cc.add(p2);
+        cc.add(p3);
 
     }
 
     @Override
     public void addMessage(String msg) {
-
+        taMessages.append(msg + "\n");
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        Object src = e.getSource();
+        if (src == bConnect) {
+            connect();
+        } else if (src == rbTwoPlayers || src == rbThreePlayers) {
+             sColorList.setEnabled(true);
+        } else if (src == rbFourPlayers) {
+            sColorList.setEnabled(false);
+        } else if (src == pColorList) {
+            if (pColorList.getSelectedIndex() == sColorList.getSelectedIndex()) {
+                sColorList.setSelectedIndex((sColorList.getSelectedIndex() + 1) % (colors.length));
+            }
+        } else if (src == sColorList) {
+            if (sColorList.getSelectedIndex() == pColorList.getSelectedIndex()) {
+                pColorList.setSelectedIndex((pColorList.getSelectedIndex() + 1) % (colors.length));
+            }
+        }
+    }
 
+    private void connect() {
+        int noOfPlayers = 0;
+        String pColor = (String) pColorList.getSelectedItem();
+        String sColor = "_";
+
+        if (rbTwoPlayers.isSelected()) {
+            noOfPlayers = 2;
+            sColor = (String) sColorList.getSelectedItem();
+        } else if (rbTwoPlayers.isSelected()) {
+            noOfPlayers = 3;
+            sColor = (String) sColorList.getSelectedItem();
+        } else if (rbFourPlayers.isSelected()) {
+            noOfPlayers = 4;
+        }
+
+        int port = 0;
+        String name = tfName.getText();
+        InetAddress host;
+
+        try {
+            port = Integer.parseInt(tfPort.getText());
+        } catch (NumberFormatException e) {
+            addMessage("ERROR: not a valid portnumber!");
+            return;
+        }
+
+        try {
+            host = InetAddress.getByName(tfHost.getText());
+        } catch (UnknownHostException e) {
+            addMessage("ERROR: not a valid host!");
+            return;
+        }
+
+        try {
+            client = new Client(name, host, port, this);
+        } catch (IOException e) {
+            addMessage("ERROR: could not connect");
+            return;
+        }
+
+        tfHost.setEditable(false);
+        tfName.setEditable(false);
+        tfPort.setEditable(false);
+        bConnect.setEnabled(false);
+        rbTwoPlayers.setEnabled(false);
+        rbThreePlayers.setEnabled(false);
+        rbFourPlayers.setEnabled(false);
+        pColorList.setEditable(false);
+        sColorList.setEditable(false);
+
+        addMessage("Connected to server...");
+        addMessage("You are: " + name);
+        if (noOfPlayers == 4) {
+            addMessage("Your color: " + pColor);
+        } else {
+            addMessage("Your colors: " + pColor + ", " + sColor);
+        }
+        addMessage("Looking for players to start a " + noOfPlayers + " player game");
+
+        client.start();
     }
 
     public static void main(String[] args) {

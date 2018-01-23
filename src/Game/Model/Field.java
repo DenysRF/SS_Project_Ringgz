@@ -59,8 +59,8 @@ public class Field {
         int colour;
         int[] amount = {0, 0};
         int tempHighscore = 0;
-        boolean hasWinner = false;
         Player tempWinner = null;
+        boolean hasWinner = false;
 
         if (noOfPlayers == 2 || noOfPlayers == 4) {
             Map<Player, int[]> score = new HashMap<>();
@@ -108,7 +108,7 @@ public class Field {
                     if (fieldContent[count].getOwner() != null) {
                         owner = fieldContent[count].getOwner();
                         if (fieldContent[count].isPrimary()) {
-                            if (score.containsKey(owner.getName())) {
+                            if (score.containsKey(owner)) {
                                 score.put(owner, score.get(owner) + 1);
                             } else {
                                 score.put(owner, 1);
@@ -141,5 +141,4 @@ public class Field {
             return null;
         }
     }
-
 }

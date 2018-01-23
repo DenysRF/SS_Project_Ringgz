@@ -38,10 +38,6 @@ public abstract class Player {
         return secondaryPieces;
     }
 
-    public boolean gameOver() {
-        return false;
-    }
-
     private void makePieces(int noOfPlayers) {
         List<Piece> pBase = new ArrayList<>();
         List<Piece> pSmall = new ArrayList<>();
@@ -118,7 +114,10 @@ public abstract class Player {
 
     // Tell the player to set the starting Base
     public void setStart(int i, Board board) {
-        Piece startBase = new Piece(Piece.START);
-        board.setField(startBase, i);
+        // start only at middle fields
+        if (i > Board.DIM + 2 && i < Board.DIM * Board.DIM - Board.DIM - 2) {
+            Piece startBase = new Piece(Piece.START);
+            board.setField(startBase, i);
+        }
     }
 }
