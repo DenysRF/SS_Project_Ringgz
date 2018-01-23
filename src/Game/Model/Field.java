@@ -44,7 +44,7 @@ public class Field {
     // Returns true if a field is empty
     public boolean isEmpty() {
         for (Piece p : fieldContent) {
-            if (!p.equals(null)) {
+            if (p != null) {
                 return false;
             }
         }
@@ -65,9 +65,9 @@ public class Field {
         if (noOfPlayers == 2 || noOfPlayers == 4) {
             Map<Player, int[]> score = new HashMap<>();
 
-            if (fieldContent[Piece.BASE].equals(null) && fieldContent[Piece.START].equals(null)) {
+            if (fieldContent[Piece.BASE] == null && fieldContent[Piece.START] == null) {
                 for (int count = 1; count < MAX_SPACE - 1; count++) {
-                    if (!fieldContent[count].getOwner().equals(null)) {
+                    if (fieldContent[count] != null) {
                         owner = fieldContent[count].getOwner();
                         if (fieldContent[count].isPrimary()) {
                             colour = 0;
@@ -76,10 +76,10 @@ public class Field {
                         }
                         if (score.containsKey(owner)) {
                             int[] tempscore = score.get(owner);
-                            tempscore[colour] = tempscore[colour] + 1;
+                            tempscore[colour] = (tempscore[colour] + 1);
                             score.put(owner, tempscore);
-                        } else {
-                            int[] tempscore = amount;
+                        } else{
+                            int[] tempscore =  {0,0};
                             tempscore[colour] = 1;
                             score.put(owner, tempscore);
                         }
@@ -87,14 +87,15 @@ public class Field {
                 }
 
                 for (Player p : score.keySet()) {
-                    for (int i = 0; i <= 1; i++)
+                    for (int i = 0; i < 2; i++) {
                         if (score.get(p)[i] > tempHighscore) {
                             tempWinner = p;
-                            tempHighscore = score.get(p)[i];
+                            tempHighscore = score.get(tempWinner)[i];
                             hasWinner = true;
                         } else if (score.get(p)[i] == tempHighscore) {
                             hasWinner = false;
                         }
+                    }
                 }
 
 
@@ -102,9 +103,9 @@ public class Field {
 
         } else if (noOfPlayers == 3) {
             Map<Player, Integer> score = new HashMap<>();
-            if (fieldContent[Piece.BASE].equals(null) && fieldContent[Piece.START].equals(null)) {
+            if (fieldContent[Piece.BASE] == null && fieldContent[Piece.START] == null) {
                 for (int count = 1; count < MAX_SPACE - 1; count++) {
-                    if (!fieldContent[count].getOwner().equals(null)) {
+                    if (fieldContent[count].getOwner() != null) {
                         owner = fieldContent[count].getOwner();
                         if (fieldContent[count].isPrimary()) {
                             if (score.containsKey(owner.getName())) {
@@ -113,7 +114,7 @@ public class Field {
                                 score.put(owner, 1);
                             }
                         } else if (!fieldContent[count].isPrimary()) {
-                            if (score.containsKey("extraColour")) {
+                            if (score.containsKey(extraColour)) {
                                 score.put(extraColour, score.get(extraColour) + 1);
                             } else {
                                 score.put(extraColour, 1);

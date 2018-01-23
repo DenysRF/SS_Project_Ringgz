@@ -48,10 +48,6 @@ public class PlayerTest {
         assertEquals(fourPlayers.getPrimaryPieces().get(Piece.MEDIUM).size(), 3);
         assertEquals(fourPlayers.getPrimaryPieces().get(Piece.BIG).size(), 3);
         assertEquals(fourPlayers.getPrimaryPieces().get(Piece.HUGE).size(), 3);
-        assertEquals(fourPlayers.getSecondaryPieces().get(Piece.BASE).size(), 0);
-        assertEquals(fourPlayers.getSecondaryPieces().get(Piece.SMALL).size(), 0);
-        assertEquals(fourPlayers.getSecondaryPieces().get(Piece.MEDIUM).size(), 0);
-        assertEquals(fourPlayers.getSecondaryPieces().get(Piece.BIG).size(), 0);
-        assertEquals(fourPlayers.getSecondaryPieces().get(Piece.HUGE).size(), 0);
+        assertEquals(fourPlayers.getSecondaryPieces(),null);
     }
 }
