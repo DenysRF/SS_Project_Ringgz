@@ -13,29 +13,48 @@ public class Ringgz {
         System.out.println(s);
     }
 
+
     // TODO check if the field is valid
     private static int readMove(Scanner in) {
+        boolean check = false;
 //        print("Type index of where you want to place the piece: ");
-        return Integer.parseInt(in.nextLine());
+        while (!check) {
+            try {
+                check = true;
+                return Integer.parseInt(in.nextLine());
+            } catch (Exception e) {
+                print("please input a number \n");
+            }
+        }
+        return -1;
     }
 
     // TODO check if piece in collection
     private static Piece choosePiece(Scanner in, Player p) {
         int color = -1;
         int size = -1;
+        boolean check = false;
         while (!(color == 0 || color == 1)) {
             print("Choose a Piece from your collection\n\tPrimary or secondary?(0/1)");
-            color = Integer.parseInt(in.nextLine());
-            if (!(color == 0 || color == 1)) {
-                print("Enter '1' for your primary color and '2' for secondary");
+            try {
+                color = Integer.parseInt(in.nextLine());
+                if (!(color == 0 || color == 1)) {
+                    print("Enter '1' for your primary color and '2' for secondary");
+                }
+            } catch (Exception e) {
+                print("please input a number \n");
             }
         }
         while (!(size >= 0 && size <= 4)) {
             print("Choose the size of the Piece\n\t" +
                     "(Base = 0, Small = 1, Medium = 2, Big = 3, Huge = 4)");
-            size = Integer.parseInt(in.nextLine());
-            if (!(size >= 0 && size <= 4)) {
-                print("Wrong input, (0, 1, 2, 3, 4)");
+            try {
+                size = Integer.parseInt(in.nextLine());
+                if (!(size >= 0 && size <= 4)) {
+                    print("Wrong input, (0, 1, 2, 3, 4)");
+                }
+            } catch (Exception e) {
+                print("please input a number \n");
             }
         }
 
@@ -64,7 +83,7 @@ public class Ringgz {
         // Define Colors client side
         int sets = 2;
         if (args.length == 4) {
-            sets = 1;
+            sets = 2;
         }
         // Two-dimensional array [index of Player][0 for primary / 1 for secondary]
         String[][] colors = new String[args.length][sets];
@@ -72,26 +91,49 @@ public class Ringgz {
             String p = "X";
             String s = "x";
             // Uppercase for primary, lowercase for secondary
-            switch (i) {
-                case 0:
-                    p = "R";
-                    s = "r";
-                    break;
-                case 1:
-                    p = "B";
-                    s = "b";
-                    break;
-                case 2:
-                    p = "Y";
-                    s = "y";
-                    break;
-                case 3:
-                    p = "G";
-                    s = "r";
-                    break;
+            if (players.length != 3) {
+                switch (i) {
+                    case 0:
+                        p = "R";
+                        s = "r";
+                        break;
+                    case 1:
+                        p = "B";
+                        s = "b";
+                        break;
+                    case 2:
+                        p = "Y";
+                        s = "y";
+                        break;
+                    case 3:
+                        p = "G";
+                        s = "r";
+                        break;
+                }
+                colors[i][0] = p;
+                colors[i][1] = s;
+            } else {
+                switch (i) {
+                    case 0:
+                        p = "R";
+                        s = "X";
+                        break;
+                    case 1:
+                        p = "B";
+                        s = "X";
+                        break;
+                    case 2:
+                        p = "Y";
+                        s = "X";
+                        break;
+                    case 3:
+                        p = "G";
+                        s = "X";
+                        break;
+                }
+                colors[i][0] = p;
+                colors[i][1] = s;
             }
-            colors[i][0] = p;
-            colors[i][1] = s;
         }
 
         Scanner in = new Scanner(System.in);
@@ -126,17 +168,17 @@ public class Ringgz {
             // Play game until the Game is over
             boolean turn = true;
             while (!board.gameOver()) {
-                if (!board.gameOver(players[currentPlayer])) {
+                if (!board.gameOver(players[currentPlayer], true) || !board.gameOver(players[currentPlayer], false)) {
                     while (turn) {
                         board.printBoard(players, colors);
                         print(players[currentPlayer].getName() + "'s turn");
 
-                        players[currentPlayer].printPieceCollection();
+                        players[currentPlayer].printPieceCollection(players.length);
                         Piece piece = choosePiece(in, players[currentPlayer]);
                         // TODO check if move is valid
                         print("Type index of where you want to place the piece: ");
                         temp = readMove(in);
-                        if (board.getField(temp).isValidMove(piece) && board.getValidFields(players[currentPlayer]).contains(board.getField(temp))) {
+                        if (board.getField(temp).isValidMove(piece) && board.getValidFields(players[currentPlayer], piece.isPrimary()).contains(board.getField(temp))) {
                             players[currentPlayer].makeMove(temp, piece, board);
                             turn = false;
                         } else {

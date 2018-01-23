@@ -108,7 +108,7 @@ public class Board {
     Return Field[] where a player given their pieces
     can place a piece
      */
-    public List<Field> getValidFields(Player player) {
+    public List<Field> getValidFields(Player player, boolean color) {
         // TODO: StartBase
         List<Field> validFields = new ArrayList<>();
         boolean add = true;
@@ -118,7 +118,9 @@ public class Board {
                 //now you iterate over every piece in a field
                 for (int i = 0; i < Field.MAX_SPACE; i++) {
                     //now you iterate over every
-                    if (getField(x, y).getFieldContent()[i] != null && (getField(x, y).getFieldContent()[i].getSize() == Piece.START || getField(x, y).getFieldContent()[i].getOwner().equals(player))) {
+                    if ((getField(x, y).getFieldContent()[i] != null) &&
+                            ((getField(x, y).getFieldContent()[i].getSize() == Piece.START) ||
+                                    (getField(x, y).getFieldContent()[i].getOwner().equals(player) && getField(x, y).getFieldContent()[i].isPrimary() == color))) {
                         for (int k = 0; k < getAdjacentFields(getField(x, y)).size(); k++) {
                             for (int l = 0; l < validFields.size(); l++) {
                                 if (validFields.get(l).equals(getAdjacentFields(getField(x, y)).get(k))) {
@@ -142,7 +144,7 @@ public class Board {
     public boolean gameOver() {
         int GameOverPlayers = 0;
         for (Player p : players) {
-            if (getValidFields(p).isEmpty()) {
+            if (getValidFields(p, true).isEmpty() && getValidFields(p, false).isEmpty()) {
                 GameOverPlayers++;
             }
         }
@@ -150,8 +152,8 @@ public class Board {
     }
 
     // Return true if this Player cannot make any moves
-    public boolean gameOver(Player player) {
-        if (getValidFields(player).isEmpty()) {
+    public boolean gameOver(Player player, Boolean color) {
+        if (getValidFields(player, color).isEmpty()) {
             return true;
         }
         return false;

@@ -33,7 +33,7 @@ public class Field {
 
     // Checks whether the piece fits in the field
     public boolean isValidMove(Piece piece) {
-        if (isEmpty() || ((fieldContent[piece.getSize()] == null) && (fieldContent[Piece.BASE] == null) && (fieldContent[Piece.START] == null))) {
+        if (isEmpty() || piece.getSize() == Piece.BASE && isEmpty() || piece.getSize() != Piece.BASE && ((fieldContent[piece.getSize()] == null) && (fieldContent[Piece.BASE] == null) && (fieldContent[Piece.START] == null))) {
             return true;
         } else {
             return false;
