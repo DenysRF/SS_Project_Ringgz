@@ -7,11 +7,11 @@ import java.util.Map;
 public class ClientHandler extends Thread {
 
     private Server server;
+    private Socket socket;
     private BufferedReader in;
     private BufferedWriter out;
     private String clientName = null;
     private boolean inGame;
-    private Socket socket;
 
     public ClientHandler(Server server, Socket socket) throws IOException {
         this.server = server;
@@ -40,10 +40,10 @@ public class ClientHandler extends Thread {
                         receiveMove(message);
                         break;
                     default:
+                        sendError(INVALID_COMMAND, "");
                         server.print(clientName + ": " + message);
                         break;
                 }
-
             }
             shutdown();
         } catch (IOException e) {
@@ -62,13 +62,10 @@ public class ClientHandler extends Thread {
     }
 
     private void shutdown() {
-        try {
-            socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         server.removeHandler(this);
-        server.print("[" + clientName + " has left]");
+        if (clientName != null) {
+            server.print("[" + clientName + " has left]");
+        }
     }
 
     public String getClientName() {
@@ -79,9 +76,35 @@ public class ClientHandler extends Thread {
         return inGame;
     }
 
+    // Set the in-game status of this clientHandler
+    public void setInGame(boolean b) {
+        inGame = b;
+    }
+
+    // Check if client name if valid
+    private boolean isValidName(String helloCommand) {
+        String[] hello = helloCommand.split(" ");
+        // if the command is longer than 2, check if extra parameters correspond to extensions
+        // if they don't this means there are spaces in the name, or elsewhere
+        if (hello.length > 2) {
+            for (int i = 2; i < hello.length; i++) {
+                if (!(hello[i].equals("chat") || hello[i].equals("challenge") ||
+                        hello[i].equals("leaderboard") || hello[i].equals("security"))) {
+                    return false;
+                }
+            }
+        }
+        // checks the name for comma's
+        if (hello[1].contains(",")) {
+            return false;
+        }
+        return true;
+    }
+
     /*-PROTOCOL----------------------------------------------*/
 
     public static final String EXTENSIONS = "";
+    // chat challenge leaderboard security
 
     //                 Error codes
     public static final int GENERAL = 0;
@@ -98,7 +121,6 @@ public class ClientHandler extends Thread {
     //				Server keywords
     public static final String ERROR = "error";
     public static final String DO_MOVE = "do_move";
-    public static final String VALID = "valid";
     public static final String DONE_MOVE = "done_move";
     public static final String PLAYER_LEFT = "player_left";
     public static final String RESULTS = "results";
@@ -133,32 +155,54 @@ public class ClientHandler extends Thread {
     public void sendResults(Map<String, Integer> playerPointsMap,
                             Map<String, Integer> playerRingsMap,
                             Map<String, Boolean> playerIsWinnerMap) {
+        sendMessage(RESULTS + " ");
 
     }
     // receiving Commands (incoming)
     public void receiveHello(String helloCommand) {
         String[] hello = helloCommand.split(" ");
         if (hello.length >= 2) {
-            if (server.nameInUse(hello[1])) {
-                System.out.println("name in use");
+            // Check if name is valid or already in use
+            if (!isValidName(helloCommand)) {
+                server.print("Refused new client with invalid name.");
+                sendError(GENERAL, "Your name in message: '" + helloCommand + "' is invalid.");
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else if (server.nameInUse(hello[1])) {
+                server.print("Refused new client.\n\tName: '" + hello[1] + "' is already in use.");
                 sendError(NAME_IN_USE, "");
-                shutdown();
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             } else {
                 clientName = hello[1];
                 server.print("[" + clientName + " has entered]");
                 if (hello.length > 2) {
-                    // handle extensions
+                    // TODO: handle extensions
                 }
             }
         } else {
-            server.print(this + " did not receive hello from client well");
+            sendError(GENERAL, "Your sendHello() message has < 2 arguments");
         }
     }
     public void receiveStart(String startCommand) {
         String[] start = startCommand.split(" ");
         if (start.length == 2) {
-            inGame = true;
-            server.print(start[0]);
             server.print(clientName + " wants to start a game with " + start[1] + " players");
             server.addPlayerToGame(this, Integer.parseInt(start[1]));
         } else {
@@ -167,7 +211,7 @@ public class ClientHandler extends Thread {
 
     }
     public void receiveMove(String moveCommand) {
-
+        // TODO
     }
 
     /*-----------------------------------------------------*/

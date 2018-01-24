@@ -3,6 +3,7 @@ package Client;
 import Interface.MessageUI;
 
 import javax.swing.*;
+import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,7 +44,7 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
     }
 
     public void buildGUI() {
-        setSize(450, 520);
+        setSize(460, 520);
 
         // Panel p1 - Connect
         JPanel p1 = new JPanel(new FlowLayout());
@@ -126,15 +127,19 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
         p2.add(pCount);
         p2.add(pColors);
 
-        // Panel p3 - TextArea
+        // Panel p3 - Messages
         JPanel p3 = new JPanel(new BorderLayout());
 
         JLabel lbMessages = new JLabel("Messages:");
         taMessages = new JTextArea("", 15, 30);
         taMessages.setEditable(false);
+        DefaultCaret caret = (DefaultCaret)taMessages.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+
+        JScrollPane spScroll = new JScrollPane(taMessages);
 
         p3.add(lbMessages);
-        p3.add(new JScrollPane(taMessages), BorderLayout.SOUTH);
+        p3.add(spScroll, BorderLayout.SOUTH);
 
 
         // Panel p4 - Disconnect
@@ -201,13 +206,12 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
         if (rbTwoPlayers.isSelected()) {
             noOfPlayers = 2;
             sColor = (String) sColorList.getSelectedItem();
-        } else if (rbTwoPlayers.isSelected()) {
+        } else if (rbThreePlayers.isSelected()) {
             noOfPlayers = 3;
             sColor = (String) sColorList.getSelectedItem();
         } else if (rbFourPlayers.isSelected()) {
             noOfPlayers = 4;
         } else {
-            addMessage("ERROR: Invalid number of players!");
             return;
         }
 
@@ -248,11 +252,10 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
         bDisconnect.setEnabled(true);
 
         addMessage("Connected to server...");
-        addMessage("You are: " + name);
         if (noOfPlayers == 4) {
-            addMessage("Your color: " + pColor);
+            //addMessage("Your color: " + pColor);
         } else {
-            addMessage("Your colors: " + pColor + ", " + sColor);
+            //addMessage("Your colors: " + pColor + ", " + sColor);
         }
         addMessage("Looking for players to start a " + noOfPlayers + " player game");
 

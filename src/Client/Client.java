@@ -46,9 +46,6 @@ public class Client extends Thread {
                     case DO_MOVE:
                         receiveDoMove(textIn);
                         break;
-                    case VALID:
-                        //
-                        break;
                     case DONE_MOVE:
                         receiveDoneMove(textIn);
                         break;
@@ -62,13 +59,10 @@ public class Client extends Thread {
                         mui.addMessage(textIn);
                         break;
                 }
-
             }
-            System.out.println("readLine() loop in client.run ended: shutdown");
-            shutdown();
         } catch (IOException e) {
-            System.err.println("Error: IOException in client run()-loop");
-            shutdown();
+            //shutdown();
+            mui.addMessage("Client terminated");
         }
     }
 
@@ -88,6 +82,7 @@ public class Client extends Thread {
         } catch (IOException e) {
             System.err.println("Error: failed to close client socket");
         }
+         mui.addMessage("Connection lost...");
     }
 
     public String getClientName() {
@@ -116,7 +111,6 @@ public class Client extends Thread {
     // sent by server only
     public static final String ERROR = "error";
     public static final String DO_MOVE = "do_move";
-    public static final String VALID = "valid";
     public static final String DONE_MOVE = "done_move";
     public static final String PLAYER_LEFT = "player_left";
     public static final String RESULTS = "results";
@@ -143,12 +137,16 @@ public class Client extends Thread {
     public void receiveHello(String helloCommand) {
         String[] hello = helloCommand.split(" ");
         if (hello.length >= 2) {
-            mui.addMessage("Server says: " + hello[0]);
             if (hello.length > 2) {
                 // handle extensions
             }
             mui.addMessage("Server has " + hello[1] + " players waiting for games");
             sendHello(clientName, EXTENSIONS);
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             sendStart(noOfPlayers);
         } else {
             mui.addMessage("server did not send hello correctly: " + helloCommand);
@@ -158,41 +156,56 @@ public class Client extends Thread {
     public void receiveStart(String startCommand) {
         String[] start = startCommand.split(" ");
         if (start.length == 3) {
-            mui.addMessage("Game started " + start[1] + start[2]);
+            mui.addMessage("Game started: " + start[1] + " " + start[2]);
         } else if (start.length == 4) {
-            mui.addMessage("Game started " + start[1] + start[2] + start[3]);
+            mui.addMessage("Game started: " + start[1] + " " + start[2] + " " + start[3]);
         } else if (start.length == 5) {
-            mui.addMessage("Game started " + start[1] + start[2] + start[3] + start[4]);
+            mui.addMessage("Game started: " + start[1] + " " + start[2] + " " + start[3] + " " + start[4]);
         } else {
             mui.addMessage("ERROR: invalid amount of players: " + startCommand);
         }
-        // Start game loop
+        // TODO: Start game loop
     }
 
     public void receiveError(String errorCommand) {
-        String[] error = errorCommand.split(" ", 2);
-        for (int i = 0; i < error.length; i++) {
-            mui.addMessage(error[i]);
+        String[] error = errorCommand.split(" ", 3);
+        switch (Integer.parseInt(error[1])) {
+            case GENERAL:
+                mui.addMessage("GENERAL ERROR: " + errorCommand);
+                break;
+            case INVALID_MOVE:
+                //
+                break;
+            case NOT_YOUR_TURN:
+                //
+                break;
+            case NAME_IN_USE:
+                mui.addMessage("ERROR NAME_IN_USE: " + errorCommand);
+                shutdown();
+                break;
+            case INVALID_COMMAND:
+                //
+                break;
+            default:
+                mui.addMessage("UNKNOWN ERROR: " + errorCommand);
+                break;
         }
-
-
-
     }
 
     public void receiveDoMove(String doMoveCommand) {
-
+        // TODO
     }
 
     public void receiveDoneMove(String doneMoveCommand) {
-
+        // TODO
     }
 
     public void receivePlayerLeft(String playerLeftCommand) {
-
+        // TODO
     }
 
     public void receiveResults(String resultsCommand) {
-
+        // TODO
     }
     /*-----------------------------------------------------*/
 

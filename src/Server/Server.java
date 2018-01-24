@@ -1,6 +1,5 @@
 package Server;
 
-import Client.Client;
 import Interface.MessageUI;
 
 import java.io.IOException;
@@ -17,14 +16,16 @@ public class Server extends Thread {
     private MessageUI mui;
     private List<ClientHandler> threads;
     private ServerSocket ss;
+    private boolean running = true;
 
-    private Map<Integer, List<List<ClientHandler>>> games;
+    private final Map<Integer, List<List<ClientHandler>>> games;
 
     public Server(int port, MessageUI mui) {
         this.port = port;
         this.mui = mui;
         threads = new ArrayList<>();
         games = new HashMap<>();
+        // Map
         for (int i = 2; i <= 4; i++) {
             games.put(i, new ArrayList<>());
         }
@@ -42,13 +43,13 @@ public class Server extends Thread {
         * Running server loop that accept incoming clients and creates
         * a ClientHandler thread for them.
         */
-        while (true) {
+        while (running) {
             try {
                 Socket socket = ss.accept();
                 mui.addMessage("[client no. " + i + " connected]");
                 i++;
                 ClientHandler ch = new ClientHandler(this, socket);
-                threads.add(ch);
+                addHandler(ch);
                 ch.start();
             } catch(IOException e) {
                 System.err.println("Error: failed to accept new client");
@@ -70,7 +71,6 @@ public class Server extends Thread {
             for (List<ClientHandler> chList : games.get(n)) {
                 for (int i = 0; i < chList.size(); i++) {
                     if (chList.get(i) == handler) {
-                        System.out.println("removed");
                         chList.remove(i);
                     }
                 }
@@ -92,12 +92,13 @@ public class Server extends Thread {
                 i++;
             }
         }
+        System.out.println("getNotInGamePlayerCount(): " + i);
         return i;
     }
 
     public void messageClient(String msg, String name) {
         for (ClientHandler ch : threads) {
-            if (ch.getClientName() == name) {
+            if (ch.getClientName().equals(name)) {
                 ch.sendMessage(msg);
             }
         }
@@ -108,6 +109,7 @@ public class Server extends Thread {
         String names = "";
         for (ClientHandler ch : chList) {
             names = names + " " + ch.getClientName();
+            ch.setInGame(true);
         }
         for (ClientHandler ch : chList) {
             print("\t" + ch.getClientName());
