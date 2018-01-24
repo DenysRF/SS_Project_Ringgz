@@ -14,7 +14,7 @@ import java.net.UnknownHostException;
 
 public class ClientGUI extends JFrame implements ActionListener, MessageUI {
 
-    private JButton bConnect;
+    private JButton bConnect, bDisconnect;
     private JTextField tfPort, tfName, tfHost;
     private JTextArea taMessages;
     private JRadioButton rbTwoPlayers, rbThreePlayers, rbFourPlayers;
@@ -43,14 +43,14 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
     }
 
     public void buildGUI() {
-        setSize(600, 600);
+        setSize(450, 520);
 
         // Panel p1 - Connect
         JPanel p1 = new JPanel(new FlowLayout());
         JPanel pFields = new JPanel(new GridLayout(3, 2));
 
         JLabel lbHost = new JLabel("Hostname:");
-        tfHost = new JTextField("", 12);
+        tfHost = new JTextField("localhost", 12);
 
         JLabel lbPort = new JLabel("Port:");
         tfPort = new JTextField("2000", 12);
@@ -127,10 +127,24 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
         p2.add(pColors);
 
         // Panel p3 - TextArea
-        JPanel p3 = new JPanel();
-        taMessages = new JTextArea("", 15, 50);
+        JPanel p3 = new JPanel(new BorderLayout());
+
+        JLabel lbMessages = new JLabel("Messages:");
+        taMessages = new JTextArea("", 15, 30);
         taMessages.setEditable(false);
-        p3.add(taMessages);
+
+        p3.add(lbMessages);
+        p3.add(new JScrollPane(taMessages), BorderLayout.SOUTH);
+
+
+        // Panel p4 - Disconnect
+        JPanel p4 = new JPanel(new FlowLayout());
+
+        bDisconnect = new JButton("Disconnect");
+        bDisconnect.setEnabled(false);
+        bDisconnect.addActionListener(this);
+
+        p4.add(bDisconnect);
 
         // Add to container
         Container cc = getContentPane();
@@ -138,6 +152,7 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
         cc.add(p1);
         cc.add(p2);
         cc.add(p3);
+        cc.add(p4);
 
     }
 
@@ -151,6 +166,18 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
         Object src = e.getSource();
         if (src == bConnect) {
             connect();
+        } else if (src == bDisconnect) {
+            client.shutdown();
+            tfHost.setEditable(true);
+            tfName.setEditable(true);
+            tfPort.setEditable(true);
+            bConnect.setEnabled(true);
+            rbTwoPlayers.setEnabled(true);
+            rbThreePlayers.setEnabled(true);
+            rbFourPlayers.setEnabled(true);
+            pColorList.setEnabled(true);
+            sColorList.setEnabled(true);
+            bDisconnect.setEnabled(false);
         } else if (src == rbTwoPlayers || src == rbThreePlayers) {
              sColorList.setEnabled(true);
         } else if (src == rbFourPlayers) {
@@ -167,7 +194,7 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
     }
 
     private void connect() {
-        int noOfPlayers = 0;
+        int noOfPlayers;
         String pColor = (String) pColorList.getSelectedItem();
         String sColor = "_";
 
@@ -179,9 +206,12 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
             sColor = (String) sColorList.getSelectedItem();
         } else if (rbFourPlayers.isSelected()) {
             noOfPlayers = 4;
+        } else {
+            addMessage("ERROR: Invalid number of players!");
+            return;
         }
 
-        int port = 0;
+        int port;
         String name = tfName.getText();
         InetAddress host;
 
@@ -200,7 +230,7 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
         }
 
         try {
-            client = new Client(name, host, port, this);
+            client = new Client(name, host, port, this, noOfPlayers);
         } catch (IOException e) {
             addMessage("ERROR: could not connect");
             return;
@@ -213,8 +243,9 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
         rbTwoPlayers.setEnabled(false);
         rbThreePlayers.setEnabled(false);
         rbFourPlayers.setEnabled(false);
-        pColorList.setEditable(false);
-        sColorList.setEditable(false);
+        pColorList.setEnabled(false);
+        sColorList.setEnabled(false);
+        bDisconnect.setEnabled(true);
 
         addMessage("Connected to server...");
         addMessage("You are: " + name);

@@ -44,7 +44,7 @@ public class Field {
     // Returns true if a field is empty
     public boolean isEmpty() {
         for (Piece p : fieldContent) {
-            if (!(p == null)) {
+            if (p != null) {
                 return false;
             }
         }

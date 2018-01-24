@@ -37,7 +37,7 @@ public class ServerGUI extends JFrame implements ActionListener, MessageUI {
     }
 
     public void buildGUI() {
-        setSize(600, 400);
+        setSize(450, 400);
 
         // Panel p1 - Listen
         JPanel p1 = new JPanel(new FlowLayout());
@@ -65,11 +65,11 @@ public class ServerGUI extends JFrame implements ActionListener, MessageUI {
         JPanel p2 = new JPanel(new BorderLayout());
 
         JLabel lbMessages = new JLabel("Messages:");
-        taMessages = new JTextArea("", 15, 50);
+        taMessages = new JTextArea("", 15, 30);
         taMessages.setEditable(false);
 
         p2.add(lbMessages);
-        p2.add(taMessages, BorderLayout.SOUTH);
+        p2.add(new JScrollPane(taMessages), BorderLayout.SOUTH);
 
         Container cc = getContentPane();
         cc.setLayout(new FlowLayout());
