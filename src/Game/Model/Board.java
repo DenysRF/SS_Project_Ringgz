@@ -28,7 +28,10 @@ public class Board {
 
     // Return the field at index i
     public Field getField(int i) {
-        return fields[i];
+        if (fields.length > i) {
+            return fields[i];
+        }
+        return null;
     }
 
     // Return the field at coordinates x,y
@@ -39,9 +42,9 @@ public class Board {
 
     // Set a piece in a field at index i
     public void setField(Piece piece, int i) {
-        //if (getField(i).isValidMove(piece)) {
+        if (getField(i).isValidMove(piece)) {
             fields[i].setFieldContent(piece);
-        //}
+        }
     }
 
     // Get the all fields that make up the "territory of a player"
@@ -108,7 +111,7 @@ public class Board {
     Return Field[] where a player given their pieces
     can place a piece
      */
-    public List<Field> getValidFields(Player player) {
+    public List<Field> getValidFields(Player player, boolean color) {
         // TODO: StartBase
         List<Field> validFields = new ArrayList<>();
         boolean add = true;
@@ -118,7 +121,9 @@ public class Board {
                 //now you iterate over every piece in a field
                 for (int i = 0; i < Field.MAX_SPACE; i++) {
                     //now you iterate over every
-                    if (getField(x, y).getFieldContent()[i].getOwner().equals(player)) {
+                    if ((getField(x, y).getFieldContent()[i] != null) &&
+                            ((getField(x, y).getFieldContent()[i].getSize() == Piece.START) ||
+                                    (getField(x, y).getFieldContent()[i].getOwner().equals(player) && getField(x, y).getFieldContent()[i].isPrimary() == color))) {
                         for (int k = 0; k < getAdjacentFields(getField(x, y)).size(); k++) {
                             for (int l = 0; l < validFields.size(); l++) {
                                 if (validFields.get(l).equals(getAdjacentFields(getField(x, y)).get(k))) {
@@ -126,7 +131,7 @@ public class Board {
                                 }
                             }
                             if (add) {
-                                validFields.set(validFields.size(), getAdjacentFields(getField(x, y)).get(k));
+                                validFields.add(getAdjacentFields(getField(x, y)).get(k));
                             }
                             add = true;
                         }
@@ -138,19 +143,20 @@ public class Board {
     }
 
     // Return true if no players are able to make a move
+
     public boolean gameOver() {
         int GameOverPlayers = 0;
         for (Player p : players) {
-            if (getValidFields(p).isEmpty()) {
+            if (getValidFields(p, true).isEmpty() && getValidFields(p, false).isEmpty()) {
                 GameOverPlayers++;
             }
         }
-        return(GameOverPlayers == players.length);
+        return (GameOverPlayers == players.length);
     }
 
     // Return true if this Player cannot make any moves
-    public boolean gameOver(Player player) {
-        if (getValidFields(player).isEmpty()) {
+    public boolean gameOver(Player player, Boolean color) {
+        if (getValidFields(player, color).isEmpty()) {
             return true;
         }
         return false;
@@ -160,7 +166,7 @@ public class Board {
     public int getScore(Player player) {
         int score = 0;
         for (Field f : fields) {
-            if (f.majority(players.length).equals(player)) {
+            if (f.majority(players.length) != null && f.majority(players.length).equals(player)) {
                 score++;
             }
         }

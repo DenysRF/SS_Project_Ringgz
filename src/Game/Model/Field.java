@@ -33,7 +33,7 @@ public class Field {
 
     // Checks whether the piece fits in the field
     public boolean isValidMove(Piece piece) {
-        if (isEmpty() || ((fieldContent[piece.getSize()] == null) && (fieldContent[Piece.BASE] == null) && (fieldContent[Piece.START] == null))) {
+        if (isEmpty() || piece.getSize() == Piece.BASE && isEmpty() || piece.getSize() != Piece.BASE && ((fieldContent[piece.getSize()] == null) && (fieldContent[Piece.BASE] == null) && (fieldContent[Piece.START] == null))) {
             return true;
         } else {
             return false;
@@ -59,8 +59,8 @@ public class Field {
         int colour;
         int[] amount = {0, 0};
         int tempHighscore = 0;
-        boolean hasWinner = false;
         Player tempWinner = null;
+        boolean hasWinner = false;
 
         if (noOfPlayers == 2 || noOfPlayers == 4) {
             Map<Player, int[]> score = new HashMap<>();
@@ -76,10 +76,10 @@ public class Field {
                         }
                         if (score.containsKey(owner)) {
                             int[] tempscore = score.get(owner);
-                            tempscore[colour] = tempscore[colour] + 1;
+                            tempscore[colour] = (tempscore[colour] + 1);
                             score.put(owner, tempscore);
                         } else {
-                            int[] tempscore = amount;
+                            int[] tempscore = {0, 0};
                             tempscore[colour] = 1;
                             score.put(owner, tempscore);
                         }
@@ -87,14 +87,15 @@ public class Field {
                 }
 
                 for (Player p : score.keySet()) {
-                    for (int i = 0; i <= 1; i++)
+                    for (int i = 0; i < 2; i++) {
                         if (score.get(p)[i] > tempHighscore) {
                             tempWinner = p;
-                            tempHighscore = score.get(p)[i];
+                            tempHighscore = score.get(tempWinner)[i];
                             hasWinner = true;
                         } else if (score.get(p)[i] == tempHighscore) {
                             hasWinner = false;
                         }
+                    }
                 }
 
 
@@ -104,7 +105,7 @@ public class Field {
             Map<Player, Integer> score = new HashMap<>();
             if (fieldContent[Piece.BASE] == null && fieldContent[Piece.START] == null) {
                 for (int count = 1; count < MAX_SPACE - 1; count++) {
-                    if (fieldContent[count] != null) {
+                    if (fieldContent[count] != null && fieldContent[count].getOwner() != null) {
                         owner = fieldContent[count].getOwner();
                         if (fieldContent[count].isPrimary()) {
                             if (score.containsKey(owner)) {
@@ -140,5 +141,4 @@ public class Field {
             return null;
         }
     }
-
 }

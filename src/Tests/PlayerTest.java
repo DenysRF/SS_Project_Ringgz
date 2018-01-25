@@ -10,7 +10,6 @@ import Game.Players.Player;
 
 import org.junit.Test;
 
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 
@@ -49,6 +48,6 @@ public class PlayerTest {
         assertEquals(fourPlayers.getPrimaryPieces().get(Piece.MEDIUM).size(), 3);
         assertEquals(fourPlayers.getPrimaryPieces().get(Piece.BIG).size(), 3);
         assertEquals(fourPlayers.getPrimaryPieces().get(Piece.HUGE).size(), 3);
-        assertTrue(fourPlayers.getSecondaryPieces() == null);
+        assertEquals(fourPlayers.getSecondaryPieces(),null);
     }
 }

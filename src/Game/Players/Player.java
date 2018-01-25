@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static Game.Model.Board.DIM;
+
 // Abstract Player class, holds shared data of human- and computer player
 public abstract class Player {
 
@@ -112,10 +114,15 @@ public abstract class Player {
         }
     }
 
+
+    public boolean validStart(int i) {
+        return (i >= (1 + DIM) && i <= 3 + DIM || i >= 1 + 2 * DIM && i <= 3 + 2 * DIM || i >= 1 + 3 * DIM && i <= 3 + 3 * DIM);
+    }
+
     // Tell the player to set the starting Base
     public void setStart(int i, Board board) {
         // start only at middle fields
-        if (i > Board.DIM + 2 && i < Board.DIM * Board.DIM - Board.DIM - 2) {
+        if (i >= (1 + DIM) && i <= 3 + DIM || i >= 1 + 2 * DIM && i <= 3 + 2 * DIM || i >= 1 + 3 * DIM && i <= 3 + 3 * DIM) {
             Piece startBase = new Piece(Piece.START);
             board.setField(startBase, i);
         }

@@ -98,8 +98,11 @@ public class FieldTest {
         winner = field[4].majority(players.length);
         assertTrue(winner == players[0]);
 
-        field[4].setFieldContent(players[1].getSecondaryPieces().get(Piece.BIG).get(0));
-        winner = field[4].majority(players.length);
+        field[5].setFieldContent(players[0].getPrimaryPieces().get(Piece.SMALL).get(0));
+        field[5].setFieldContent(players[0].getPrimaryPieces().get(Piece.MEDIUM).get(0));
+        field[5].setFieldContent(players[1].getSecondaryPieces().get(Piece.BIG).get(0));
+        field[5].setFieldContent(players[1].getSecondaryPieces().get(Piece.HUGE).get(0));
+        winner = field[5].majority(players.length);
         assertTrue(winner == null);
 
         // Test with 3 players

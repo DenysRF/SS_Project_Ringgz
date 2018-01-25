@@ -6,14 +6,16 @@ public class HumanPlayer extends Player {
         super(name, noOfPlayers);
     }
 
-    public void printPieceCollection() {
+    public void printPieceCollection(int NoOfPlayers) {
         System.out.println(name + "'s pieces:\nPrimary:");
         for (Integer p : primaryPieces.keySet()) {
             System.out.println("\t" + p + ": " + primaryPieces.get(p).size());
         }
-        System.out.println("Secondary:");
-        for (Integer p : secondaryPieces.keySet()) {
-            System.out.println("\t" + p + ": " + secondaryPieces.get(p).size());
+        if (NoOfPlayers != 4) {
+            System.out.println("Secondary:");
+            for (Integer p : secondaryPieces.keySet()) {
+                System.out.println("\t" + p + ": " + secondaryPieces.get(p).size());
+            }
         }
     }
 }
