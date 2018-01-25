@@ -14,55 +14,56 @@ public class Ringgz {
     }
 
 
-    // TODO check if the field is valid
     private static int readMove(Scanner in) {
         boolean check = false;
 //        print("Type index of where you want to place the piece: ");
         while (!check) {
-            try {
+            if (in.hasNextInt()) {
                 check = true;
                 return Integer.parseInt(in.nextLine());
-            } catch (Exception e) {
-                print("please input a number \n");
+            } else {
+                in.nextLine();
+                System.err.println("please input a number \n");
             }
         }
         return -1;
     }
 
-    // TODO check if piece in collection
     private static Piece choosePiece(Scanner in, Player p) {
         int color = -1;
         int size = -1;
         boolean check = false;
         while (!(color == 0 || color == 1)) {
             print("Choose a Piece from your collection\n\tPrimary or secondary?(0/1)");
-            try {
+            if (in.hasNextInt()) {
                 color = Integer.parseInt(in.nextLine());
                 if (!(color == 0 || color == 1)) {
                     print("Enter '1' for your primary color and '2' for secondary");
                 }
-            } catch (Exception e) {
+            } else {
+                in.nextLine();
                 print("please input a number \n");
             }
         }
         while (!(size >= 0 && size <= 4)) {
             print("Choose the size of the Piece\n\t" +
                     "(Base = 0, Small = 1, Medium = 2, Big = 3, Huge = 4)");
-            try {
+            if (in.hasNextInt()) {
                 size = Integer.parseInt(in.nextLine());
                 if (!(size >= 0 && size <= 4)) {
                     print("Wrong input, (0, 1, 2, 3, 4)");
                 }
-            } catch (Exception e) {
+            } else {
+                in.nextLine();
                 print("please input a number \n");
             }
         }
 
         Piece piece = null;
 
-        if (color == 0) {
+        if (color == 0 && p.getPrimaryPieces().get(size) != null) {
             piece = p.getPrimaryPieces().get(size).get(0);
-        } else if (color == 1) {
+        } else if (color == 1 && p.getSecondaryPieces().get(size) != null) {
             piece = p.getSecondaryPieces().get(size).get(0);
         }
 
@@ -79,7 +80,6 @@ public class Ringgz {
         // Only HumanPlayers for now
         HumanPlayer[] players = new HumanPlayer[args.length];
 
-
         // Define Colors client side
         int sets = 2;
         if (args.length == 4) {
@@ -87,6 +87,119 @@ public class Ringgz {
         }
         // Two-dimensional array [index of Player][0 for primary / 1 for secondary]
         String[][] colors = new String[args.length][sets];
+        initializePlayerColours(players, colors);
+
+        Scanner in = new Scanner(System.in);
+
+        boolean playAgain = true;
+        playGame(args, players, colors, in, playAgain);
+
+        print("End of session");
+        in.close();
+    }
+
+    private static void playGame(String[] args, HumanPlayer[] players, String[][] colors, Scanner in, boolean playAgain) {
+        while (playAgain) {
+            for (int i = 0; i < players.length; i++) {
+                players[i] = new HumanPlayer(args[i], players.length);
+            }
+
+            // Construct Board
+            Board board = new Board(players);
+            // Index of Player[] whose turn it is
+            int currentPlayer = 0;
+
+            // Announce colors
+            for (int i = 0; i < players.length; i++) {
+                print(players[i].getName() + " is color:\n\tprimary " + colors[i][0] + "\n\tsecondary " + colors[i][1]);
+            }
+
+            // First Player will set the StartBase
+            board.printBoard(players, colors);
+            print(players[currentPlayer].getName() + " may set the StartBase");
+            int temp = readMove(in);
+            while (!players[currentPlayer].validStart(temp)) {
+                print("plese enter a valid start position");
+                temp = readMove(in);
+            }
+            players[currentPlayer].setStart(temp, board);
+            currentPlayer = (currentPlayer + 1) % players.length;
+
+            // Play game until the Game is over
+            boolean turn = true;
+            doMove(players, colors, in, board, currentPlayer, turn);
+
+            // Determine score and winner
+            print("Scores:");
+
+            for (int i = 0; i < players.length; i++) {
+                int score = board.getScore(players[i]);
+                print("\t" + players[i].getName() + ": " + score);
+            }
+
+            boolean answered = true;
+            while (answered) {
+                print("Play again? (y/n)");
+                String s;
+                s = in.nextLine();
+                switch (s) {
+                    case "y":
+                        print("Playing again");
+                        board.reset();
+                        answered = false;
+                        break;
+                    case "n":
+                        answered = false;
+                        playAgain = false;
+                        break;
+                    default:
+                        print("Re-type your answer");
+                        break;
+                }
+            }
+        }
+    }
+
+    private static void doMove(HumanPlayer[] players, String[][] colors, Scanner in, Board board, int currentPlayer, boolean turn) {
+        int temp;
+        boolean noAdjecentBase = true;
+        while (!board.gameOver()) {
+            if (!board.gameOver(players[currentPlayer], true) || !board.gameOver(players[currentPlayer], false)) {
+                while (turn) {
+                    board.printBoard(players, colors);
+                    print(players[currentPlayer].getName() + "'s turn");
+
+                    players[currentPlayer].printPieceCollection(players.length);
+                    Piece piece = choosePiece(in, players[currentPlayer]);
+                    print("Type index of where you want to place the piece: ");
+                    temp = readMove(in);
+
+                    //this for loop tests if at least one adjacent field has a Base of the same colour
+                    for (int i = 0; i < board.getAdjacentFields(board.getField(temp)).size(); i++) {
+                        if (board.getAdjacentFields(board.getField(temp)).get(i).getFieldContent()[Piece.BASE] != null && board.getAdjacentFields(board.getField(temp)).get(i).getFieldContent()[Piece.BASE].getOwner() == players[currentPlayer] &&
+                                board.getAdjacentFields(board.getField(temp)).get(i).getFieldContent()[Piece.BASE].isPrimary() == piece.isPrimary()) {
+                            noAdjecentBase = false;
+                            break;
+                        }
+                    }
+
+                    if (noAdjecentBase && (board.getField(temp) != null && board.getField(temp).isValidMove(piece) && board.getValidFields(players[currentPlayer], piece.isPrimary()).contains(board.getField(temp)))) {
+
+                        players[currentPlayer].makeMove(temp, piece, board);
+                        turn = false;
+                    } else {
+                        System.err.println("This is not a valid move, try again");
+                    }
+
+                }
+                turn = true;
+            }
+
+            currentPlayer = (currentPlayer + 1) % players.length;
+        }
+    }
+
+    private static void initializePlayerColours(HumanPlayer[] players, String[][] colors) {
         for (int i = 0; i < players.length; i++) {
             String p = "X";
             String s = "x";
@@ -135,94 +248,5 @@ public class Ringgz {
                 colors[i][1] = s;
             }
         }
-
-        Scanner in = new Scanner(System.in);
-
-        boolean playAgain = true;
-        while (playAgain) {
-            for (int i = 0; i < players.length; i++) {
-                players[i] = new HumanPlayer(args[i], players.length);
-            }
-
-            // Construct Board
-            Board board = new Board(players);
-            // Index of Player[] whose turn it is
-            int currentPlayer = 0;
-
-            // Announce colors
-            for (int i = 0; i < players.length; i++) {
-                print(players[i].getName() + " is color:\n\tprimary " + colors[i][0] + "\n\tsecondary " + colors[i][1]);
-            }
-
-            // First Player will set the StartBase
-            board.printBoard(players, colors);
-            print(players[currentPlayer].getName() + " may set the StartBase");
-            int temp = readMove(in);
-            while (!players[currentPlayer].validStart(temp)) {
-                print("plese enter a valid start position");
-                temp = readMove(in);
-            }
-            players[currentPlayer].setStart(temp, board);
-            currentPlayer = (currentPlayer + 1) % players.length;
-
-            // Play game until the Game is over
-            boolean turn = true;
-            while (!board.gameOver()) {
-                if (!board.gameOver(players[currentPlayer], true) || !board.gameOver(players[currentPlayer], false)) {
-                    while (turn) {
-                        board.printBoard(players, colors);
-                        print(players[currentPlayer].getName() + "'s turn");
-
-                        players[currentPlayer].printPieceCollection(players.length);
-                        Piece piece = choosePiece(in, players[currentPlayer]);
-                        // TODO check if move is valid
-                        print("Type index of where you want to place the piece: ");
-                        temp = readMove(in);
-                        if (board.getField(temp).isValidMove(piece) && board.getValidFields(players[currentPlayer], piece.isPrimary()).contains(board.getField(temp))) {
-                            players[currentPlayer].makeMove(temp, piece, board);
-                            turn = false;
-                        } else {
-                            print("This is not a valid move, try again");
-                        }
-
-                    }
-                    turn = true;
-                }
-
-                currentPlayer = (currentPlayer + 1) % players.length;
-            }
-
-            // Determine score and winner
-            print("Scores:");
-
-            for (int i = 0; i < players.length; i++) {
-                int score = board.getScore(players[i]);
-                print("\t" + players[i].getName() + ": " + score);
-            }
-
-            boolean answered = true;
-            while (answered) {
-                print("Play again? (y/n)");
-                String s;
-                s = in.nextLine();
-                switch (s) {
-                    case "y":
-                        print("Playing again");
-                        board.reset();
-                        answered = false;
-                        break;
-                    case "n":
-                        answered = false;
-                        playAgain = false;
-                        break;
-                    default:
-                        print("Re-type your answer");
-                        break;
-                }
-            }
-        }
-
-        print("End of session");
-        in.close();
     }
 }

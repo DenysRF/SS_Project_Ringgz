@@ -28,7 +28,10 @@ public class Board {
 
     // Return the field at index i
     public Field getField(int i) {
-        return fields[i];
+        if (fields.length > i) {
+            return fields[i];
+        }
+        return null;
     }
 
     // Return the field at coordinates x,y
