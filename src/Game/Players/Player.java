@@ -3,10 +3,7 @@ package Game.Players;
 import Game.Model.Board;
 import Game.Model.Piece;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static Game.Model.Board.DIM;
 
@@ -127,4 +124,5 @@ public abstract class Player {
             board.setField(startBase, i);
         }
     }
+
 }
