@@ -43,7 +43,7 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
         });
     }
 
-    public void buildGUI() {
+    private void buildGUI() {
         setSize(460, 520);
 
         // Panel p1 - Connect

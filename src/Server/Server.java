@@ -16,7 +16,6 @@ public class Server extends Thread {
     private MessageUI mui;
     private List<ClientHandler> threads;
     private ServerSocket ss;
-    private boolean running = true;
 
     private final Map<Integer, List<List<ClientHandler>>> games;
 
@@ -43,7 +42,7 @@ public class Server extends Thread {
         * Running server loop that accept incoming clients and creates
         * a ClientHandler thread for them.
         */
-        while (running) {
+        while (true) {
             try {
                 Socket socket = ss.accept();
                 mui.addMessage("[client no. " + i + " connected]");
@@ -61,21 +60,21 @@ public class Server extends Thread {
         mui.addMessage(message);
     }
 
-    public void addHandler(ClientHandler handler) {
+    private void addHandler(ClientHandler handler) {
         threads.add(handler);
     }
 
     public void removeHandler(ClientHandler handler) {
         threads.remove(handler);
-        for (Integer n : games.keySet()) {
-            for (List<ClientHandler> chList : games.get(n)) {
-                for (int i = 0; i < chList.size(); i++) {
-                    if (chList.get(i) == handler) {
-                        chList.remove(i);
-                    }
-                }
-            }
-        }
+//        for (Integer n : games.keySet()) {
+//            for (List<ClientHandler> chList : games.get(n)) {
+//                for (int i = 0; i < chList.size(); i++) {
+//                    if (chList.get(i) == handler) {
+//                        chList.remove(i);
+//                    }
+//                }
+//            }
+//        }
     }
 
     public void broadcast(String msg) {
@@ -115,6 +114,7 @@ public class Server extends Thread {
             print("\t" + ch.getClientName());
             ch.sendStart(names);
         }
+        // TODO: when game is over empty the corresponding list in map games
     }
 
     public void addPlayerToGame(ClientHandler ch, int noOfPlayers) {

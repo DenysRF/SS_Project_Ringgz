@@ -134,9 +134,9 @@ public class Ringgz {
             // Determine score and winner
             print("Scores:");
 
-            for (int i = 0; i < players.length; i++) {
-                int score = board.getScore(players[i]);
-                print("\t" + players[i].getName() + ": " + score);
+            for (HumanPlayer player : players) {
+                int score = board.getScore(player);
+                print("\t" + player.getName() + ": " + score);
             }
 
             boolean answered = true;
