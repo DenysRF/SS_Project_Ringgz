@@ -124,9 +124,9 @@ public class Client extends Thread {
         sendMessage(HELLO + " " + name + " " + extensions);
     }
 
-    public void sendStart(int numberOfPlayers) {
+    public void sendStart() {
         mui.addMessage("Waiting for players...");
-        sendMessage(START + " " + numberOfPlayers);
+        sendMessage(START + " " + noOfPlayers);
     }
 
     public void sendMove(int x, int y, int size, int colour) {
@@ -142,12 +142,6 @@ public class Client extends Thread {
             }
             mui.addMessage("Server has " + hello[1] + " players waiting for games");
             sendHello(clientName, EXTENSIONS);
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            sendStart(noOfPlayers);
         } else {
             mui.addMessage("server did not send hello correctly: " + helloCommand);
         }

@@ -119,7 +119,7 @@ public class Ringgz {
             print(players[currentPlayer].getName() + " may set the StartBase");
             int temp = readMove(in);
             while (!players[currentPlayer].validStart(temp)) {
-                print("plese enter a valid start position");
+                print("please enter a valid start position");
                 temp = readMove(in);
             }
             players[currentPlayer].setStart(temp, board);

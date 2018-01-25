@@ -1,9 +1,17 @@
 package Game.Players;
 
+import Game.Model.Board;
+
 public class HumanPlayer extends Player {
 
     public HumanPlayer(String name, int noOfPlayers) {
         super(name, noOfPlayers);
+    }
+
+    @Override
+    public int determineMove(Board board) {
+        // TODO ask for move
+        return 0;
     }
 
     public void printPieceCollection(int NoOfPlayers) {

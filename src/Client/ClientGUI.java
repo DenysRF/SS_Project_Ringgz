@@ -15,7 +15,7 @@ import java.net.UnknownHostException;
 
 public class ClientGUI extends JFrame implements ActionListener, MessageUI {
 
-    private JButton bConnect, bDisconnect;
+    private JButton bConnect, bDisconnect, bLookForGame;
     private JTextField tfPort, tfName, tfHost;
     private JTextArea taMessages;
     private JRadioButton rbTwoPlayers, rbThreePlayers, rbFourPlayers;
@@ -142,13 +142,18 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
         p3.add(spScroll, BorderLayout.SOUTH);
 
 
-        // Panel p4 - Disconnect
+        // Panel p4 - LookForGame/Disconnect
         JPanel p4 = new JPanel(new FlowLayout());
+
+        bLookForGame = new JButton("Look for game");
+        bLookForGame.setEnabled(false);
+        bLookForGame.addActionListener(this);
 
         bDisconnect = new JButton("Disconnect");
         bDisconnect.setEnabled(false);
         bDisconnect.addActionListener(this);
 
+        p4.add(bLookForGame);
         p4.add(bDisconnect);
 
         // Add to container
@@ -183,6 +188,10 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
             pColorList.setEnabled(true);
             sColorList.setEnabled(true);
             bDisconnect.setEnabled(false);
+            bLookForGame.setEnabled(false);
+        } else if (src == bLookForGame) {
+            client.sendStart();
+            bLookForGame.setEnabled(false);
         } else if (src == rbTwoPlayers || src == rbThreePlayers) {
              sColorList.setEnabled(true);
         } else if (src == rbFourPlayers) {
@@ -250,6 +259,7 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
         pColorList.setEnabled(false);
         sColorList.setEnabled(false);
         bDisconnect.setEnabled(true);
+        bLookForGame.setEnabled(true);
 
         addMessage("Connected to server...");
         if (noOfPlayers == 4) {

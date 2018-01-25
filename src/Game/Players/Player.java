@@ -114,6 +114,8 @@ public abstract class Player {
         }
     }
 
+    public abstract int determineMove(Board board);
+
 
     public boolean validStart(int i) {
         return (i >= (1 + DIM) && i <= 3 + DIM || i >= 1 + 2 * DIM && i <= 3 + 2 * DIM || i >= 1 + 3 * DIM && i <= 3 + 3 * DIM);
