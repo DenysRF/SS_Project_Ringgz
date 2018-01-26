@@ -40,10 +40,10 @@ public class HumanPlayer extends Player {
         int color = -1;
         int size = -1;
         boolean check = false;
-        while ((readMove() != -1) && !(color == 0 || color == 1)) {
+        while (!(color == 0 || color == 1)) {
             print("Choose a Piece from your collection\n\tPrimary or secondary?(0/1)");
             if (in.hasNextInt()) {
-                color = Integer.parseInt(in.nextLine());
+                color = (in.nextInt());
                 if (!(color == 0 || color == 1)) {
                     print("Enter '1' for your primary color and '2' for secondary");
                 }
@@ -56,7 +56,7 @@ public class HumanPlayer extends Player {
             print("Choose the size of the Piece\n\t" +
                     "(Base = 0, Small = 1, Medium = 2, Big = 3, Huge = 4)");
             if (in.hasNextInt()) {
-                size = Integer.parseInt(in.nextLine());
+                size = in.nextInt();
                 if (!(size >= 0 && size <= 4)) {
                     print("Wrong input, (0, 1, 2, 3, 4)");
                 }
@@ -82,7 +82,7 @@ public class HumanPlayer extends Player {
         while (!check) {
             if (in.hasNextInt()) {
                 check = true;
-                return Integer.parseInt(in.nextLine());
+                return in.nextInt();
             } else {
                 in.nextLine();
                 System.err.println("please input a number \n");
