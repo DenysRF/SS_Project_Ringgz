@@ -2,8 +2,11 @@ package Game;
 
 import Game.Model.Board;
 import Game.Model.Piece;
+import Game.Players.ComputerPlayer;
 import Game.Players.HumanPlayer;
 import Game.Players.Player;
+import Game.Strategies.RandomStrategy;
+import Game.Strategies.Strategy;
 
 import java.util.Scanner;
 
@@ -78,7 +81,7 @@ public class Ringgz {
         }
 
         // Only HumanPlayers for now
-        HumanPlayer[] players = new HumanPlayer[args.length];
+        Player[] players = new Player[args.length];
 
         // Define Colors client side
         int sets = 2;
@@ -96,10 +99,15 @@ public class Ringgz {
         print("End of session");
     }
 
-    private static void playGame(String[] args, HumanPlayer[] players, String[][] colors, boolean playAgain) {
+    private static void playGame(String[] args, Player[] players, String[][] colors, boolean playAgain) {
         while (playAgain) {
             for (int i = 0; i < players.length; i++) {
-                players[i] = new HumanPlayer(args[i], players.length);
+                if (args[i].equals("random") || args[i].equals("player2")) {
+                    Strategy strategy = new RandomStrategy();
+                    players[i] = new ComputerPlayer(args[i], args.length, strategy);
+                } else {
+                    players[i] = new HumanPlayer(args[i], players.length);
+                }
             }
 
             // Construct Board
@@ -155,7 +163,7 @@ public class Ringgz {
         }
     }
 
-    private static void doMove(HumanPlayer[] players, String[][] colors, Board board, int currentPlayer, boolean turn) {
+    private static void doMove(Player[] players, String[][] colors, Board board, int currentPlayer, boolean turn) {
         int temp;
         boolean noAdjecentBase = true;
         while (!board.gameOver()) {
@@ -195,7 +203,7 @@ public class Ringgz {
         }
     }
 
-    private static void initializePlayerColours(HumanPlayer[] players, String[][] colors) {
+    private static void initializePlayerColours(Player[] players, String[][] colors) {
         for (int i = 0; i < players.length; i++) {
             String p = "X";
             String s = "x";

@@ -12,7 +12,7 @@ public class HumanPlayer extends Player {
 
     public HumanPlayer(String name, int noOfPlayers) {
         super(name, noOfPlayers);
-         in = new Scanner(System.in);
+        in = new Scanner(System.in);
     }
 
     public void printPieceCollection(int NoOfPlayers) {
@@ -76,11 +76,12 @@ public class HumanPlayer extends Player {
         return piece;
     }
 
+
     public static int readMove() {
         boolean check = false;
 //        print("Type index of where you want to place the piece: ");
         while (!check) {
-            if (in.hasNextInt()) {
+            if (in.hasNextLine() && in.hasNextInt()) {
                 check = true;
                 return in.nextInt();
             } else {
@@ -91,10 +92,11 @@ public class HumanPlayer extends Player {
         return -1;
     }
 
+//    @Override
     public void setStart(Board board) {
         int temp = readMove();
         while (!this.validStart(temp)) {
-            print("please enter a valid start position");
+            System.err.println("please enter a valid start position");
             temp = readMove();
         }
         // start only at middle fields
@@ -103,7 +105,7 @@ public class HumanPlayer extends Player {
             board.setField(startBase, temp);
         }
     }
-
+//    @Override
     public boolean doMove(int noOfPlayers, Board board) {
         boolean noAdjecentBase = true;
         this.printPieceCollection(noOfPlayers);
@@ -113,13 +115,7 @@ public class HumanPlayer extends Player {
         int temp = this.readMove();
 
         //this for loop tests if at least one adjacent field has a Base of the same colour
-        for (int i = 0; i < board.getAdjacentFields(board.getField(temp)).size(); i++) {
-            if (board.getAdjacentFields(board.getField(temp)).get(i).getFieldContent()[Piece.BASE] != null && board.getAdjacentFields(board.getField(temp)).get(i).getFieldContent()[Piece.BASE].getOwner() == this &&
-                    board.getAdjacentFields(board.getField(temp)).get(i).getFieldContent()[Piece.BASE].isPrimary() == piece.isPrimary()) {
-                noAdjecentBase = false;
-                break;
-            }
-        }
+       noAdjecentBase = isValidMove(board, temp, piece);
 
         if (noAdjecentBase && (board.getField(temp) != null && board.getField(temp).isValidMove(piece) && board.getValidFields(this, piece.isPrimary()).contains(board.getField(temp)))) {
 

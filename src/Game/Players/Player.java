@@ -117,12 +117,23 @@ public abstract class Player {
     }
 
     // Tell the player to set the starting Base
-    public void setStart(int i, Board board) {
-        // start only at middle fields
-        if (i >= (1 + DIM) && i <= 3 + DIM || i >= 1 + 2 * DIM && i <= 3 + 2 * DIM || i >= 1 + 3 * DIM && i <= 3 + 3 * DIM) {
-            Piece startBase = new Piece(Piece.START);
-            board.setField(startBase, i);
+    public void setStart(Board board) {
+    }
+
+    public boolean doMove(int noOfPlayers, Board board){
+        return false;
+    };
+
+    public boolean isValidMove(Board board, int temp, Piece piece){
+        boolean noAdjecentBase = true;
+        for (int i = 0; i < board.getAdjacentFields(board.getField(temp)).size(); i++) {
+            if (board.getAdjacentFields(board.getField(temp)).get(i).getFieldContent()[Piece.BASE] != null && board.getAdjacentFields(board.getField(temp)).get(i).getFieldContent()[Piece.BASE].getOwner() == this &&
+                    board.getAdjacentFields(board.getField(temp)).get(i).getFieldContent()[Piece.BASE].isPrimary() == piece.isPrimary()) {
+                noAdjecentBase = false;
+                break;
+            }
         }
+        return noAdjecentBase;
     }
 
 }
