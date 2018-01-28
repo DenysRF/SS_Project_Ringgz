@@ -1,6 +1,7 @@
 package Game.Players;
 
 import Game.Model.Board;
+import Game.Model.Field;
 import Game.Model.Piece;
 
 import java.util.*;
@@ -111,6 +112,15 @@ public abstract class Player {
         }
     }
 
+    public void makeMove(Field field, Piece piece, Board board) {
+        board.setField(piece, field);
+        if (piece.isPrimary()) {
+            primaryPieces.get(piece.getSize()).remove(0);
+        } else {
+            secondaryPieces.get(piece.getSize()).remove(0);
+        }
+    }
+
 
     public boolean validStart(int i) {
         return (i >= (1 + DIM) && i <= 3 + DIM || i >= 1 + 2 * DIM && i <= 3 + 2 * DIM || i >= 1 + 3 * DIM && i <= 3 + 3 * DIM);
@@ -120,11 +130,13 @@ public abstract class Player {
     public void setStart(Board board) {
     }
 
-    public boolean doMove(int noOfPlayers, Board board){
+    public boolean doMove(int noOfPlayers, Board board) {
         return false;
-    };
+    }
 
-    public boolean isValidMove(Board board, int temp, Piece piece){
+    ;
+
+    public boolean isValidMove(Board board, int temp, Piece piece) {
         boolean noAdjecentBase = true;
         for (int i = 0; i < board.getAdjacentFields(board.getField(temp)).size(); i++) {
             if (board.getAdjacentFields(board.getField(temp)).get(i).getFieldContent()[Piece.BASE] != null && board.getAdjacentFields(board.getField(temp)).get(i).getFieldContent()[Piece.BASE].getOwner() == this &&
@@ -136,4 +148,50 @@ public abstract class Player {
         return noAdjecentBase;
     }
 
+    public boolean isValidMove(Board board, Field field, Piece piece) {
+        boolean noAdjecentBase = true;
+        for (int i = 0; i < board.getAdjacentFields(field).size(); i++) {
+            if (board.getAdjacentFields(field).get(i).getFieldContent()[Piece.BASE] != null && board.getAdjacentFields(field).get(i).getFieldContent()[Piece.BASE].getOwner() == this &&
+                    board.getAdjacentFields(field).get(i).getFieldContent()[Piece.BASE].isPrimary() == piece.isPrimary()) {
+                noAdjecentBase = false;
+                break;
+            }
+        }
+        return noAdjecentBase;
+    }
+
+    public Map<Field, List<Piece>> getValidMoves(Player player, Boolean color, Board board) {
+        List<Piece> pieces = new ArrayList<>();
+        Map<Field, List<Piece>> possibleMoves = new HashMap<>();
+
+        for (int i = 0; i < board.getValidFields(player, color).size(); i++) {
+            pieces.clear();
+            boolean hasAdjacentBase = false;
+            Field field = board.getValidFields(player, color).get(i);
+            List<Field> fields = board.getAdjacentFields(field);
+            for (int j = 0; j < fields.size(); j++) {
+                if (fields.get(j).getFieldContent()[Piece.BASE] != null && fields.get(j).getFieldContent()[Piece.BASE].getOwner() == player && fields.get(j).getFieldContent()[Piece.BASE].isPrimary() == color) {
+                    hasAdjacentBase = true;
+                }
+            }
+            if (!hasAdjacentBase) {
+                for (int size = 0; size < Piece.START; size++) {
+                    if (color) {
+                        if (player.getPrimaryPieces() != null && player.getPrimaryPieces().get(size) != null && player.getPrimaryPieces().get(size).get(0) != null) {
+                            pieces.add(player.getPrimaryPieces().get(size).get(0));
+                        }
+                    } else {
+                        if (player.getSecondaryPieces() != null && player.getSecondaryPieces().get(size) != null && player.getSecondaryPieces().get(size).get(0) != null) {
+                            pieces.add(player.getSecondaryPieces().get(size).get(0));
+                        }
+                    }
+                }
+            }
+            if (!pieces.isEmpty()) {
+                possibleMoves.put(field, pieces);
+            }
+        }
+
+        return possibleMoves;
+    }
 }

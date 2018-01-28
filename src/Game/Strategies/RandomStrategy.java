@@ -1,11 +1,14 @@
 package Game.Strategies;
 
 import Game.Model.Board;
+import Game.Model.Field;
 import Game.Model.Piece;
 import Game.Players.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class RandomStrategy implements Strategy {
 
@@ -57,66 +60,11 @@ public class RandomStrategy implements Strategy {
         List<Integer> piece = new ArrayList<Integer>();
         boolean move = false;
         boolean color;
-        if (noOfPlayers == 2)
-            while (!move) {
-                if (!board.getValidFields(player, true).isEmpty() && !board.getValidFields(player, false).isEmpty()) {
-                    color = Math.random() > 0.5;
-                    if (color) {
-                        int tempField = (int) (board.getValidFields(player, true).size() * Math.random());
-                        for (int i = 0; i < Piece.START; i++) {
-                            if (player.getSecondaryPieces() != null && player.getPrimaryPieces().containsKey(i) && player.getPrimaryPieces().get(i) != null &&  player.isValidMove(board, tempField, player.getPrimaryPieces().get(i).get(0))) {
-                                piece.add(i);
-                            }
-                        }
-                        if (piece.size() != 0) {
-                            int chosenPiece = piece.get((int) (Math.random() * piece.size()));
-                            player.makeMove(chosenPiece, player.getPrimaryPieces().get(chosenPiece).get(0), board);
-                            move = true;
-                            break;
-                        }
-                    } else {
-                        int tempField = (int) (board.getValidFields(player, false).size() * Math.random());
-                        for (int i = 0; i < Piece.START; i++) {
-                            if (player.getSecondaryPieces().containsKey(i) && player.getSecondaryPieces().get(i) != null && player.isValidMove(board, tempField, player.getSecondaryPieces().get(i).get(0))) {
-                                piece.add(i);
-                            }
-                        }
-                        if (piece.size() != 0) {
-                            int chosenPiece = piece.get((int) (Math.random() * piece.size()));
-                            player.makeMove(chosenPiece, player.getSecondaryPieces().get(chosenPiece).get(0), board);
-                            move = true;
-                            break;
-                        }
-                    }
-                } else if (!board.getValidFields(player, true).isEmpty()) {
-                    int tempField = (int) (board.getValidFields(player, true).size() * Math.random());
-                    for (int i = 0; i < Piece.START; i++) {
-                        if (player.getPrimaryPieces().containsKey(i) && player.getPrimaryPieces().get(i) != null && player.isValidMove(board, tempField, player.getPrimaryPieces().get(i).get(0))) {
-                            piece.add(i);
-                        }
-                    }
-                    if (piece.size() != 0) {
-                        int chosenPiece = piece.get((int) (Math.random() * piece.size()));
-                        player.makeMove(chosenPiece, player.getPrimaryPieces().get(chosenPiece).get(0), board);
-                        move = true;
-                        return true;
-                    }
-                } else if (!board.getValidFields(player, false).isEmpty()) {
-                    int tempField = (int) (board.getValidFields(player, false).size() * Math.random());
-                    for (int i = 0; i < Piece.START; i++) {
-                        if (player.getSecondaryPieces().containsKey(i) && player.getSecondaryPieces().get(i) != null && player.isValidMove(board, tempField, player.getSecondaryPieces().get(i).get(0))) {
-                            piece.add(i);
-                        }
-                    }
-                    if (piece.size() != 0) {
-                        int chosenPiece = piece.get((int) (Math.random() * piece.size()));
-                        player.makeMove(chosenPiece, player.getSecondaryPieces().get(chosenPiece).get(0), board);
-                        move = true;
-                        return true;
-                    }
-                }
-            }
 
+        if (noOfPlayers == 4){
+            Map<Field, List<Piece>> validMove = player.getValidMoves(player, true, board);
+            Set<Field> possibleMoves = validMove.keySet();
+        }
         return false;
     }
 }
