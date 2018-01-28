@@ -14,8 +14,8 @@ public class RandomStrategy implements Strategy {
 
     private String name;
 
-    public RandomStrategy() {
-        name = "Random";
+    public RandomStrategy(String name) {
+        this.name = name;
     }
 
     public String getName() {
@@ -61,11 +61,11 @@ public class RandomStrategy implements Strategy {
         boolean move = false;
         boolean color;
 
-        if (noOfPlayers == 4){
-            Map<Field, List<Piece>> validMove = player.getValidMoves(player, true, board);
+        if (noOfPlayers == 4) {
+            Map<Field, List<Piece>> validMove = player.getValidMoves(true, board);
             List<Field> keys = new ArrayList<>(validMove.keySet());
-            Field tempField = keys.get((int)(Math.random()*keys.size()));
-            Piece tempPiece = validMove.get(tempField).get((int)(Math.random()*validMove.get(tempField).size()));
+            Field tempField = keys.get((int) (Math.random() * keys.size()));
+            Piece tempPiece = validMove.get(tempField).get((int) (Math.random() * validMove.get(tempField).size()));
             player.makeMove(tempField, tempPiece, board);
             return false;
         }

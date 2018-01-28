@@ -1,6 +1,7 @@
 package Game;
 
 import Game.Model.Board;
+import Game.Model.Field;
 import Game.Model.Piece;
 import Game.Players.ComputerPlayer;
 import Game.Players.HumanPlayer;
@@ -8,6 +9,7 @@ import Game.Players.Player;
 import Game.Strategies.RandomStrategy;
 import Game.Strategies.Strategy;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class Ringgz {
@@ -103,7 +105,7 @@ public class Ringgz {
         while (playAgain) {
             for (int i = 0; i < players.length; i++) {
                 if (args[i].equals("random") || args[i].equals("player2") || args[i].equals("player3") || args[i].equals("player4")) {
-                    Strategy strategy = new RandomStrategy();
+                    Strategy strategy = new RandomStrategy(args[i]);
                     players[i] = new ComputerPlayer(args[i], args.length, strategy);
                 } else {
                     players[i] = new HumanPlayer(args[i], players.length);
@@ -129,6 +131,7 @@ public class Ringgz {
 
             // Play game until the Game is over
             boolean turn = true;
+
             doMove(players, colors, board, currentPlayer, turn);
 
             // Determine score and winner
@@ -166,8 +169,10 @@ public class Ringgz {
     private static void doMove(Player[] players, String[][] colors, Board board, int currentPlayer, boolean turn) {
         int temp;
         boolean noAdjecentBase = true;
-        while (!board.gameOver()) {
-            if (!board.gameOver(players[currentPlayer], true) || !board.gameOver(players[currentPlayer], false)) {
+        while (!board.gameOver(board)) {
+            List<Field> test1 = board.getValidFields(players[currentPlayer], true);
+            List<Field> test2 = board.getValidFields(players[currentPlayer], false);
+            if (players[currentPlayer].getValidMoves(true, board).size() != 0 || players[currentPlayer].getValidMoves(false, board).size() != 0) {
                 while (turn) {
                     board.printBoard(players, colors);
                     print(players[currentPlayer].getName() + "'s turn");

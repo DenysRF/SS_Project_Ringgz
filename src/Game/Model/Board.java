@@ -156,10 +156,10 @@ public class Board {
 
     // Return true if no players are able to make a move
 
-    public boolean gameOver() {
+    public boolean gameOver(Board board) {
         int GameOverPlayers = 0;
         for (Player p : players) {
-            if (getValidFields(p, true).isEmpty() && getValidFields(p, false).isEmpty()) {
+            if (p.getValidMoves(true, board).isEmpty() && p.getValidMoves(false, board).isEmpty()) {
                 GameOverPlayers++;
             }
         }
