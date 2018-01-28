@@ -63,8 +63,12 @@ public class RandomStrategy implements Strategy {
 
         if (noOfPlayers == 4){
             Map<Field, List<Piece>> validMove = player.getValidMoves(player, true, board);
-            Set<Field> possibleMoves = validMove.keySet();
+            List<Field> keys = new ArrayList<>(validMove.keySet());
+            Field tempField = keys.get((int)(Math.random()*keys.size()));
+            Piece tempPiece = validMove.get(tempField).get((int)(Math.random()*validMove.get(tempField).size()));
+            player.makeMove(tempField, tempPiece, board);
+            return false;
         }
-        return false;
+        return true;
     }
 }

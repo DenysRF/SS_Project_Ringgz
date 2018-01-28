@@ -102,7 +102,7 @@ public class Ringgz {
     private static void playGame(String[] args, Player[] players, String[][] colors, boolean playAgain) {
         while (playAgain) {
             for (int i = 0; i < players.length; i++) {
-                if (args[i].equals("random") || args[i].equals("player2")) {
+                if (args[i].equals("random") || args[i].equals("player2") || args[i].equals("player3") || args[i].equals("player4")) {
                     Strategy strategy = new RandomStrategy();
                     players[i] = new ComputerPlayer(args[i], args.length, strategy);
                 } else {
