@@ -174,8 +174,9 @@ public abstract class Player {
                     hasAdjacentBase = true;
                 }
             }
-            if (!hasAdjacentBase) {
-                for (int size = 0; size < Piece.START; size++) {
+            for (int size = 0; size < Piece.START; size++) {
+                if (size == 0 && hasAdjacentBase) {
+                } else {
                     if (color) {
                         if (player.getPrimaryPieces() != null && player.getPrimaryPieces().get(size) != null && player.getPrimaryPieces().get(size).get(0) != null) {
                             pieces.add(player.getPrimaryPieces().get(size).get(0));
@@ -187,6 +188,7 @@ public abstract class Player {
                     }
                 }
             }
+
             if (!pieces.isEmpty()) {
                 possibleMoves.put(field, pieces);
             }
