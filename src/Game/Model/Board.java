@@ -124,7 +124,6 @@ public class Board {
     can place a piece
      */
     public List<Field> getValidFields(Player player, boolean color) {
-        // TODO: StartBase
         List<Field> validFields = new ArrayList<>();
         boolean add = true;
         //first you iterate over every field
@@ -158,6 +157,7 @@ public class Board {
 
     public boolean gameOver(Board board) {
         int GameOverPlayers = 0;
+        Player[] player = players;
         for (Player p : players) {
             if (p.getValidMoves(true, board).isEmpty() && p.getValidMoves(false, board).isEmpty()) {
                 GameOverPlayers++;

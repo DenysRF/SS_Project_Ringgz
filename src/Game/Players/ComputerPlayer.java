@@ -3,6 +3,7 @@ package Game.Players;
 import Game.Model.Board;
 import Game.Model.Piece;
 import Game.Strategies.Strategy;
+import javafx.util.Pair;
 
 public class ComputerPlayer extends Player {
 
@@ -14,7 +15,8 @@ public class ComputerPlayer extends Player {
     }
 
 //    @Override
-    public boolean doMove(int noOfPlayers, Board board) {
+    public Pair<Integer, Piece> doMove(int noOfPlayers, Board board) {
+//        this.printPieceCollection(noOfPlayers);
         return strategy.doMove(noOfPlayers, this, board);
     }
 

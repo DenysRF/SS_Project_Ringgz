@@ -138,6 +138,7 @@ public class Ringgz {
             print("Scores:");
 
             for (int i = 0; i < players.length; i++) {
+                players[i].printPieceCollection(players.length);
                 int score = board.getScore(players[i]);
                 print("\t" + players[i].getName() + ": " + score);
             }
@@ -176,7 +177,7 @@ public class Ringgz {
                 while (turn) {
                     board.printBoard(players, colors);
                     print(players[currentPlayer].getName() + "'s turn");
-                    turn = players[currentPlayer].doMove(players.length, board);
+                    turn = !players[currentPlayer].makeMove(players.length, board);
 
 //                    players[currentPlayer].printPieceCollection(players.length);
 //                    Piece piece = players[currentPlayer].choosePiece();

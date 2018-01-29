@@ -1,7 +1,9 @@
 package Game.Players;
 
 import Game.Model.Board;
+import Game.Model.Field;
 import Game.Model.Piece;
+import javafx.util.Pair;
 
 import java.util.Scanner;
 
@@ -16,16 +18,7 @@ public class HumanPlayer extends Player {
     }
 
     public void printPieceCollection(int NoOfPlayers) {
-        System.out.println(name + "'s pieces:\nPrimary:");
-        for (Integer p : primaryPieces.keySet()) {
-            System.out.println("\t" + p + ": " + primaryPieces.get(p).size());
-        }
-        if (NoOfPlayers != 4) {
-            System.out.println("Secondary:");
-            for (Integer p : secondaryPieces.keySet()) {
-                System.out.println("\t" + p + ": " + secondaryPieces.get(p).size());
-            }
-        }
+        super.printPieceCollection(NoOfPlayers);
     }
 
 //    public int[] determineMove(Board b){
@@ -92,7 +85,7 @@ public class HumanPlayer extends Player {
         return -1;
     }
 
-//    @Override
+    //    @Override
     public void setStart(Board board) {
         int temp = readMove();
         while (!this.validStart(temp)) {
@@ -105,8 +98,9 @@ public class HumanPlayer extends Player {
             board.setField(startBase, temp);
         }
     }
-//    @Override
-    public boolean doMove(int noOfPlayers, Board board) {
+
+    //    @Override
+    public Pair<Integer, Piece> doMove(int noOfPlayers, Board board) {
         boolean noAdjecentBase = true;
         this.printPieceCollection(noOfPlayers);
         Piece piece = this.choosePiece();
@@ -115,15 +109,14 @@ public class HumanPlayer extends Player {
         int temp = this.readMove();
 
         //this for loop tests if at least one adjacent field has a Base of the same colour
-       noAdjecentBase = isValidMove(board, temp, piece);
+        noAdjecentBase = isValidMove(board, temp, piece);
 
         if (noAdjecentBase && (board.getField(temp) != null && board.getField(temp).isValidMove(piece) && board.getValidFields(this, piece.isPrimary()).contains(board.getField(temp)))) {
-
-            this.makeMove(temp, piece, board);
-            return false;
+            Pair<Integer, Piece> chosenMove = new Pair<>(temp, piece);
+            return chosenMove;
         } else {
             System.err.println("This is not a valid move, try again");
         }
-        return true;
+        return null;
     }
 }
