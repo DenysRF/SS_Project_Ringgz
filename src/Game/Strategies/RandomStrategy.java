@@ -72,8 +72,8 @@ public class RandomStrategy implements Strategy {
             Field tempField = keys.get((int) (Math.random() * keys.size()));
             Piece tempPiece = validMove.get(tempField).get((int) (Math.random() * validMove.get(tempField).size()));
             int tempIndex = 30;
-            for (int i = 0; i < Board.DIM * Board.DIM; i++ ){
-                if (tempField.equals(board.getField(i))){
+            for (int i = 0; i < Board.DIM * Board.DIM; i++) {
+                if (tempField.equals(board.getField(i))) {
                     tempIndex = i;
                     break;
                 }
@@ -81,7 +81,7 @@ public class RandomStrategy implements Strategy {
             Pair<Integer, Piece> chosenMove = new Pair<>(tempIndex, tempPiece);
             return chosenMove;
 
-        } else if (noOfPlayers == 2) {
+        } else if (noOfPlayers == 2 || noOfPlayers == 3) {
             Map<Field, List<Piece>> validMovePrimary = player.getValidMoves(true, board);
             Map<Field, List<Piece>> validMoveSecondary = player.getValidMoves(false, board);
 
@@ -93,8 +93,8 @@ public class RandomStrategy implements Strategy {
                 Piece tempPiece = null;
                 tempPiece = validMove.get(tempField).get((int) (Math.random() * validMove.get(tempField).size()));
                 int tempIndex = 30;
-                for (int i = 0; i < Board.DIM * Board.DIM; i++ ){
-                    if (tempField.equals(board.getField(i))){
+                for (int i = 0; i < Board.DIM * Board.DIM; i++) {
+                    if (tempField.equals(board.getField(i))) {
                         tempIndex = i;
                         break;
                     }
@@ -107,9 +107,9 @@ public class RandomStrategy implements Strategy {
                 List<Field> keys = new ArrayList<>(validMove.keySet());
                 Field tempField = keys.get((int) (Math.random() * keys.size()));
                 Piece tempPiece = validMove.get(tempField).get((int) (Math.random() * validMove.get(tempField).size()));
-                 int tempIndex = 30;
-                for (int i = 0; i < Board.DIM * Board.DIM; i++ ){
-                    if (tempField.equals(board.getField(i))){
+                int tempIndex = 30;
+                for (int i = 0; i < Board.DIM * Board.DIM; i++) {
+                    if (tempField.equals(board.getField(i))) {
                         tempIndex = i;
                         break;
                     }
@@ -123,8 +123,8 @@ public class RandomStrategy implements Strategy {
                 Field tempField = keys.get((int) (Math.random() * keys.size()));
                 Piece tempPiece = validMove.get(tempField).get((int) (Math.random() * validMove.get(tempField).size()));
                 int tempIndex = 30;
-                for (int i = 0; i < Board.DIM * Board.DIM; i++ ){
-                    if (tempField.equals(board.getField(i))){
+                for (int i = 0; i < Board.DIM * Board.DIM; i++) {
+                    if (tempField.equals(board.getField(i))) {
                         tempIndex = i;
                         break;
                     }
