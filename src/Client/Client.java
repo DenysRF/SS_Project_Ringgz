@@ -5,6 +5,9 @@ import Interface.MessageUI;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Arrays;
+
+import static java.util.Arrays.copyOfRange;
 
 public class Client extends Thread {
 
@@ -14,6 +17,8 @@ public class Client extends Thread {
     private BufferedReader in;
     private BufferedWriter out;
     private int noOfPlayers;
+    private ClientGame clientGame;
+    private GameGUI gameGUI;
 
     public Client(String clientName, InetAddress host, int port, MessageUI mui, int noOfPlayers)
             throws IOException {
@@ -61,7 +66,6 @@ public class Client extends Thread {
                 }
             }
         } catch (IOException e) {
-            //shutdown();
             mui.addMessage("Client terminated");
         }
     }
@@ -125,6 +129,7 @@ public class Client extends Thread {
     }
 
     public void sendStart() {
+        mui.addMessage("Looking for players to start a " + noOfPlayers + " player game");
         mui.addMessage("Waiting for players...");
         sendMessage(START + " " + noOfPlayers);
     }
@@ -134,7 +139,7 @@ public class Client extends Thread {
     }
 
     // receiving Commands (incoming)
-    public void receiveHello(String helloCommand) {
+    private void receiveHello(String helloCommand) {
         String[] hello = helloCommand.split(" ");
         if (hello.length >= 2) {
             if (hello.length > 2) {
@@ -147,10 +152,11 @@ public class Client extends Thread {
         }
     }
 
-    public void receiveStart(String startCommand) {
+    private void receiveStart(String startCommand) {
         String[] start = startCommand.split(" ");
         if (start.length == 3) {
             mui.addMessage("Game started: " + start[1] + " " + start[2]);
+
         } else if (start.length == 4) {
             mui.addMessage("Game started: " + start[1] + " " + start[2] + " " + start[3]);
         } else if (start.length == 5) {
@@ -158,27 +164,32 @@ public class Client extends Thread {
         } else {
             mui.addMessage("ERROR: invalid amount of players: " + startCommand);
         }
-        // TODO: Start game loop
+        String[] names = Arrays.copyOfRange(start, 1, start.length);
+        clientGame = new ClientGame(names);
+        gameGUI = new GameGUI(this, clientGame);
+        clientGame.setObservers(gameGUI);
+        new Thread(gameGUI).start();
+
     }
 
-    public void receiveError(String errorCommand) {
+    private void receiveError(String errorCommand) {
         String[] error = errorCommand.split(" ", 3);
         switch (Integer.parseInt(error[1])) {
             case GENERAL:
                 mui.addMessage("GENERAL ERROR: " + errorCommand);
                 break;
             case INVALID_MOVE:
-                //
+                System.out.println(errorCommand);
                 break;
             case NOT_YOUR_TURN:
-                //
+                System.out.println(errorCommand);
                 break;
             case NAME_IN_USE:
                 mui.addMessage("ERROR NAME_IN_USE: " + errorCommand);
                 shutdown();
                 break;
             case INVALID_COMMAND:
-                //
+                System.out.println(errorCommand);
                 break;
             default:
                 mui.addMessage("UNKNOWN ERROR: " + errorCommand);
@@ -186,20 +197,29 @@ public class Client extends Thread {
         }
     }
 
-    public void receiveDoMove(String doMoveCommand) {
-        // TODO
+    private void receiveDoMove(String doMoveCommand) {
+        String[] doMove = doMoveCommand.split(" ");
+        if (doMove[1].equals(clientName)) {
+            gameGUI.updateTurn(doMove[1], true);
+        } else {
+            gameGUI.updateTurn(doMove[1], false);
+        }
     }
 
-    public void receiveDoneMove(String doneMoveCommand) {
-        // TODO
+    private void receiveDoneMove(String doneMoveCommand) {
+        String[] doneMove = doneMoveCommand.split(" ");
+        clientGame.doneMove(doneMove[1], Integer.parseInt(doneMove[2]), Integer.parseInt(doneMove[3]), Integer.parseInt(doneMove[4]), Integer.parseInt(doneMove[5]));
+        gameGUI.updatePieces(clientName);
     }
 
-    public void receivePlayerLeft(String playerLeftCommand) {
-        // TODO
+    private void receivePlayerLeft(String playerLeftCommand) {
+        String[] playerLeft = playerLeftCommand.split(" ");
+        mui.addMessage("Player '" + playerLeft[1] + "' left");
     }
 
-    public void receiveResults(String resultsCommand) {
-        // TODO
+    private void receiveResults(String resultsCommand) {
+        gameGUI.printResults(resultsCommand);
+        mui.addMessage("Game ended.\nResults:\n" + resultsCommand);
     }
     /*-----------------------------------------------------*/
 

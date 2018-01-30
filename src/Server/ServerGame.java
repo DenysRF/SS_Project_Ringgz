@@ -1,0 +1,162 @@
+package Server;
+
+import Game.Model.Board;
+import Game.Model.Field;
+import Game.Model.Piece;
+import Game.Players.HumanPlayer;
+import Game.Players.Player;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class ServerGame {
+
+    private Map<Player, ClientHandler> playerMap;
+    private List<Player> notGameOver;
+    private Board board;
+    private Player currentPlayer;
+    private boolean start;
+
+
+    public ServerGame(List<ClientHandler> chList) {
+
+        playerMap = new HashMap<>();
+        notGameOver = new ArrayList<>();
+
+        // Error wrong player size
+        if (chList.size() < 2 || chList.size() > 4) {
+            System.err.println("Give player names as arguments\nA game can only feature 2, 3 or 4 players");
+            System.exit(0);
+        }
+
+        // Create HumanPlayers for each ClientHandler and map them
+        // And fill not game over -list
+        for (ClientHandler ch : chList) {
+            Player p = new HumanPlayer(ch.getClientName(), chList.size());
+            playerMap.put(p, ch);
+            notGameOver.add(p);
+        }
+
+
+
+        // Create Player[] from playerMap for Board argument
+        int i = 0;
+        Player[] boardArg = new Player[playerMap.keySet().size()];
+        for (Player player : playerMap.keySet()) {
+            boardArg[i] = player;
+            i++;
+        }
+        // Create Board
+        board = new Board(boardArg);
+    }
+
+    public void doneMove(String name, int x, int y, int size, int color) {
+
+        // Check if command came from player whose turn it is
+        if (!board.gameOver(currentPlayer)) {
+            if (!(currentPlayer.getName().equals(name))) {
+                for (Player p : playerMap.keySet()) {
+                    if (p.getName().equals(name)) {
+                        playerMap.get(p).sendError(ClientHandler.NOT_YOUR_TURN, "");
+                        return;
+                    }
+                }
+            }
+            // Handle placement of Start Base
+            if (start) {
+                if (size != Piece.START) {
+                    for (Player p : playerMap.keySet()) {
+                        if (p.getName().equals(name)) {
+                            playerMap.get(p).sendError(ClientHandler.INVALID_MOVE, "Expected: Start Base");
+                            return;
+                        }
+                    }
+                } else {
+                    for (Player p : playerMap.keySet()) {
+                        if (p.getName().equals(name)) {
+                            if (p.validStart(board.index(x,y))) {
+                                playerMap.get(p).sendError(ClientHandler.INVALID_MOVE, "Start Base can only get set in 9 middle fields");
+                                return;
+                            }
+                            p.setStart(board.index(x, y), board);
+                            System.out.println("Start Base set: " + x + " " + y + " " + size + " " + color);
+                            start = false;
+                        }
+                    }
+                }
+            } else {
+                for (Player p : playerMap.keySet()) {
+                    if (p.getName().equals(name)) {
+                        if (color == 0) {
+                            List<Field> validFields = board.getValidFields(p, true);
+                            if (validFields.contains(board.getField(x, y))) {
+                                p.makeMove(board.index(x, y), p.getPrimaryPieces().get(size).get(0), board);
+                            } else {
+                                playerMap.get(p).sendError(ClientHandler.INVALID_MOVE, "");
+                                return;
+                            }
+                        } else if (color == 1) {
+                            List<Field> validFields = board.getValidFields(p, false);
+                            if (validFields.contains(board.getField(x, y))) {
+                                p.makeMove(board.index(x, y), p.getSecondaryPieces().get(size).get(0), board);
+                            } else {
+                                playerMap.get(p).sendError(ClientHandler.INVALID_MOVE, "");
+                                return;
+                            }
+
+                        }
+                        System.out.println("move made: " + x + " " + y + " " + size + " " + color);
+                    }
+                }
+            }
+        } else {
+            notGameOver.remove(currentPlayer);
+        }
+        nextPlayer();
+        for (Player player : playerMap.keySet()) {
+            playerMap.get(player).sendDoMove(currentPlayer.getName());
+        }
+
+    }
+
+    public void playGame() {
+        start = true;
+        // Ask first Player for move
+        currentPlayer = notGameOver.get(0);
+        for (Player player : playerMap.keySet()) {
+            playerMap.get(player).sendDoMove(currentPlayer.getName());
+        }
+
+    }
+
+    private void nextPlayer() {
+        if (notGameOver.isEmpty()) {
+            return;
+        }
+        for (int i = 0; i < notGameOver.size(); i++) {
+            if (currentPlayer.getName().equals(notGameOver.get(i).getName())) {
+                if (board.gameOver(notGameOver.get(i))) {
+                    notGameOver.remove(i);
+                    if (notGameOver.isEmpty()) {
+                        gameFinished();
+                        return;
+                    }
+                }
+                currentPlayer = notGameOver.get((i + 1) % notGameOver.size());
+                return;
+            }
+        }
+    }
+
+    private void gameFinished() {
+        StringBuilder result = new StringBuilder();
+        for (Player player : playerMap.keySet()) {
+            result.append("[").append(player.getName()).append(",").append(board.getScore(player)).append(",").append(player.ringCount()).append("] ");
+        }
+        for (Player player : playerMap.keySet()) {
+            playerMap.get(player).sendResults(result.toString());
+        }
+    }
+}

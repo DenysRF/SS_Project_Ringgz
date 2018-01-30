@@ -24,12 +24,13 @@ public class Server extends Thread {
         this.mui = mui;
         threads = new ArrayList<>();
         games = new HashMap<>();
-        // Map
+        // Mapping for 2-, 3- and 4-player games
         for (int i = 2; i <= 4; i++) {
             games.put(i, new ArrayList<>());
         }
     }
 
+    // Loop for accepting Clients
     @Override
     public void run() {
         try {
@@ -37,7 +38,6 @@ public class Server extends Thread {
         } catch (IOException e) {
             System.err.println("Error: could not create ServerSocket on port " + port);
         }
-        int i = 1;
         /*
         * Running server loop that accept incoming clients and creates
         * a ClientHandler thread for them.
@@ -45,8 +45,6 @@ public class Server extends Thread {
         while (true) {
             try {
                 Socket socket = ss.accept();
-                mui.addMessage("[client no. " + i + " connected]");
-                i++;
                 ClientHandler ch = new ClientHandler(this, socket);
                 addHandler(ch);
                 ch.start();
@@ -56,45 +54,52 @@ public class Server extends Thread {
         }
     }
 
-    public void print(String message) {
-        mui.addMessage(message);
+    // Method so ClientHandler can print to server
+    public void print(String msg) {
+        mui.addMessage(msg);
     }
 
+    // Add ClientHandler to server
     private void addHandler(ClientHandler handler) {
         threads.add(handler);
     }
 
+    // Remove ClientHandler from server
     public void removeHandler(ClientHandler handler) {
+        mui.addMessage("[" + handler.getClientName() + " disconnected]");
         threads.remove(handler);
-//        for (Integer n : games.keySet()) {
-//            for (List<ClientHandler> chList : games.get(n)) {
-//                for (int i = 0; i < chList.size(); i++) {
-//                    if (chList.get(i) == handler) {
-//                        chList.remove(i);
-//                    }
-//                }
-//            }
-//        }
-    }
-
-    public void broadcast(String msg) {
-        mui.addMessage(msg);
-        for (ClientHandler ch : threads) {
-            ch.sendMessage(msg);
+        synchronized (games) {
+            for (Integer n : games.keySet()) {
+                for (List<ClientHandler> chList : games.get(n)) {
+                    if (chList.contains(handler)) {
+                        chList.remove(handler);
+                    }
+                }
+            }
         }
     }
 
+    // Send message to all Clients
+//    public void broadcast(String msg) {
+//        mui.addMessage("BROADCAST: " + msg);
+//        for (ClientHandler ch : threads) {
+//            ch.sendMessage(msg);
+//        }
+//    }
+
+    // Count all players that are connected to server but not in game
     public int getNotInGamePlayerCount() {
+        // Do count yourself
         int i = 0;
         for (ClientHandler ch : threads) {
             if (!ch.inGame()) {
                 i++;
             }
         }
-        System.out.println("getNotInGamePlayerCount(): " + i);
         return i;
     }
 
+    // Send message to specific client via ClientHandler
     public void messageClient(String msg, String name) {
         for (ClientHandler ch : threads) {
             if (ch.getClientName().equals(name)) {
@@ -103,20 +108,31 @@ public class Server extends Thread {
         }
     }
 
+    // Start a game when enough players are ready
     private void startGame(List<ClientHandler> chList) {
-        print("Game started with: ");
+        mui.addMessage("Game started with: ");
         String names = "";
+        ServerGame serverGame = new ServerGame(chList);
         for (ClientHandler ch : chList) {
             names = names + " " + ch.getClientName();
             ch.setInGame(true);
+            ch.setServerGame(serverGame);
         }
         for (ClientHandler ch : chList) {
-            print("\t" + ch.getClientName());
+            mui.addMessage("\t" + ch.getClientName());
             ch.sendStart(names);
         }
+        serverGame.playGame();
+        // when game is over
+        mui.addMessage("A game just finished");
+        for (ClientHandler ch : chList) {
+            ch.setInGame(false);
+        }
         // TODO: when game is over empty the corresponding list in map games
+
     }
 
+    // Add player to games and wait for enough players to start
     public void addPlayerToGame(ClientHandler ch, int noOfPlayers) {
         if (games.get(noOfPlayers).size() == 0) {
             games.get(noOfPlayers).add(new ArrayList<>());
@@ -127,10 +143,12 @@ public class Server extends Thread {
                 if (l.size() == noOfPlayers) {
                     startGame(l);
                 }
+                break;
             }
         }
     }
 
+    // Check if another Client already uses this name
     public boolean nameInUse(String name) {
         for (ClientHandler ch : threads) {
             if (ch.getClientName() != null) {

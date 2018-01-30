@@ -267,7 +267,6 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
         } else {
             //addMessage("Your colors: " + pColor + ", " + sColor);
         }
-        addMessage("Looking for players to start a " + noOfPlayers + " player game");
 
         client.start();
     }

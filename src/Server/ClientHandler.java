@@ -12,6 +12,7 @@ public class ClientHandler extends Thread {
     private BufferedWriter out;
     private String clientName = null;
     private boolean inGame;
+    private ServerGame serverGame;
 
     public ClientHandler(Server server, Socket socket) throws IOException {
         this.server = server;
@@ -21,6 +22,7 @@ public class ClientHandler extends Thread {
     }
 
 
+    // Send server hello to client and receive incoming commands
     @Override
     public void run() {
 
@@ -40,7 +42,7 @@ public class ClientHandler extends Thread {
                         receiveMove(message);
                         break;
                     default:
-                        sendError(INVALID_COMMAND, "");
+                        //sendError(INVALID_COMMAND, "");
                         server.print(clientName + ": " + message);
                         break;
                 }
@@ -51,6 +53,7 @@ public class ClientHandler extends Thread {
         }
     }
 
+    // Send commands to client according to Protocol
     public void sendMessage(String message) {
         try {
             out.write(message + "\n");
@@ -61,6 +64,7 @@ public class ClientHandler extends Thread {
         }
     }
 
+    // If Client disconnects this gets triggered and cleans client from server
     private void shutdown() {
         server.removeHandler(this);
         if (clientName != null) {
@@ -99,6 +103,10 @@ public class ClientHandler extends Thread {
             return false;
         }
         return true;
+    }
+
+    public void setServerGame(ServerGame serverGame) {
+        this.serverGame = serverGame;
     }
 
     /*-PROTOCOL----------------------------------------------*/
@@ -152,10 +160,8 @@ public class ClientHandler extends Thread {
     public void sendPlayerLeft(String name) {
         sendMessage(PLAYER_LEFT + " " + name);
     }
-    public void sendResults(Map<String, Integer> playerPointsMap,
-                            Map<String, Integer> playerRingsMap,
-                            Map<String, Boolean> playerIsWinnerMap) {
-        sendMessage(RESULTS + " ");
+    public void sendResults(String results) {
+        sendMessage(RESULTS + " " + results);
 
     }
     // receiving Commands (incoming)
@@ -193,7 +199,7 @@ public class ClientHandler extends Thread {
                 clientName = hello[1];
                 server.print("[" + clientName + " has entered]");
                 if (hello.length > 2) {
-                    // TODO: handle extensions
+                    // no extensions
                 }
             }
         } else {
@@ -208,10 +214,18 @@ public class ClientHandler extends Thread {
         } else {
             server.print(clientName + "did not receive start well");
         }
-
     }
+
     public void receiveMove(String moveCommand) {
-        // TODO
+        String[] move = moveCommand.split(" ");
+
+        // check Command
+        if (inGame) {
+            serverGame.doneMove(clientName, Integer.parseInt(move[1]), Integer.parseInt(move[2]), Integer.parseInt(move[3]), Integer.parseInt(move[4]));
+
+        } else {
+            sendError(GENERAL, "You are not in game");
+        }
     }
 
     /*-----------------------------------------------------*/

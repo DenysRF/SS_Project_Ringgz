@@ -155,8 +155,8 @@ public class Board {
     }
 
     // Return true if this Player cannot make any moves
-    public boolean gameOver(Player player, Boolean color) {
-        if (getValidFields(player, color).isEmpty()) {
+    public boolean gameOver(Player player) {
+        if (getValidFields(player, true).isEmpty() && getValidFields(player, false).isEmpty()) {
             return true;
         }
         return false;

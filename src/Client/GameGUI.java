@@ -8,29 +8,27 @@ import java.awt.event.*;
 import java.util.Observable;
 import java.util.Observer;
 
-public class GameGUI extends JFrame implements ActionListener, Observer {
+public class GameGUI extends JFrame implements ActionListener, Observer, Runnable {
 
     private JButton[] fields = new JButton[Board.DIM * Board.DIM];
 
     private Client client;
+    private JTextArea taPieces;
+    private JPanel p3;
+    private JRadioButton rbPrimary, rbSecondary, rbBase, rbSmall, rbMedium, rbBig, rbHuge, rbStart;
+    private ClientGame clientGame;
+    private JLabel lbMessage;
 
 
-    public GameGUI(Client client)  {
+    public GameGUI(Client client, ClientGame clientGame)  {
         super("Ringgz");
         this.client = client;
-
-        buildGUI();
-        pack();
-        setVisible(true);
+        this.clientGame = clientGame;
 
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 e.getWindow().dispose();
-            }
-            @Override
-            public void windowClosed(WindowEvent e) {
-                System.exit(0);
             }
         });
     }
@@ -41,7 +39,7 @@ public class GameGUI extends JFrame implements ActionListener, Observer {
         // Panel p1 - Fields
         JPanel p1 = new JPanel(new GridBagLayout());
 
-        ImageIcon icon = new ImageIcon("src\\Client\\images\\empty.png");
+        //ImageIcon icon = new ImageIcon("src\\Client\\images\\empty.png");
         GridBagConstraints c = new GridBagConstraints();
 
 
@@ -55,7 +53,7 @@ public class GameGUI extends JFrame implements ActionListener, Observer {
                 }
             }
 
-            fields[i] = new JButton(icon);
+            fields[i] = new JButton("(_._._._._)");
 
             c.fill = GridBagConstraints.BOTH;
             c.weightx = 1.0 / Board.DIM;
@@ -76,18 +74,36 @@ public class GameGUI extends JFrame implements ActionListener, Observer {
 
         // p2 - Display Piece collection
 
-        // p3 - Color and Piece radio buttons
+        JPanel p2 = new JPanel(new GridLayout(1, 1));
 
-        JPanel p3 = new JPanel(new BorderLayout());
+        taPieces = new JTextArea("Display pieces after Start Base has been set",15, 10);
+        taPieces.setEditable(false);
+
+        p2.add(taPieces);
+
+
+        // p3 - Message
+
+        p3 = new JPanel(new GridLayout(1, 1));
+        p3.setBackground(Color.GRAY);
+
+        lbMessage = new JLabel("Game not yet started", JLabel.CENTER);
+
+        p3.add(lbMessage);
+
+
+        // p4 - Color and Piece radio buttons
+
+        JPanel p4 = new JPanel(new BorderLayout());
 
         JLabel lbColors = new JLabel("Select color:");
         JPanel pColors = new JPanel(new FlowLayout());
 
-        JRadioButton rbPrimary = new JRadioButton("Primary");
+        rbPrimary = new JRadioButton("Primary");
         rbPrimary.addActionListener(this);
         rbPrimary.setActionCommand("0");
 
-        JRadioButton rbSecondary = new JRadioButton("Secondary");
+        rbSecondary = new JRadioButton("Secondary");
         rbPrimary.addActionListener(this);
         rbPrimary.setActionCommand("1");
 
@@ -103,23 +119,26 @@ public class GameGUI extends JFrame implements ActionListener, Observer {
         JLabel lbPieces = new JLabel("Select Piece:");
         JPanel pPieces = new JPanel(new FlowLayout());
 
-        JRadioButton rbBase = new JRadioButton("Base");
-        JRadioButton rbSmall = new JRadioButton("Small");
-        JRadioButton rbMedium = new JRadioButton("Mediun");
-        JRadioButton rbBig = new JRadioButton("Big");
-        JRadioButton rbHuge = new JRadioButton("Huge");
+        rbBase = new JRadioButton("Base");
+        rbSmall = new JRadioButton("Small");
+        rbMedium = new JRadioButton("Medium");
+        rbBig = new JRadioButton("Big");
+        rbHuge = new JRadioButton("Huge");
+        rbStart = new JRadioButton("Start");
 
         rbBase.addActionListener(this);
         rbSmall.addActionListener(this);
         rbMedium.addActionListener(this);
         rbBig.addActionListener(this);
         rbHuge.addActionListener(this);
+        rbStart.addActionListener(this);
 
         rbBase.setActionCommand("0");
         rbSmall.setActionCommand("1");
         rbMedium.setActionCommand("2");
         rbBig.setActionCommand("3");
         rbHuge.setActionCommand("4");
+        rbStart.setActionCommand("5");
 
         ButtonGroup bgPieceGroup = new ButtonGroup();
         bgPieceGroup.add(rbBase);
@@ -127,6 +146,7 @@ public class GameGUI extends JFrame implements ActionListener, Observer {
         bgPieceGroup.add(rbMedium);
         bgPieceGroup.add(rbBig);
         bgPieceGroup.add(rbHuge);
+        bgPieceGroup.add(rbStart);
         bgPieceGroup.setSelected(rbBase.getModel(), true);
 
         pPieces.add(lbPieces);
@@ -135,16 +155,28 @@ public class GameGUI extends JFrame implements ActionListener, Observer {
         pPieces.add(rbMedium);
         pPieces.add(rbBig);
         pPieces.add(rbHuge);
+        pPieces.add(rbStart);
 
-        p3.add(pColors, BorderLayout.NORTH);
-        p3.add(pPieces);
+        p4.add(pColors, BorderLayout.NORTH);
+        p4.add(pPieces);
 
         // Add to container
+        JPanel cp = new JPanel(new BorderLayout());
+        cp.add(p2, BorderLayout.NORTH);
+        cp.add(p3, BorderLayout.CENTER);
+        cp.add(p4, BorderLayout.SOUTH);
+
         Container cc = getContentPane();
-        cc.setLayout(new FlowLayout());
-        cc.add(p1);
-        //cc.add(p2);
-        cc.add(p3);
+        cc.setLayout(new BorderLayout());
+        cc.add(p1, BorderLayout.WEST);
+        cc.add(cp);
+    }
+
+    @Override
+    public void run() {
+        buildGUI();
+        pack();
+        setVisible(true);
     }
 
     private class MyButtonListener implements ActionListener {
@@ -157,21 +189,63 @@ public class GameGUI extends JFrame implements ActionListener, Observer {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("(" + x + "." + y + ")");
+            int size;
+            int color;
+            if (rbBase.isSelected()) {
+                size = 0;
+            } else if (rbSmall.isSelected()) {
+                size = 1;
+            } else if (rbMedium.isSelected()) {
+                size = 2;
+            } else if (rbBig.isSelected()) {
+                size = 3;
+            } else if (rbHuge.isSelected()){
+                size = 4;
+            } else {
+                size = 5;
+            }
+            if (rbPrimary.isSelected()) {
+                color = 0;
+            } else {
+                color = 1;
+            }
+            client.sendMove(x, y, size, color);
         }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Object src = e.getSource();
+        //Object src = e.getSource();
     }
 
     @Override
     public void update(Observable o, Object arg) {
-
+        for (int i = 0; i < fields.length; i++) {
+            fields[i].setText(clientGame.updateField(i));
+        }
     }
 
-    public static void main(String[] args) {
-        new GameGUI(null);
+    public void updateTurn(String name, boolean b) {
+        if (b) {
+            p3.setBackground(Color.GREEN);
+        } else {
+            p3.setBackground(Color.RED);
+        }
+        lbMessage.setText("It's "+ name + "'s turn");
+    }
+
+    public void updatePieces(String name) {
+        taPieces.setText(clientGame.getPieces(name));
+    }
+
+    public void printResults(String resultsCommand) {
+        String[] results = resultsCommand.split(" ");
+
+        StringBuilder s = new StringBuilder("Results:");
+        for (int i = 1; i < results.length; i++) {
+            s.append("\n\t").append(results[i]);
+        }
+        taPieces.setText(s.toString());
+        lbMessage.setText("Game over");
     }
 }

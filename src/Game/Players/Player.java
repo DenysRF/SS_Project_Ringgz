@@ -3,15 +3,12 @@ package Game.Players;
 import Game.Model.Board;
 import Game.Model.Piece;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static Game.Model.Board.DIM;
 
 // Abstract Player class, holds shared data of human- and computer player
-public abstract class Player {
+public abstract class Player extends Observable {
 
     // Name of the player
     protected String name;
@@ -112,6 +109,8 @@ public abstract class Player {
         } else {
             secondaryPieces.get(p.getSize()).remove(0);
         }
+        setChanged();
+        notifyObservers();
     }
 
     public abstract int determineMove(Board board);
@@ -128,5 +127,20 @@ public abstract class Player {
             Piece startBase = new Piece(Piece.START);
             board.setField(startBase, i);
         }
+        setChanged();
+        notifyObservers();
+    }
+
+    public int ringCount() {
+        int count = 0;
+        for (Integer i : primaryPieces.keySet()) {
+            count += primaryPieces.get(i).size();
+        }
+        if (secondaryPieces != null) {
+            for (Integer i : primaryPieces.keySet()) {
+                count += primaryPieces.get(i).size();
+            }
+        }
+        return count;
     }
 }

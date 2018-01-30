@@ -164,7 +164,7 @@ public class Ringgz {
         int temp;
         boolean noAdjecentBase = true;
         while (!board.gameOver()) {
-            if (!board.gameOver(players[currentPlayer], true) || !board.gameOver(players[currentPlayer], false)) {
+            if (!board.gameOver(players[currentPlayer])) {
                 while (turn) {
                     board.printBoard(players, colors);
                     print(players[currentPlayer].getName() + "'s turn");
