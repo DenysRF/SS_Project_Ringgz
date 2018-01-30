@@ -117,6 +117,7 @@ public abstract class Player {
     public boolean makeMove(int noOfPlayers, Board board) {
         Pair<Integer, Piece> chosenMove = null;
         while (chosenMove == null) {
+
             chosenMove = doMove(noOfPlayers, board);
         }
         chosenMove.getKey();
@@ -129,6 +130,7 @@ public abstract class Player {
             return true;
         }
         System.err.println("this is an invalid move");
+        System.out.println("place: " + chosenMove.getKey() + "piece: " + chosenMove.getValue().getSize());
         return false;
     }
 
@@ -157,16 +159,16 @@ public abstract class Player {
     }
 
     public boolean isValidMove(Board board, Field field, Boolean color) {
-        boolean noAdjecentBase = true;
+        boolean AdjecentBase = false;
         List<Field> adjacentField = board.getAdjacentFields(field);
         for (int i = 0; i < board.getAdjacentFields(field).size(); i++) {
             if (adjacentField.get(i).getFieldContent()[Piece.BASE] != null && adjacentField.get(i).getFieldContent()[Piece.BASE].getOwner() == this &&
                     adjacentField.get(i).getFieldContent()[Piece.BASE].isPrimary() == color) {
-                noAdjecentBase = false;
+                AdjecentBase = true;
                 break;
             }
         }
-        return noAdjecentBase;
+        return AdjecentBase;
     }
 
     public Map<Field, List<Piece>> getValidMoves(Boolean color, Board board) {
@@ -175,7 +177,7 @@ public abstract class Player {
         //iterate over the fields
         List<Field> validFields = board.getValidFields(this, color);
 
-        for (Field field: validFields) {
+        for (Field field : validFields) {
             List<Piece> pieces = new ArrayList<>();
             boolean hasAdjacentBase;
             List<Field> fields = board.getAdjacentFields(field);
@@ -188,21 +190,21 @@ public abstract class Player {
             hasAdjacentBase = isValidMove(board, field, color);
             for (int size = 0; size < Piece.START; size++) {
                 //todo door deze check komen in de possibleMoves map geen Bases
-                if (!(size == 0 && hasAdjacentBase)) {
-                    if (color) {
-                        if (!this.getPrimaryPieces().isEmpty() && this.getPrimaryPieces().containsKey(size) && !this.getPrimaryPieces().get(size).isEmpty() && this.getPrimaryPieces().get(size).get(0) != null) {
-                            if (field.getFieldContent()[size] == null && field.getFieldContent()[Piece.START] == null && field.getFieldContent()[Piece.BASE] == null) {
-                                pieces.add(this.getPrimaryPieces().get(size).get(0));
-                            }
+                if ((size == 0 && hasAdjacentBase)) {
+                } else if (color) {
+                    if (!this.getPrimaryPieces().isEmpty() && this.getPrimaryPieces().containsKey(size) && !this.getPrimaryPieces().get(size).isEmpty() && this.getPrimaryPieces().get(size).get(0) != null) {
+                        if (((field.getFieldContent()[size] == null) && (field.getFieldContent()[Piece.START] == null) && (field.getFieldContent()[Piece.BASE] == null)) && size != 0 || size == 0 && field.isEmpty()) {
+                            pieces.add(this.getPrimaryPieces().get(size).get(0));
                         }
-                    } else {
-                        if (!this.getSecondaryPieces().isEmpty() && this.getSecondaryPieces().containsKey(size) && !this.getSecondaryPieces().get(size).isEmpty() && this.getSecondaryPieces().get(size).get(0) != null) {
-                            if (field.getFieldContent()[size] == null && field.getFieldContent()[Piece.START] == null && field.getFieldContent()[Piece.BASE] == null) {
-                                pieces.add(this.getSecondaryPieces().get(size).get(0));
-                            }
+                    }
+                } else {
+                    if (!this.getSecondaryPieces().isEmpty() && this.getSecondaryPieces().containsKey(size) && !this.getSecondaryPieces().get(size).isEmpty() && this.getSecondaryPieces().get(size).get(0) != null) {
+                        if (field.getFieldContent()[size] == null && field.getFieldContent()[Piece.START] == null && field.getFieldContent()[Piece.BASE] == null && size != 0 || ((size == 0) && field.isEmpty())) {
+                            pieces.add(this.getSecondaryPieces().get(size).get(0));
                         }
                     }
                 }
+
             }
 //            boolean test = (!pieces.isEmpty());
             if (pieces.size() > 0) {
