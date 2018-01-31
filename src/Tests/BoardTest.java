@@ -14,11 +14,14 @@ import Game.Model.Piece;
 import Game.Players.HumanPlayer;
 
 import java.util.List;
+import java.util.Map;
 
 public class BoardTest {
 
     private Board board;
     private Player[] players;
+    private Board board2;
+    private Player[] players2;
 
     @Before
     public void setUp() {
@@ -26,6 +29,11 @@ public class BoardTest {
         players[0] = new HumanPlayer("Player1", 2);
         players[1] = new HumanPlayer("Player2", 2);
         board = new Board(players);
+
+        players2 = new HumanPlayer[2];
+        players2[0] = new HumanPlayer("Player1", 2);
+        players2[1] = new HumanPlayer("Player2", 2);
+        board2 = new Board(players);
     }
 
     @Test
@@ -42,24 +50,24 @@ public class BoardTest {
         assertTrue(board.getField(2, 2) == field);
     }
 
-    @Test
-    public void testSetField() {
-        Piece before = board.getField(0).getFieldContent()[0];
-        Piece validBase = board.getPlayers()[0].getPrimaryPieces().get(Piece.BASE).get(0);
-        board.setField(validBase, 0);
-        Piece after = board.getField(0).getFieldContent()[0];
-        assertFalse(before == after);
-        assertTrue(validBase == after);
-
-        // The field already contains a Base, so placing a ring should not be possible
-        // TODO: check if a move is valid in Board.setField;
-        Piece invalidSmall = board.getPlayers()[1].getPrimaryPieces().get(Piece.SMALL).get(0);
-        board.setField(invalidSmall, 0);
-        Piece invalid = board.getField(0).getFieldContent()[1];
-        assertTrue(invalidSmall == invalid);
-
-
-    }
+//    @Test
+//    public void testSetField() {
+//        Piece before = board.getField(0).getFieldContent()[0];
+//        Piece validBase = board.getPlayers()[0].getPrimaryPieces().get(Piece.BASE).get(0);
+//        board.setField(validBase, 0);
+//        Piece after = board.getField(0).getFieldContent()[0];
+//        assertFalse(before == after);
+//        assertTrue(validBase == after);
+//
+//        // The field already contains a Base, so placing a ring should not be possible
+//        // TODO: check if a move is valid in Board.setField;
+//        Piece invalidSmall = board.getPlayers()[1].getPrimaryPieces().get(Piece.SMALL).get(0);
+//        board.setField(invalidSmall, 0);
+//        Piece invalid = board.getField(0).getFieldContent()[1];
+//        assertTrue(invalidSmall == invalid);
+//
+//
+//    }
 
     @Test
     public void testGetAdjacentFields() {
@@ -114,6 +122,55 @@ public class BoardTest {
 
     @Test
     public void testGameOver() {
+        players2[0].setStart(8, board2);
+        players2[0].makeMove(3, players2[0].getPrimaryPieces().get(Piece.BASE).get(0), board2);
+        Map<Field, List<Piece>> test = players2[0].getValidMoves(true, board2);
+        Map<Field, List<Piece>> test2 = players2[0].getValidMoves(false, board2);
+        Map<Field, List<Piece>> test3 = players2[1].getValidMoves(true, board2);
+        Map<Field, List<Piece>> test4 = players2[1].getValidMoves(false, board2);
+        players2[0].makeMove(7, players2[0].getPrimaryPieces().get(Piece.BASE).get(0), board2);
+        players2[0].makeMove(13,players2[0].getPrimaryPieces().get(Piece.BASE).get(0), board2);
+        players2[0].makeMove(9,players2[0].getSecondaryPieces().get(Piece.BASE).get(0), board2);
+        test = players2[0].getValidMoves(true, board2);
+        test2 = players2[0].getValidMoves(false, board2);
+        test3 = players2[1].getValidMoves(true, board2);
+        test4 = players2[1].getValidMoves(false, board2);
+
+        assertTrue(board2.gameOver(players2[1]));
+
+        System.out.println(board2.gameOver(players2[0]));
+        System.out.println(board2.gameOver(players2[0]));
+        System.out.println(board2.gameOver(players2[0]));
+        System.out.println(board2.gameOver(players2[0]));
+        System.out.println(board2.gameOver(players2[0]));
+        System.out.println(board2.gameOver(players2[0]));
+        System.out.println(board2.gameOver(players2[0]));
+        System.out.println(board2.gameOver(players2[0]));
+
+        assertFalse(board2.gameOver(players2[0]));
+
+        players2[0].makeMove(4,players2[0].getSecondaryPieces().get(Piece.BASE).get(0), board2);
+        players2[0].makeMove(14,players2[0].getPrimaryPieces().get(Piece.SMALL).get(0), board2);
+        players2[0].makeMove(14,players2[0].getPrimaryPieces().get(Piece.MEDIUM).get(0), board2);
+        players2[0].makeMove(14,players2[0].getPrimaryPieces().get(Piece.BIG).get(0), board2);
+        players2[0].makeMove(14,players2[0].getPrimaryPieces().get(Piece.HUGE).get(0), board2);
+        //Now player[0] does not contain any possible moves for secondary
+        assertFalse(board2.gameOver(players2[0]));
+
+        players2[0].makeMove(2,players2[0].getPrimaryPieces().get(Piece.SMALL).get(0), board2);
+        players2[0].makeMove(2,players2[0].getPrimaryPieces().get(Piece.MEDIUM).get(0), board2);
+        players2[0].makeMove(2,players2[0].getPrimaryPieces().get(Piece.BIG).get(0), board2);
+        players2[0].makeMove(2,players2[0].getPrimaryPieces().get(Piece.HUGE).get(0), board2);
+
+        players2[0].makeMove(12,players2[0].getPrimaryPieces().get(Piece.SMALL).get(0), board2);
+        players2[0].makeMove(12,players2[0].getPrimaryPieces().get(Piece.MEDIUM).get(0), board2);
+        players2[0].makeMove(12,players2[0].getPrimaryPieces().get(Piece.BIG).get(0), board2);
+        players2[0].makeMove(12,players2[0].getPrimaryPieces().get(Piece.HUGE).get(0), board2);
+
+
+
+        assertTrue(board2.gameOver(players2[0]));
+//        assertTrue(board2.gameOver(players2[1]));
 
     }
 

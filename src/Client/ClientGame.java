@@ -20,7 +20,8 @@ public class ClientGame {
         players = new Player[names.length];
         for (int i = 0; i < players.length; i++) {
             if (names[i].contains("BOT")) {
-                players[i] = new ComputerPlayer(names[i], players.length, new RandomStrategy(names[i]));
+                players[i] = new ComputerPlayer(names[i],
+                        players.length, new RandomStrategy(names[i]));
             } else {
                 players[i] = new HumanPlayer(names[i], players.length);
             }
@@ -86,9 +87,11 @@ public class ClientGame {
                     player.setStart(board.index(x, y), board);
                 } else {
                     if (color == 0) {
-                        player.makeMove(board.index(x, y), player.getPrimaryPieces().get(size).get(0), board);
+                        player.makeMove(board.index(x, y),
+                                player.getPrimaryPieces().get(size).get(0), board);
                     } else if (color == 1) {
-                        player.makeMove(board.index(x, y), player.getSecondaryPieces().get(size).get(0), board);
+                        player.makeMove(board.index(x, y),
+                                player.getSecondaryPieces().get(size).get(0), board);
                     }
                 }
             }
@@ -142,8 +145,8 @@ public class ClientGame {
     }
 
     public void setObservers(GameGUI gameGUI) {
-        for (int i = 0; i < players.length; i++) {
-            players[i].addObserver(gameGUI);
+        for (Player player : players) {
+            player.addObserver(gameGUI);
         }
     }
 

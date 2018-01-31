@@ -19,12 +19,26 @@ public class Field {
         Arrays.fill(fieldContent, null);
     }
 
+    /**
+     * This method is created to returns a piece array which are present in the field
+     * @return Piece[]
+     */
     // Return the contents of a field
+    //@ensures \result == fieldContent;
+    /*@ pure*/
     public Piece[] getFieldContent() {
         return fieldContent;
     }
 
     // Set the content of a field
+    //@ requires piece != null;
+    //@ensures getFieldContent().contains(piece);
+
+    /**
+     * This method places a piece in this field if there is space for this piece
+     * @param piece
+     * this is a piece which has an owner, boolean to select the color and the size
+     */
     public void setFieldContent(Piece piece) {
         if (isValidMove(piece)) {
             fieldContent[piece.getSize()] = piece;
@@ -32,6 +46,14 @@ public class Field {
     }
 
     // Checks whether the piece fits in the field
+    //@ requires piece != null;
+    // /*@ pure*/
+
+    /**
+     * this method returns true if a specified piece can be placed in this field
+     * @param piece
+     * @return true if the piece can be placed
+     */
     public boolean isValidMove(Piece piece) {
         if (isEmpty() || piece.getSize() == Piece.BASE && isEmpty() || piece.getSize() != Piece.BASE && ((fieldContent[piece.getSize()] == null) && (fieldContent[Piece.BASE] == null) && (fieldContent[Piece.START] == null))) {
             return true;
@@ -42,6 +64,14 @@ public class Field {
 
 
     // Returns true if a field is empty
+    //@requires fieldContent!= null;
+    //@ensures \result == fieldContend.isempty;
+    /*@ pure*/
+
+    /**
+     * this method returns if the field is empty
+     * @return true if the field indeed is empty
+     */
     public boolean isEmpty() {
         for (Piece p : fieldContent) {
             if (p != null) {
@@ -52,6 +82,14 @@ public class Field {
     }
 
     // Returns the player with the majority of the field or null
+    //@requires noOfPlayers == 2 || noOfPlayers == 3 || noOfPlayers == 4;
+    /*@ pure*/
+
+    /**
+     * This method checks who is the winner of a field
+     * @param noOfPlayers
+     * @return Player || null. player if there is a winner, null if there is no winner on this field
+     */
     public Player majority(int noOfPlayers) {
 
         Player owner;

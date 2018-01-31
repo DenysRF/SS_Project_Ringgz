@@ -30,7 +30,8 @@ public class ServerGame extends Thread {
 
         // Error wrong player size
         if (chList.size() < 2 || chList.size() > 4) {
-            System.err.println("Give player names as arguments\nA game can only feature 2, 3 or 4 players");
+            System.err.println("Give player names as arguments\n" +
+                    "A game can only feature 2, 3 or 4 players");
             System.exit(0);
         }
 
@@ -69,7 +70,8 @@ public class ServerGame extends Thread {
             if (size != Piece.START) {
                 for (Player p : playerMap.keySet()) {
                     if (p.getName().equals(name)) {
-                        playerMap.get(p).sendError(ClientHandler.INVALID_MOVE, "Expected: Start Base");
+                        playerMap.get(p).sendError(ClientHandler.INVALID_MOVE,
+                                "Expected: Start Base");
                         return;
                     }
                 }
@@ -77,7 +79,8 @@ public class ServerGame extends Thread {
                 for (Player p : playerMap.keySet()) {
                     if (p.getName().equals(name)) {
                         if (!p.validStart(board.index(x, y))) {
-                            playerMap.get(p).sendError(ClientHandler.INVALID_MOVE, "Start Base can only get set in 9 middle fields");
+                            playerMap.get(p).sendError(ClientHandler.INVALID_MOVE,
+                                    "Start Base can only get set in 9 middle fields");
                             return;
                         }
                         p.setStart(board.index(x, y), board);
@@ -100,9 +103,11 @@ public class ServerGame extends Thread {
                     if (color == 0) {
                         List<Field> validFields = board.getValidFields(p, true);
                         if (validFields.contains(board.getField(x, y))) {
-                            p.makeMove(board.index(x, y), p.getPrimaryPieces().get(size).get(0), board);
+                            p.makeMove(board.index(x, y),
+                                    p.getPrimaryPieces().get(size).get(0), board);
                             for (Player player : playerMap.keySet()) {
-                                playerMap.get(player).sendDoneMove(currentPlayer.getName(), x, y, size, color);
+                                playerMap.get(player).sendDoneMove(currentPlayer.getName(),
+                                        x, y, size, color);
                             }
                         } else {
                             playerMap.get(p).sendError(ClientHandler.INVALID_MOVE, "");
@@ -111,9 +116,11 @@ public class ServerGame extends Thread {
                     } else if (color == 1) {
                         List<Field> validFields = board.getValidFields(p, false);
                         if (validFields.contains(board.getField(x, y))) {
-                            p.makeMove(board.index(x, y), p.getSecondaryPieces().get(size).get(0), board);
+                            p.makeMove(board.index(x, y),
+                                    p.getSecondaryPieces().get(size).get(0), board);
                             for (Player player : playerMap.keySet()) {
-                                playerMap.get(player).sendDoneMove(currentPlayer.getName(), x, y, size, color);
+                                playerMap.get(player).sendDoneMove(currentPlayer.getName(),
+                                        x, y, size, color);
                             }
                         } else {
                             playerMap.get(p).sendError(ClientHandler.INVALID_MOVE, "");
@@ -167,7 +174,9 @@ public class ServerGame extends Thread {
         server.print("A game ended");
         StringBuilder result = new StringBuilder();
         for (Player player : playerMap.keySet()) {
-            result.append("[").append(player.getName()).append(",").append(board.getScore(player)).append(",").append(player.ringCount()).append("] ");
+            result.append("[").append(player.getName()).append(",").
+                    append(board.getScore(player)).append(",").
+                    append(player.ringCount()).append("] ");
         }
         for (Player player : playerMap.keySet()) {
             playerMap.get(player).sendResults(result.toString());
