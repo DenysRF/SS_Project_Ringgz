@@ -1,12 +1,12 @@
-package Game.Players;
+package game.players;
 
-import Game.Model.Board;
-import Game.Model.Field;
-import Game.Model.Piece;
+import game.model.Board;
+import game.model.Field;
+import game.model.Piece;
 
 import java.util.*;
 
-import static Game.Model.Board.DIM;
+import static game.model.Board.DIM;
 
 // Abstract Player class, holds shared data of human- and computer player
 public abstract class Player extends Observable {
@@ -30,7 +30,7 @@ public abstract class Player extends Observable {
     /*@pure*/
 
     /**
-     * This method returns the name of the player
+     * This method returns the name of the player.
      * @return String name
      */
     public String getName() {
@@ -41,7 +41,7 @@ public abstract class Player extends Observable {
     /*@pure*/
 
     /**
-     * this returns a map of all the primary pieces
+     * this returns a map of all the primary pieces.
      * @return Map<Integer, List<Piece>> primaryPieces
      */
     public Map<Integer, List<Piece>> getPrimaryPieces() {
@@ -51,7 +51,7 @@ public abstract class Player extends Observable {
     //@ ensures \result == secondaryPieces;
     /*@pure*/
     /**
-     * this returns a map of all the decondary pieces
+     * this returns a map of all the decondary pieces.
      * @return Map<Integer, List<Piece>> secondaryPieces
      */
     public Map<Integer, List<Piece>> getSecondaryPieces() {
@@ -59,10 +59,11 @@ public abstract class Player extends Observable {
     }
 
     //@ requires noOfPlayers == 2 || noOfPlayers == 1 || noOfPlayers == 4;
-    //@ ensures if (noOfPlayers == 2 | noOfPlayers == 3) {!getPrimaryPieces.isEmpty() && !getSecondaryPieces.isEmptie()};
+    //@ ensures if (noOfPlayers == 2 | noOfPlayers == 3)
+    // {!getPrimaryPieces.isEmpty() && !getSecondaryPieces.isEmptie()};
     //@ensures if (noOfPlayers == 4) { !getPrimaryPieces.isEmpty && getSecondaryPieces.isEmpty();
     /**
-     * this method creates the Piece arrays in different ways
+     * this method creates the Piece arrays in different ways.
      * for eacht amount of players
      * 2 players: a primary and secondary map is created
      * 3 players: primary pieces created and 1 of each secondary piece is created
@@ -138,10 +139,11 @@ public abstract class Player extends Observable {
     //@requires p.getOwner.equals(this);
     //@requires p != null && i != null && board != null;
     //@requires piece.getOwner().equals(this);
-    //@ensures this.getPrimaryPieces().equals(\old(this.getPrimaryPieces())) || this.getSecondaryPieces().equals(\old(this.getSecondaryPieces()));
+    //@ensures this.getPrimaryPieces().equals(\old(this.getPrimaryPieces()))
+    // || this.getSecondaryPieces().equals(\old(this.getSecondaryPieces()));
 
     /**
-     * This method sets a field and removes the piece from the corresponding piece map
+     * This method sets a field and removes the piece from the corresponding piece map.
      * @param i the index
      * @param p the piece which will be placed on the index
      * @param board the board on which the piece will be placed
@@ -162,7 +164,7 @@ public abstract class Player extends Observable {
     /*@pure*/
 
     /**
-     * this method checks if the given index is one of the middle 9 fields
+     * this method checks if the given index is one of the middle 9 fields.
      * @param i index
      * @return true if the the index is a valid start field
      */
@@ -177,7 +179,7 @@ public abstract class Player extends Observable {
     //@requires validStart(i);
 
     /**
-     * places the start piece on the board if the index is a valid start field
+     * places the start piece on the board if the index is a valid start field.
      * @param i the index of the specified field
      * @param board the board on which the start piece will be put
      */
@@ -199,7 +201,8 @@ public abstract class Player extends Observable {
     /*@pure*/
 
     /**
-     * this method returns true if a move is valid when looking if the piece fits on the field
+     * this method returns true if a move is valid
+     * when looking if the piece fits on the field.
      * and if you want to place a base and there is no base of
      * the same color in an adjacent field
      * @param board the board on which we check if there is a valid move
@@ -227,10 +230,11 @@ public abstract class Player extends Observable {
     /*@pure*/
 
     /**
-     * this method creates a map with all possible moves
+     * this method creates a map with all possible moves.
      * @param color to specify whether piece is this players primary or secondary color
      * @param board the board on which we check if there is a valid move
-     * @return a Map in the form Map<Field, List<Piece>>, a field with all the possible pieces that are available
+     * @return a Map in the form Map<Field, List<Piece>>,
+     * a field with all the possible pieces that are available
      */
     public Map<Field, List<Piece>> getValidMoves(Boolean color, Board board) {
 
@@ -245,8 +249,7 @@ public abstract class Player extends Observable {
             hasAdjacentBase = isValidMove(board, field, color);
             for (int size = 0; size < Piece.START; size++) {
                 // TODO: rewrite to eliminate empty statement
-                if ((size == 0 && hasAdjacentBase)) {}
-                else {
+                if (!(size == 0 && hasAdjacentBase)) {
                     if (color) {
                         Map<Integer, List<Piece>> primePiece = this.getPrimaryPieces();
                         if (!primePiece.isEmpty() && primePiece.containsKey(size) &&

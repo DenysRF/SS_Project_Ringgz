@@ -1,16 +1,4 @@
-package Game;
-
-import Game.Model.Board;
-import Game.Model.Field;
-import Game.Model.Piece;
-import Game.Players.ComputerPlayer;
-import Game.Players.HumanPlayer;
-import Game.Players.Player;
-import Game.Strategies.RandomStrategy;
-import Game.Strategies.Strategy;
-
-import java.util.List;
-import java.util.Scanner;
+package game;
 
 // Old local TUI view/controller
 public class Ringgz {
@@ -130,7 +118,7 @@ public class Ringgz {
 //            players[currentPlayer].setStart(board);
 //            currentPlayer = (currentPlayer + 1) % players.length;
 //
-//            // Play game until the Game is over
+//            // Play game until the game is over
 //            boolean turn = true;
 //
 //            doMove(players, colors, board, currentPlayer, turn);

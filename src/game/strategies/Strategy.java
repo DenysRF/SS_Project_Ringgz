@@ -1,8 +1,8 @@
-package Game.Strategies;
+package game.strategies;
 
-import Game.Model.Board;
-import Game.Model.Piece;
-import Game.Players.Player;
+import game.model.Board;
+import game.model.Piece;
+import game.players.Player;
 import javafx.util.Pair;
 
 public interface Strategy {

@@ -1,6 +1,6 @@
-package Game.Model;
+package game.model;
 
-import Game.Players.Player;
+import game.players.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +95,7 @@ public class Board {
     /*@pure*/
 
     /**
-     * this method returns all the adjacent fields of a specified field
+     * this method returns all the adjacent fields of a specified field.
      * @param field a field of which you want to get the adjacent fields
      * @return List<Field> field, this is a list which contains
      * all fields which are adjacent to field
@@ -232,7 +232,7 @@ public class Board {
     // Reset this board
 
     /**
-     * this method resets the board
+     * this method resets the board.
      */
     public void reset() {
         fields = new Field[DIM * DIM];

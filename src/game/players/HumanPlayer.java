@@ -1,4 +1,4 @@
-package Game.Players;
+package game.players;
 
 public class HumanPlayer extends Player {
 
@@ -6,8 +6,8 @@ public class HumanPlayer extends Player {
         super(name, noOfPlayers);
     }
 
-    public void printPieceCollection(int NoOfPlayers) {
-        super.printPieceCollection(NoOfPlayers);
+    public void printPieceCollection(int noOfPlayers) {
+        super.printPieceCollection(noOfPlayers);
     }
 
 }

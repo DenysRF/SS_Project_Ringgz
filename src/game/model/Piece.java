@@ -1,6 +1,6 @@
-package Game.Model;
+package game.model;
 
-import Game.Players.Player;
+import game.players.Player;
 
 public class Piece {
 

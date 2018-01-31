@@ -1,11 +1,11 @@
-package Client;
+package client;
 
-import Game.Model.Board;
-import Game.Model.Piece;
-import Game.Players.ComputerPlayer;
-import Game.Players.HumanPlayer;
-import Game.Players.Player;
-import Game.Strategies.RandomStrategy;
+import game.model.Board;
+import game.model.Piece;
+import game.players.ComputerPlayer;
+import game.players.HumanPlayer;
+import game.players.Player;
+import game.strategies.RandomStrategy;
 import javafx.util.Pair;
 
 public class ClientGame {
@@ -103,9 +103,11 @@ public class ClientGame {
         for (Player p : players) {
             if (p.getName().equals(name)) {
                 for (int i = 0; i < 5; i++) {
-                    primaryPieceString.append("\n\t").append(i).append(": ").append(p.getPrimaryPieces().get(i).size());
+                    primaryPieceString.append("\n\t").append(i).append(": "
+                    ).append(p.getPrimaryPieces().get(i).size());
                     if (p.getSecondaryPieces() != null) {
-                        secondaryPieceString.append("\n\t").append(i).append(": ").append(p.getSecondaryPieces().get(i).size());
+                        secondaryPieceString.append("\n\t").append(i).append(": "
+                        ).append(p.getSecondaryPieces().get(i).size());
                     }
                 }
             }

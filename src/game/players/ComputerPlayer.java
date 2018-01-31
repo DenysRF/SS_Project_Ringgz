@@ -1,8 +1,8 @@
-package Game.Players;
+package game.players;
 
-import Game.Model.Board;
-import Game.Model.Piece;
-import Game.Strategies.Strategy;
+import game.model.Board;
+import game.model.Piece;
+import game.strategies.Strategy;
 import javafx.util.Pair;
 
 public class ComputerPlayer extends Player {

@@ -1,9 +1,9 @@
-package Game.Strategies;
+package game.strategies;
 
-import Game.Model.Board;
-import Game.Model.Field;
-import Game.Model.Piece;
-import Game.Players.Player;
+import game.model.Board;
+import game.model.Field;
+import game.model.Piece;
+import game.players.Player;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
@@ -68,7 +68,8 @@ public class RandomStrategy implements Strategy {
             Map<Field, List<Piece>> validMove = player.getValidMoves(true, board);
             List<Field> keys = new ArrayList<>(validMove.keySet());
             Field tempField = keys.get((int) (Math.random() * keys.size()));
-            Piece tempPiece = validMove.get(tempField).get((int) (Math.random() * validMove.get(tempField).size()));
+            Piece tempPiece = validMove.get(tempField).get((int)
+                    (Math.random() * validMove.get(tempField).size()));
             int tempIndex = 30;
             for (int i = 0; i < Board.DIM * Board.DIM; i++) {
                 if (tempField.equals(board.getField(i))) {
@@ -88,7 +89,8 @@ public class RandomStrategy implements Strategy {
                 List<Field> keys = new ArrayList<>(validMove.keySet());
                 Field tempField = keys.get((int) (Math.random() * keys.size()));
                 Piece tempPiece;
-                tempPiece = validMove.get(tempField).get((int) (Math.random() * validMove.get(tempField).size()));
+                tempPiece = validMove.get(tempField).get((int)
+                        (Math.random() * validMove.get(tempField).size()));
                 int tempIndex = 30;
                 for (int i = 0; i < Board.DIM * Board.DIM; i++) {
                     if (tempField.equals(board.getField(i))) {
@@ -101,8 +103,10 @@ public class RandomStrategy implements Strategy {
             if (!validMovePrimary.isEmpty()) {
                 Map<Field, List<Piece>> validMove = player.getValidMoves(true, board);
                 List<Field> keys = new ArrayList<>(validMove.keySet());
-                Field tempField = keys.get((int) (Math.random() * keys.size()));
-                Piece tempPiece = validMove.get(tempField).get((int) (Math.random() * validMove.get(tempField).size()));
+                Field tempField = keys.get((int)
+                        (Math.random() * keys.size()));
+                Piece tempPiece = validMove.get(tempField).get((int)
+                        (Math.random() * validMove.get(tempField).size()));
                 int tempIndex = 30;
                 for (int i = 0; i < Board.DIM * Board.DIM; i++) {
                     if (tempField.equals(board.getField(i))) {
@@ -114,9 +118,11 @@ public class RandomStrategy implements Strategy {
             }
             if (!validMoveSecondary.isEmpty()) {
                 Map<Field, List<Piece>> validMove = player.getValidMoves(false, board);
-                List<Field> keys = new ArrayList<>(validMove.keySet());
+                List<Field> keys = new
+                        ArrayList<>(validMove.keySet());
                 Field tempField = keys.get((int) (Math.random() * keys.size()));
-                Piece tempPiece = validMove.get(tempField).get((int) (Math.random() * validMove.get(tempField).size()));
+                Piece tempPiece = validMove.get(tempField).get((int)
+                        (Math.random() * validMove.get(tempField).size()));
                 int tempIndex = 30;
                 for (int i = 0; i < Board.DIM * Board.DIM; i++) {
                     if (tempField.equals(board.getField(i))) {

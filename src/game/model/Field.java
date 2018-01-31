@@ -1,7 +1,7 @@
-package Game.Model;
+package game.model;
 
-import Game.Players.HumanPlayer;
-import Game.Players.Player;
+import game.players.HumanPlayer;
+import game.players.Player;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -35,7 +35,7 @@ public class Field {
     //@ensures getFieldContent().contains(piece);
 
     /**
-     * This method places a piece in this field if there is space for this piece
+     * This method places a piece in this field if there is space for this piece.
      * @param piece the piece to be placed in the field
      * this is a piece which has an owner, boolean to select the color and the size
      */
@@ -50,12 +50,16 @@ public class Field {
     // /*@ pure*/
 
     /**
-     * this method returns true if a specified piece can be placed in this field
+     * this method returns true if a specified piece can be placed in this field.
      * @param piece the piece you want put in this field
      * @return true if the piece can be placed
      */
     public boolean isValidMove(Piece piece) {
-        return isEmpty() || piece.getSize() == Piece.BASE && isEmpty() || piece.getSize() != Piece.BASE && ((fieldContent[piece.getSize()] == null) && (fieldContent[Piece.BASE] == null) && (fieldContent[Piece.START] == null));
+        return isEmpty() || piece.getSize() == Piece.BASE && isEmpty() ||
+                piece.getSize() != Piece.BASE &&
+                ((fieldContent[piece.getSize()] == null) &&
+                (fieldContent[Piece.BASE] == null) &&
+                (fieldContent[Piece.START] == null));
     }
 
 
@@ -65,7 +69,7 @@ public class Field {
     /*@ pure*/
 
     /**
-     * this method returns if the field is empty
+     * this method returns if the field is empty.
      * @return true if the field indeed is empty
      */
     public boolean isEmpty() {
@@ -82,7 +86,7 @@ public class Field {
     /*@ pure*/
 
     /**
-     * This method checks who is the winner of a field
+     * This method checks who is the winner of a field.
      * @param noOfPlayers the number of players playing the game
      * @return Player || null. player if there is a winner, null if there is no winner on this field
      */
@@ -109,7 +113,7 @@ public class Field {
                         }
                         if (score.containsKey(owner)) {
                             int[] tempscore = score.get(owner);
-                            tempscore[colour] = (tempscore[colour] + 1);
+                            tempscore[colour] = tempscore[colour] + 1;
                             score.put(owner, tempscore);
                         } else {
                             int[] tempscore = {0, 0};
@@ -158,7 +162,7 @@ public class Field {
             }
 
             for (Player p : score.keySet()) {
-                for (int i = 0; i <= 1; i++)
+                for (int i = 0; i <= 1; i++) {
                     if (score.get(p) > tempHighscore && !p.getName().equals("extraColour")) {
                         tempWinner = p;
                         tempHighscore = score.get(p);
@@ -166,6 +170,7 @@ public class Field {
                     } else if (score.get(p) == tempHighscore) {
                         hasWinner = false;
                     }
+                }
             }
         }
         if (hasWinner) {

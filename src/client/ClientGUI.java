@@ -1,6 +1,6 @@
-package Client;
+package client;
 
-import Interface.MessageUI;
+import interfaces.MessageUI;
 
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
@@ -26,7 +26,7 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
     private Client client;
 
     public ClientGUI() {
-        super("Ringgz Client");
+        super("Ringgz client");
 
         buildGUI();
         setVisible(true);
@@ -133,7 +133,7 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
         JLabel lbMessages = new JLabel("Messages:");
         taMessages = new JTextArea("", 15, 30);
         taMessages.setEditable(false);
-        DefaultCaret caret = (DefaultCaret)taMessages.getCaret();
+        DefaultCaret caret = (DefaultCaret) taMessages.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
         JScrollPane spScroll = new JScrollPane(taMessages);
@@ -193,7 +193,7 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
             client.sendStart();
             bLookForGame.setEnabled(false);
         } else if (src == rbTwoPlayers || src == rbThreePlayers) {
-             sColorList.setEnabled(true);
+            sColorList.setEnabled(true);
         } else if (src == rbFourPlayers) {
             sColorList.setEnabled(false);
         } else if (src == pColorList) {

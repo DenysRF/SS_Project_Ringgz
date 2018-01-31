@@ -1,6 +1,6 @@
-package Client;
+package client;
 
-import Game.Model.Board;
+import game.model.Board;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,7 +46,7 @@ public class GameGUI extends JFrame implements Observer, Runnable {
         // Panel p1 - Fields
         JPanel p1 = new JPanel(new GridBagLayout());
 
-        //ImageIcon icon = new ImageIcon("src\\Client\\images\\empty.png");
+        //ImageIcon icon = new ImageIcon("src\\client\\images\\empty.png");
         GridBagConstraints c = new GridBagConstraints();
 
 
@@ -94,7 +94,7 @@ public class GameGUI extends JFrame implements Observer, Runnable {
         p3 = new JPanel(new GridLayout(1, 1));
         p3.setBackground(Color.GRAY);
 
-        lbMessage = new JLabel("Game not yet started", JLabel.CENTER);
+        lbMessage = new JLabel("game not yet started", JLabel.CENTER);
 
         p3.add(lbMessage);
 
@@ -237,6 +237,6 @@ public class GameGUI extends JFrame implements Observer, Runnable {
             s.append("\n\t").append(results[i]);
         }
         taPieces.setText(clientGame.getPieces(client.getClientName()) + "\n" + s.toString());
-        lbMessage.setText("Game over");
+        lbMessage.setText("game over");
     }
 }

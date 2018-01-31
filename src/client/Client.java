@@ -1,8 +1,8 @@
-package Client;
+package client;
 
-import Game.Model.Board;
-import Game.Model.Piece;
-import Interface.MessageUI;
+import game.model.Board;
+import game.model.Piece;
+import interfaces.MessageUI;
 import javafx.util.Pair;
 
 import java.io.*;
@@ -35,7 +35,7 @@ public class Client extends Thread {
     @Override
     public void run() {
 
-        // Client main loop for receiving messages
+        // client main loop for receiving messages
         String textIn;
         try {
             while ((textIn = in.readLine()) != null) {
@@ -68,7 +68,7 @@ public class Client extends Thread {
                 }
             }
         } catch (IOException e) {
-            mui.addMessage("Client terminated");
+            mui.addMessage("client terminated");
         }
     }
 
@@ -144,7 +144,7 @@ public class Client extends Thread {
     private void receiveHello(String helloCommand) {
         String[] hello = helloCommand.split(" ");
         if (hello.length >= 2) {
-            mui.addMessage("Server has " + hello[1] + " players waiting for games");
+            mui.addMessage("server has " + hello[1] + " players waiting for games");
             sendHello(clientName, EXTENSIONS);
         } else {
             mui.addMessage("server did not send hello correctly: " + helloCommand);
@@ -154,11 +154,11 @@ public class Client extends Thread {
     private void receiveStart(String startCommand) {
         String[] start = startCommand.split(" ");
         if (start.length == 3) {
-            mui.addMessage("Game started: " + start[1] + " " + start[2]);
+            mui.addMessage("game started: " + start[1] + " " + start[2]);
         } else if (start.length == 4) {
-            mui.addMessage("Game started: " + start[1] + " " + start[2] + " " + start[3]);
+            mui.addMessage("game started: " + start[1] + " " + start[2] + " " + start[3]);
         } else if (start.length == 5) {
-            mui.addMessage("Game started: " + start[1] + " "
+            mui.addMessage("game started: " + start[1] + " "
                     + start[2] + " " + start[3] + " " + start[4]);
         } else {
             mui.addMessage("ERROR: invalid amount of players: " + startCommand);
@@ -231,7 +231,7 @@ public class Client extends Thread {
 
     private void receiveResults(String resultsCommand) {
         gameGUI.printResults(resultsCommand);
-        mui.addMessage("Game ended.\nResults:\n" + resultsCommand);
+        mui.addMessage("game ended.\nResults:\n" + resultsCommand);
     }
     /*-----------------------------------------------------*/
 }
