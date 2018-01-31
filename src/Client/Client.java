@@ -9,6 +9,8 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static java.util.Arrays.copyOfRange;
 
@@ -160,7 +162,6 @@ public class Client extends Thread {
         String[] start = startCommand.split(" ");
         if (start.length == 3) {
             mui.addMessage("Game started: " + start[1] + " " + start[2]);
-
         } else if (start.length == 4) {
             mui.addMessage("Game started: " + start[1] + " " + start[2] + " " + start[3]);
         } else if (start.length == 5) {
@@ -173,6 +174,7 @@ public class Client extends Thread {
         gameGUI = new GameGUI(this, clientGame);
         clientGame.setObservers(gameGUI);
         new Thread(gameGUI).start();
+
 
     }
 
@@ -203,7 +205,7 @@ public class Client extends Thread {
 
     private void receiveDoMove(String doMoveCommand) {
         String[] doMove = doMoveCommand.split(" ");
-        //System.out.println(doMove);
+
         if (doMove[1].equals(clientName)) {
             gameGUI.updateTurn(doMove[1], true);
             if (clientName.contains("BOT")) {

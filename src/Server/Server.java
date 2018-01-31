@@ -111,18 +111,18 @@ public class Server extends Thread {
     // Start a game when enough players are ready
     private void startGame(List<ClientHandler> chList) {
         mui.addMessage("Game started with: ");
-        String names = "";
+        StringBuilder names = new StringBuilder();
         ServerGame serverGame = new ServerGame(chList, this);
         for (ClientHandler ch : chList) {
-            names = names + " " + ch.getClientName();
+            names.append(ch.getClientName()).append(" ");
             ch.setInGame(true);
             ch.setServerGame(serverGame);
         }
         for (ClientHandler ch : chList) {
             mui.addMessage("\t" + ch.getClientName());
-            ch.sendStart(names.trim());
+            ch.sendStart(names.toString().trim());
         }
-        serverGame.playGame();
+        serverGame.start();
 
 
     }

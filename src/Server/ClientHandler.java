@@ -145,7 +145,7 @@ public class ClientHandler extends Thread {
 
     // Server puts a space in front of names
     public void sendStart(String names) {
-        sendMessage(START + names);
+        sendMessage(START + " " + names);
     }
     public void sendError(int errorcode, String optionalMessage) {
         sendMessage(ERROR + " " + errorcode + " " + optionalMessage);

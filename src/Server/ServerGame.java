@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ServerGame {
+public class ServerGame extends Thread {
 
     private Map<Player, ClientHandler> playerMap;
     private List<Player> notGameOver;
@@ -43,7 +43,6 @@ public class ServerGame {
         }
 
 
-
         // Create Player[] from playerMap for Board argument
         int i = 0;
         Player[] boardArg = new Player[playerMap.keySet().size()];
@@ -56,9 +55,9 @@ public class ServerGame {
     }
 
     public void doneMove(String name, int x, int y, int size, int color) {
-
         // Check if command came from player whose turn it is
-        if (!board.gameOver(currentPlayer)) {
+
+        if (start) {
             if (!(currentPlayer.getName().equals(name))) {
                 for (Player p : playerMap.keySet()) {
                     if (p.getName().equals(name)) {
@@ -67,59 +66,60 @@ public class ServerGame {
                     }
                 }
             }
-            // Handle placement of Start Base
-            if (start) {
-                if (size != Piece.START) {
-                    for (Player p : playerMap.keySet()) {
-                        if (p.getName().equals(name)) {
-                            playerMap.get(p).sendError(ClientHandler.INVALID_MOVE, "Expected: Start Base");
-                            return;
-                        }
-                    }
-                } else {
-                    for (Player p : playerMap.keySet()) {
-                        if (p.getName().equals(name)) {
-                            if (p.validStart(board.index(x,y))) {
-                                playerMap.get(p).sendError(ClientHandler.INVALID_MOVE, "Start Base can only get set in 9 middle fields");
-                                return;
-                            }
-                            p.setStart(board.index(x, y), board);
-                            for (Player player : playerMap.keySet()) {
-                                playerMap.get(player).sendDoneMove(currentPlayer.getName(), x, y, size, color);
-                            }
-                            System.out.println("Start Base set: " + x + " " + y + " " + size + " " + color);
-                            start = false;
-                        }
+            if (size != Piece.START) {
+                for (Player p : playerMap.keySet()) {
+                    if (p.getName().equals(name)) {
+                        playerMap.get(p).sendError(ClientHandler.INVALID_MOVE, "Expected: Start Base");
+                        return;
                     }
                 }
             } else {
                 for (Player p : playerMap.keySet()) {
                     if (p.getName().equals(name)) {
-                        if (color == 0) {
-                            List<Field> validFields = board.getValidFields(p, true);
-                            if (validFields.contains(board.getField(x, y))) {
-                                p.makeMove(board.index(x, y), p.getPrimaryPieces().get(size).get(0), board);
-                                for (Player player : playerMap.keySet()) {
-                                    playerMap.get(player).sendDoneMove(currentPlayer.getName(), x, y, size, color);
-                                }
-                            } else {
-                                playerMap.get(p).sendError(ClientHandler.INVALID_MOVE, "");
-                                return;
-                            }
-                        } else if (color == 1) {
-                            List<Field> validFields = board.getValidFields(p, false);
-                            if (validFields.contains(board.getField(x, y))) {
-                                p.makeMove(board.index(x, y), p.getSecondaryPieces().get(size).get(0), board);
-                                for (Player player : playerMap.keySet()) {
-                                    playerMap.get(player).sendDoneMove(currentPlayer.getName(), x, y, size, color);
-                                }
-                            } else {
-                                playerMap.get(p).sendError(ClientHandler.INVALID_MOVE, "");
-                                return;
-                            }
-
+                        if (!p.validStart(board.index(x, y))) {
+                            playerMap.get(p).sendError(ClientHandler.INVALID_MOVE, "Start Base can only get set in 9 middle fields");
+                            return;
                         }
-                        System.out.println("move made: " + x + " " + y + " " + size + " " + color);
+                        p.setStart(board.index(x, y), board);
+                        for (Player player : playerMap.keySet()) {
+                            playerMap.get(player).sendDoneMove(currentPlayer.getName(), x, y, size, color);
+                        }
+                        start = false;
+                        nextPlayer();
+                        for (Player player : playerMap.keySet()) {
+                            playerMap.get(player).sendDoMove(currentPlayer.getName());
+                        }
+                        return;
+                    }
+                }
+            }
+        }
+        if (!board.gameOver(currentPlayer)) {
+            for (Player p : playerMap.keySet()) {
+                if (p.getName().equals(name)) {
+                    if (color == 0) {
+                        List<Field> validFields = board.getValidFields(p, true);
+                        if (validFields.contains(board.getField(x, y))) {
+                            p.makeMove(board.index(x, y), p.getPrimaryPieces().get(size).get(0), board);
+                            for (Player player : playerMap.keySet()) {
+                                playerMap.get(player).sendDoneMove(currentPlayer.getName(), x, y, size, color);
+                            }
+                        } else {
+                            playerMap.get(p).sendError(ClientHandler.INVALID_MOVE, "");
+                            return;
+                        }
+                    } else if (color == 1) {
+                        List<Field> validFields = board.getValidFields(p, false);
+                        if (validFields.contains(board.getField(x, y))) {
+                            p.makeMove(board.index(x, y), p.getSecondaryPieces().get(size).get(0), board);
+                            for (Player player : playerMap.keySet()) {
+                                playerMap.get(player).sendDoneMove(currentPlayer.getName(), x, y, size, color);
+                            }
+                        } else {
+                            playerMap.get(p).sendError(ClientHandler.INVALID_MOVE, "");
+                            return;
+                        }
+
                     }
                 }
             }
@@ -133,7 +133,7 @@ public class ServerGame {
 
     }
 
-    public void playGame() {
+    public void run() {
         start = true;
         // Ask first Player for move
         currentPlayer = notGameOver.get(0);
@@ -144,9 +144,6 @@ public class ServerGame {
     }
 
     private void nextPlayer() {
-        if (notGameOver.isEmpty()) {
-            return;
-        }
         for (int i = 0; i < notGameOver.size(); i++) {
             if (currentPlayer.getName().equals(notGameOver.get(i).getName())) {
                 if (board.gameOver(notGameOver.get(i))) {
@@ -156,8 +153,7 @@ public class ServerGame {
                         for (ClientHandler ch : playerMap.values()) {
                             chList.add(ch);
                         }
-                        gameFinished();
-                        server.gameFinished(chList);
+                        gameFinished(chList);
                         return;
                     }
                 }
@@ -167,7 +163,7 @@ public class ServerGame {
         }
     }
 
-    private void gameFinished() {
+    private void gameFinished(List<ClientHandler> chList) {
         server.print("A game ended");
         StringBuilder result = new StringBuilder();
         for (Player player : playerMap.keySet()) {
@@ -176,5 +172,6 @@ public class ServerGame {
         for (Player player : playerMap.keySet()) {
             playerMap.get(player).sendResults(result.toString());
         }
+        server.gameFinished(chList);
     }
 }

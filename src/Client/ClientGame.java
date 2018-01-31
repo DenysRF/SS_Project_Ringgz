@@ -155,6 +155,7 @@ public class ClientGame extends Thread {
                 } else {
                     return ((ComputerPlayer) p).doMove(players.length, board);
                 }
+
             }
         }
         return null;

@@ -5,8 +5,11 @@ import Game.Model.Board;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static java.lang.Thread.sleep;
 
@@ -254,7 +257,7 @@ public class GameGUI extends JFrame implements ActionListener, Observer, Runnabl
         for (int i = 1; i < results.length; i++) {
             s.append("\n\t").append(results[i]);
         }
-        taPieces.setText(s.toString());
+        taPieces.setText(clientGame.getPieces(client.getClientName()) + "\n" + s.toString());
         lbMessage.setText("Game over");
     }
 }
