@@ -1,6 +1,7 @@
 package Game;
 
 import Game.Model.Board;
+import Game.Model.Field;
 import Game.Model.Piece;
 import Game.Players.ComputerPlayer;
 import Game.Players.HumanPlayer;
@@ -136,7 +137,7 @@ public class Ringgz {
             // Determine score and winner
             print("Scores:");
 
-            for (HumanPlayer player : players) {
+            for (Player player : players) {
                 int score = board.getScore(player);
                 print("\t" + player.getName() + ": " + score);
             }
