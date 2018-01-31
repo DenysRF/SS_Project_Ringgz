@@ -8,6 +8,8 @@ import java.awt.event.*;
 import java.util.Observable;
 import java.util.Observer;
 
+import static java.lang.Thread.sleep;
+
 public class GameGUI extends JFrame implements ActionListener, Observer, Runnable {
 
     private JButton[] fields = new JButton[Board.DIM * Board.DIM];
@@ -21,7 +23,7 @@ public class GameGUI extends JFrame implements ActionListener, Observer, Runnabl
 
 
     public GameGUI(Client client, ClientGame clientGame)  {
-        super("Ringgz");
+        super(client.getClientName());
         this.client = client;
         this.clientGame = clientGame;
 
@@ -226,6 +228,13 @@ public class GameGUI extends JFrame implements ActionListener, Observer, Runnabl
     }
 
     public void updateTurn(String name, boolean b) {
+        if (p3 == null) {
+            try {
+                sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         if (b) {
             p3.setBackground(Color.GREEN);
         } else {

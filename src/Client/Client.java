@@ -1,6 +1,9 @@
 package Client;
 
+import Game.Model.Board;
+import Game.Model.Piece;
 import Interface.MessageUI;
+import javafx.util.Pair;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -19,6 +22,7 @@ public class Client extends Thread {
     private int noOfPlayers;
     private ClientGame clientGame;
     private GameGUI gameGUI;
+    private boolean first = true;
 
     public Client(String clientName, InetAddress host, int port, MessageUI mui, int noOfPlayers)
             throws IOException {
@@ -199,11 +203,21 @@ public class Client extends Thread {
 
     private void receiveDoMove(String doMoveCommand) {
         String[] doMove = doMoveCommand.split(" ");
+        //System.out.println(doMove);
         if (doMove[1].equals(clientName)) {
             gameGUI.updateTurn(doMove[1], true);
+            if (clientName.contains("BOT")) {
+                Pair<Integer, Piece> botMove = clientGame.askBotMove(clientName, first);
+                int x = botMove.getKey() % Board.DIM;
+                int y = (botMove.getKey() - x) / Board.DIM;
+                int size = botMove.getValue().getSize();
+                int color = botMove.getValue().isPrimary() ? 0 : 1;
+                sendMove(x ,y ,size, color);
+            }
         } else {
             gameGUI.updateTurn(doMove[1], false);
         }
+        first = false;
     }
 
     private void receiveDoneMove(String doneMoveCommand) {
@@ -222,5 +236,4 @@ public class Client extends Thread {
         mui.addMessage("Game ended.\nResults:\n" + resultsCommand);
     }
     /*-----------------------------------------------------*/
-
 }

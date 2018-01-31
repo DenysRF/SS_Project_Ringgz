@@ -7,8 +7,8 @@ import javafx.util.Pair;
 
 public interface Strategy {
 
-    public String getName();
-    public Pair<Integer, Piece> doMove(int noOfPlayers, Player player, Board b);
+    String getName();
+    Pair<Integer, Piece> doMove(int noOfPlayers, Player player, Board b);
 
-    public void setStart(Board board);
+    Pair<Integer, Piece> setStart();
 }

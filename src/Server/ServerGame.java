@@ -168,6 +168,7 @@ public class ServerGame {
     }
 
     private void gameFinished() {
+        server.print("A game ended");
         StringBuilder result = new StringBuilder();
         for (Player player : playerMap.keySet()) {
             result.append("[").append(player.getName()).append(",").append(board.getScore(player)).append(",").append(player.ringCount()).append("] ");

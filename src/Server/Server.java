@@ -120,7 +120,7 @@ public class Server extends Thread {
         }
         for (ClientHandler ch : chList) {
             mui.addMessage("\t" + ch.getClientName());
-            ch.sendStart(names);
+            ch.sendStart(names.trim());
         }
         serverGame.playGame();
 

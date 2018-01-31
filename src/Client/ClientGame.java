@@ -2,8 +2,12 @@ package Client;
 
 import Game.Model.Board;
 import Game.Model.Piece;
+import Game.Players.ComputerPlayer;
 import Game.Players.HumanPlayer;
 import Game.Players.Player;
+import Game.Strategies.RandomStrategy;
+import Game.Strategies.Strategy;
+import javafx.util.Pair;
 
 public class ClientGame extends Thread {
 
@@ -15,7 +19,11 @@ public class ClientGame extends Thread {
     public ClientGame(String[] names) {
         players = new Player[names.length];
         for (int i = 0; i < players.length; i++) {
-            players[i] = new HumanPlayer(names[i], players.length);
+            if (names[i].contains("BOT")) {
+                players[i] = new ComputerPlayer(names[i], players.length, new RandomStrategy(names[i]));
+            } else {
+                players[i] = new HumanPlayer(names[i], players.length);
+            }
         }
         board = new Board(players);
 
@@ -137,5 +145,18 @@ public class ClientGame extends Thread {
         for (int i = 0; i < players.length; i++) {
             players[i].addObserver(gameGUI);
         }
+    }
+
+    public Pair<Integer, Piece> askBotMove(String name, boolean first) {
+        for (Player p : players) {
+            if (name.equals(p.getName())) {
+                if (first) {
+                    return ((ComputerPlayer) p).doStart();
+                } else {
+                    return ((ComputerPlayer) p).doMove(players.length, board);
+                }
+            }
+        }
+        return null;
     }
 }

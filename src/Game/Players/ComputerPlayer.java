@@ -7,7 +7,7 @@ import javafx.util.Pair;
 
 public class ComputerPlayer extends Player {
 
-    Strategy strategy;
+    private Strategy strategy;
 
     public ComputerPlayer(String name, int noOfPlayers, Strategy strategy) {
         super(strategy.getName(), noOfPlayers);
@@ -20,11 +20,8 @@ public class ComputerPlayer extends Player {
         return strategy.doMove(noOfPlayers, this, board);
     }
 
-//    @Override
-    public void setStart(Board board) {
-        strategy.setStart(board);
+    public Pair<Integer, Piece> doStart() {
+        return strategy.setStart();
     }
-
-
 
 }

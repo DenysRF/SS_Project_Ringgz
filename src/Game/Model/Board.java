@@ -50,14 +50,14 @@ public class Board {
         }
     }
 
-    public boolean setField(Piece piece, Field field){
-        if (field.isValidMove(piece)){
-            field.setFieldContent(piece);
-            return true;
-        }else{
-            return false;
-        }
-    }
+//    public boolean setField(Piece piece, Field field){
+//        if (field.isValidMove(piece)){
+//            field.setFieldContent(piece);
+//            return true;
+//        }else{
+//            return false;
+//        }
+//    }
 
     // Get the all fields that make up the "territory of a player"
     public List<Field> getAdjacentFields(Field field) {

@@ -93,7 +93,7 @@ public abstract class Player extends Observable {
                 secondaryPieces.put(Piece.HUGE, sHuge);
                 break;
             case 4:
-                secondaryPieces = new HashMap<>();
+                //secondaryPieces = new HashMap<>();
                 break;
         }
 
@@ -116,25 +116,27 @@ public abstract class Player extends Observable {
         notifyObservers();
     }
 
-    public boolean makeMove(int noOfPlayers, Board board) {
-        Pair<Integer, Piece> chosenMove = null;
-        while (chosenMove == null) {
-
-            chosenMove = doMove(noOfPlayers, board);
-        }
-        chosenMove.getKey();
-        if (board.setField(chosenMove.getValue(), chosenMove.getKey())) {
-            if (chosenMove.getValue().isPrimary()) {
-                primaryPieces.get(chosenMove.getValue().getSize()).remove(0);
-            } else {
-                secondaryPieces.get(chosenMove.getValue().getSize()).remove(0);
-            }
-            return true;
-        }
-        System.err.println("this is an invalid move");
-        System.out.println("place: " + chosenMove.getKey() + "piece: " + chosenMove.getValue().getSize());
-        return false;
-    }
+//    public boolean makeMove(int noOfPlayers, Board board) {
+//        Pair<Integer, Piece> chosenMove = null;
+//        while (chosenMove == null) {
+//
+//            chosenMove = doMove(noOfPlayers, board);
+//        }
+//        chosenMove.getKey();
+//        if (board.setField(chosenMove.getValue(), chosenMove.getKey())) {
+//            if (chosenMove.getValue().isPrimary()) {
+//                primaryPieces.get(chosenMove.getValue().getSize()).remove(0);
+//            } else {
+//                secondaryPieces.get(chosenMove.getValue().getSize()).remove(0);
+//            }
+//            setChanged();
+//            notifyObservers();
+//            return true;
+//        }
+//        System.err.println("this is an invalid move");
+//        System.out.println("place: " + chosenMove.getKey() + "piece: " + chosenMove.getValue().getSize());
+//        return false;
+//    }
 
 
     public boolean validStart(int i) {
@@ -142,10 +144,17 @@ public abstract class Player extends Observable {
     }
 
     // Tell the player to set the starting Base
-    public void setStart(Board board) {
+    public void setStart(int i, Board board) {
+        // start only at middle fields
+        if (validStart(i)) {
+            Piece startBase = new Piece(Piece.START);
+            board.setField(startBase, i);
+        }
+        setChanged();
+        notifyObservers();
     }
 
-    public abstract Pair<Integer, Piece> doMove(int noOfPlayers, Board board);
+//    public abstract Pair<Integer, Piece> doMove(int noOfPlayers, Board board);
 
 
     public boolean isValidMove(Board board, int temp, Piece piece) {
@@ -161,16 +170,16 @@ public abstract class Player extends Observable {
     }
 
     public boolean isValidMove(Board board, Field field, Boolean color) {
-        boolean AdjecentBase = false;
+        boolean adjacentBase = false;
         List<Field> adjacentField = board.getAdjacentFields(field);
         for (int i = 0; i < board.getAdjacentFields(field).size(); i++) {
             if (adjacentField.get(i).getFieldContent()[Piece.BASE] != null && adjacentField.get(i).getFieldContent()[Piece.BASE].getOwner() == this &&
                     adjacentField.get(i).getFieldContent()[Piece.BASE].isPrimary() == color) {
-                AdjecentBase = true;
+                adjacentBase = true;
                 break;
             }
         }
-        return AdjecentBase;
+        return adjacentBase;
     }
 
     public Map<Field, List<Piece>> getValidMoves(Boolean color, Board board) {
@@ -191,7 +200,6 @@ public abstract class Player extends Observable {
 //            }
             hasAdjacentBase = isValidMove(board, field, color);
             for (int size = 0; size < Piece.START; size++) {
-                //todo door deze check komen in de possibleMoves map geen Bases
                 if ((size == 0 && hasAdjacentBase)) {
                 } else if (color) {
                     if (!this.getPrimaryPieces().isEmpty() && this.getPrimaryPieces().containsKey(size) && !this.getPrimaryPieces().get(size).isEmpty() && this.getPrimaryPieces().get(size).get(0) != null) {

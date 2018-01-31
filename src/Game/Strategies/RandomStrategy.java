@@ -13,8 +13,8 @@ import java.util.Set;
 
 public class RandomStrategy implements Strategy {
 
-    protected Map<Integer, List<Piece>> primaryPieces;
-    protected Map<Integer, List<Piece>> secondaryPieces;
+//    protected Map<Integer, List<Piece>> primaryPieces;
+//    protected Map<Integer, List<Piece>> secondaryPieces;
 
 
     private String name;
@@ -27,38 +27,40 @@ public class RandomStrategy implements Strategy {
         return name;
     }
 
-    public void setStart(Board board) {
+    public Pair<Integer, Piece> setStart() {
         int randomStart = (int) (Math.random() * 9);
         Piece startBase = new Piece(Piece.START);
+        int index = 12;
         switch (randomStart) {
             case 0:
-                board.setField(startBase, 6);
+                index = 6;
                 break;
             case 1:
-                board.setField(startBase, 7);
+                index = 7;
                 break;
             case 2:
-                board.setField(startBase, 8);
+                index = 8;
                 break;
             case 3:
-                board.setField(startBase, 11);
+                index = 11;
                 break;
             case 4:
-                board.setField(startBase, 12);
+                index = 12;
                 break;
             case 5:
-                board.setField(startBase, 13);
+                index = 13;
                 break;
             case 6:
-                board.setField(startBase, 16);
+                index = 16;
                 break;
             case 7:
-                board.setField(startBase, 17);
+                index = 17;
                 break;
             case 8:
-                board.setField(startBase, 18);
+                index = 18;
                 break;
         }
+        return new Pair<>(index, startBase);
     }
 
     public Pair<Integer, Piece> doMove(int noOfPlayers, Player player, Board board) {
@@ -136,16 +138,16 @@ public class RandomStrategy implements Strategy {
         return null;
     }
 
-    public void printPieceCollection(int NoOfPlayers) {
-        System.out.println(name + "'s pieces:\nPrimary:");
-        for (Integer p : primaryPieces.keySet()) {
-            System.out.println("\t" + p + ": " + primaryPieces.get(p).size());
-        }
-        if (NoOfPlayers != 4) {
-            System.out.println("Secondary:");
-            for (Integer p : secondaryPieces.keySet()) {
-                System.out.println("\t" + p + ": " + secondaryPieces.get(p).size());
-            }
-        }
-    }
+//    public void printPieceCollection(int NoOfPlayers) {
+//        System.out.println(name + "'s pieces:\nPrimary:");
+//        for (Integer p : primaryPieces.keySet()) {
+//            System.out.println("\t" + p + ": " + primaryPieces.get(p).size());
+//        }
+//        if (NoOfPlayers != 4) {
+//            System.out.println("Secondary:");
+//            for (Integer p : secondaryPieces.keySet()) {
+//                System.out.println("\t" + p + ": " + secondaryPieces.get(p).size());
+//            }
+//        }
+//    }
 }
