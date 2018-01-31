@@ -41,9 +41,21 @@ public class Board {
 
 
     // Set a piece in a field at index i
-    public void setField(Piece piece, int i) {
+    public boolean setField(Piece piece, int i) {
         if (getField(i).isValidMove(piece)) {
             fields[i].setFieldContent(piece);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean setField(Piece piece, Field field){
+        if (field.isValidMove(piece)){
+            field.setFieldContent(piece);
+            return true;
+        }else{
+            return false;
         }
     }
 
@@ -60,12 +72,12 @@ public class Board {
                         adjacentFields.add(getField(x, y));
                         adjacentFields.add(getField(x, y + 1));
                         adjacentFields.add(getField(x + 1, y));
-                    } else if (x == 0 && (y > 0 && y < DIM)) {
+                    } else if (x == 0 && (y > 0 && y < DIM-1)) {
                         adjacentFields.add(getField(x, y - 1));
                         adjacentFields.add(getField(x, y));
                         adjacentFields.add(getField(x, y + 1));
                         adjacentFields.add(getField(x + 1, y));
-                    } else if ((x > 0 && x < DIM) && y == 0) {
+                    } else if ((x > 0 && x < DIM-1) && y == 0) {
                         adjacentFields.add(getField(x - 1, y));
                         adjacentFields.add(getField(x, y));
                         adjacentFields.add(getField(x + 1, y));
@@ -78,12 +90,12 @@ public class Board {
                         adjacentFields.add(getField(x, y - 1));
                         adjacentFields.add(getField(x, y));
                         adjacentFields.add(getField(x + 1, y));
-                    } else if (x == DIM - 1 && (y > 0 && y < DIM)) {
+                    } else if (x == DIM - 1 && (y > 0 && y < DIM-1)) {
                         adjacentFields.add(getField(x, y - 1));
                         adjacentFields.add(getField(x, y));
                         adjacentFields.add(getField(x, y + 1));
                         adjacentFields.add(getField(x - 1, y));
-                    } else if ((x > 0 && x < DIM) && y == DIM - 1) {
+                    } else if ((x > 0 && x < DIM-1) && y == DIM - 1) {
                         adjacentFields.add(getField(x - 1, y));
                         adjacentFields.add(getField(x, y));
                         adjacentFields.add(getField(x + 1, y));
@@ -112,7 +124,6 @@ public class Board {
     can place a piece
      */
     public List<Field> getValidFields(Player player, boolean color) {
-        // TODO: StartBase
         List<Field> validFields = new ArrayList<>();
         boolean add = true;
         //first you iterate over every field
@@ -144,10 +155,11 @@ public class Board {
 
     // Return true if no players are able to make a move
 
-    public boolean gameOver() {
+    public boolean gameOver(Board board) {
         int GameOverPlayers = 0;
+        Player[] player = players;
         for (Player p : players) {
-            if (getValidFields(p, true).isEmpty() && getValidFields(p, false).isEmpty()) {
+            if (p.getValidMoves(true, board).isEmpty() && p.getValidMoves(false, board).isEmpty()) {
                 GameOverPlayers++;
             }
         }

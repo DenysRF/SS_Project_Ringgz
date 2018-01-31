@@ -1,7 +1,9 @@
 package Game.Players;
 
 import Game.Model.Board;
+import Game.Model.Field;
 import Game.Model.Piece;
+import javafx.util.Pair;
 
 import java.util.*;
 
@@ -91,6 +93,7 @@ public abstract class Player extends Observable {
                 secondaryPieces.put(Piece.HUGE, sHuge);
                 break;
             case 4:
+                secondaryPieces = new HashMap<>();
                 break;
         }
 
@@ -113,7 +116,25 @@ public abstract class Player extends Observable {
         notifyObservers();
     }
 
-    public abstract int determineMove(Board board);
+    public boolean makeMove(int noOfPlayers, Board board) {
+        Pair<Integer, Piece> chosenMove = null;
+        while (chosenMove == null) {
+
+            chosenMove = doMove(noOfPlayers, board);
+        }
+        chosenMove.getKey();
+        if (board.setField(chosenMove.getValue(), chosenMove.getKey())) {
+            if (chosenMove.getValue().isPrimary()) {
+                primaryPieces.get(chosenMove.getValue().getSize()).remove(0);
+            } else {
+                secondaryPieces.get(chosenMove.getValue().getSize()).remove(0);
+            }
+            return true;
+        }
+        System.err.println("this is an invalid move");
+        System.out.println("place: " + chosenMove.getKey() + "piece: " + chosenMove.getValue().getSize());
+        return false;
+    }
 
 
     public boolean validStart(int i) {
@@ -121,11 +142,90 @@ public abstract class Player extends Observable {
     }
 
     // Tell the player to set the starting Base
-    public void setStart(int i, Board board) {
-        // start only at middle fields
-        if (i >= (1 + DIM) && i <= 3 + DIM || i >= 1 + 2 * DIM && i <= 3 + 2 * DIM || i >= 1 + 3 * DIM && i <= 3 + 3 * DIM) {
-            Piece startBase = new Piece(Piece.START);
-            board.setField(startBase, i);
+    public void setStart(Board board) {
+    }
+
+    public abstract Pair<Integer, Piece> doMove(int noOfPlayers, Board board);
+
+
+    public boolean isValidMove(Board board, int temp, Piece piece) {
+        boolean noAdjecentBase = true;
+        for (int i = 0; i < board.getAdjacentFields(board.getField(temp)).size(); i++) {
+            if (board.getAdjacentFields(board.getField(temp)).get(i).getFieldContent()[Piece.BASE] != null && board.getAdjacentFields(board.getField(temp)).get(i).getFieldContent()[Piece.BASE].getOwner() == this &&
+                    board.getAdjacentFields(board.getField(temp)).get(i).getFieldContent()[Piece.BASE].isPrimary() == piece.isPrimary()) {
+                noAdjecentBase = false;
+                break;
+            }
+        }
+        return noAdjecentBase;
+    }
+
+    public boolean isValidMove(Board board, Field field, Boolean color) {
+        boolean AdjecentBase = false;
+        List<Field> adjacentField = board.getAdjacentFields(field);
+        for (int i = 0; i < board.getAdjacentFields(field).size(); i++) {
+            if (adjacentField.get(i).getFieldContent()[Piece.BASE] != null && adjacentField.get(i).getFieldContent()[Piece.BASE].getOwner() == this &&
+                    adjacentField.get(i).getFieldContent()[Piece.BASE].isPrimary() == color) {
+                AdjecentBase = true;
+                break;
+            }
+        }
+        return AdjecentBase;
+    }
+
+    public Map<Field, List<Piece>> getValidMoves(Boolean color, Board board) {
+
+        Map<Field, List<Piece>> possibleMoves = new HashMap<>();
+        //iterate over the fields
+        List<Field> validFields = board.getValidFields(this, color);
+
+        for (Field field : validFields) {
+            List<Piece> pieces = new ArrayList<>();
+            boolean hasAdjacentBase;
+            List<Field> fields = board.getAdjacentFields(field);
+            //iterate over the pieces
+//            for (Field ForField: fields) {
+//                if (ForField.getFieldContent()[Piece.BASE] != null && ForField.getFieldContent()[Piece.BASE].getOwner() == this && ForField.getFieldContent()[Piece.BASE].isPrimary() == color) {
+//                    hasAdjacentBase = true;
+//                }
+//            }
+            hasAdjacentBase = isValidMove(board, field, color);
+            for (int size = 0; size < Piece.START; size++) {
+                //todo door deze check komen in de possibleMoves map geen Bases
+                if ((size == 0 && hasAdjacentBase)) {
+                } else if (color) {
+                    if (!this.getPrimaryPieces().isEmpty() && this.getPrimaryPieces().containsKey(size) && !this.getPrimaryPieces().get(size).isEmpty() && this.getPrimaryPieces().get(size).get(0) != null) {
+                        if (((field.getFieldContent()[size] == null) && (field.getFieldContent()[Piece.START] == null) && (field.getFieldContent()[Piece.BASE] == null)) && size != 0 || size == 0 && field.isEmpty()) {
+                            pieces.add(this.getPrimaryPieces().get(size).get(0));
+                        }
+                    }
+                } else {
+                    if (!this.getSecondaryPieces().isEmpty() && this.getSecondaryPieces().containsKey(size) && !this.getSecondaryPieces().get(size).isEmpty() && this.getSecondaryPieces().get(size).get(0) != null) {
+                        if (field.getFieldContent()[size] == null && field.getFieldContent()[Piece.START] == null && field.getFieldContent()[Piece.BASE] == null && size != 0 || ((size == 0) && field.isEmpty())) {
+                            pieces.add(this.getSecondaryPieces().get(size).get(0));
+                        }
+                    }
+                }
+
+            }
+//            boolean test = (!pieces.isEmpty());
+            if (pieces.size() > 0) {
+                possibleMoves.put(field, pieces);
+            }
+        }
+        return possibleMoves;
+    }
+
+    public void printPieceCollection(int NoOfPlayers) {
+        System.out.println(name + "'s pieces:\nPrimary:");
+        for (Integer p : primaryPieces.keySet()) {
+            System.out.println("\t" + p + ": " + primaryPieces.get(p).size());
+        }
+        if (NoOfPlayers != 4) {
+            System.out.println("Secondary:");
+            for (Integer p : secondaryPieces.keySet()) {
+                System.out.println("\t" + p + ": " + secondaryPieces.get(p).size());
+            }
         }
         setChanged();
         notifyObservers();
