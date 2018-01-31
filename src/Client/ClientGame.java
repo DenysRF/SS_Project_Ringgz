@@ -9,7 +9,7 @@ import Game.Strategies.RandomStrategy;
 import Game.Strategies.Strategy;
 import javafx.util.Pair;
 
-public class ClientGame extends Thread {
+public class ClientGame {
 
     private Player[] players;
     private Board board;
