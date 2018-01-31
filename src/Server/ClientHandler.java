@@ -2,7 +2,6 @@ package Server;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Map;
 
 public class ClientHandler extends Thread {
 
@@ -42,8 +41,8 @@ public class ClientHandler extends Thread {
                         receiveMove(message);
                         break;
                     default:
-                        //sendError(INVALID_COMMAND, "");
-                        server.print(clientName + ": " + message);
+                        sendError(INVALID_COMMAND, "");
+                        server.print("INVALID COMMAND from " + clientName + ": " + message);
                         break;
                 }
             }
@@ -218,13 +217,15 @@ public class ClientHandler extends Thread {
 
     public void receiveMove(String moveCommand) {
         String[] move = moveCommand.split(" ");
+        if (move.length == 5) {
+            if (inGame) {
+                serverGame.doneMove(clientName, Integer.parseInt(move[1]), Integer.parseInt(move[2]), Integer.parseInt(move[3]), Integer.parseInt(move[4]));
 
-        // check Command
-        if (inGame) {
-            serverGame.doneMove(clientName, Integer.parseInt(move[1]), Integer.parseInt(move[2]), Integer.parseInt(move[3]), Integer.parseInt(move[4]));
-
+            } else {
+                sendError(GENERAL, "You are not in game");
+            }
         } else {
-            sendError(GENERAL, "You are not in game");
+            sendError(INVALID_COMMAND, "Number of arguments did not match expected number of arguments");
         }
     }
 

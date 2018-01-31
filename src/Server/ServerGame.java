@@ -18,9 +18,12 @@ public class ServerGame {
     private Board board;
     private Player currentPlayer;
     private boolean start;
+    private Server server;
 
 
-    public ServerGame(List<ClientHandler> chList) {
+    public ServerGame(List<ClientHandler> chList, Server server) {
+
+        this.server = server;
 
         playerMap = new HashMap<>();
         notGameOver = new ArrayList<>();
@@ -81,6 +84,9 @@ public class ServerGame {
                                 return;
                             }
                             p.setStart(board.index(x, y), board);
+                            for (Player player : playerMap.keySet()) {
+                                playerMap.get(player).sendDoneMove(currentPlayer.getName(), x, y, size, color);
+                            }
                             System.out.println("Start Base set: " + x + " " + y + " " + size + " " + color);
                             start = false;
                         }
@@ -93,6 +99,9 @@ public class ServerGame {
                             List<Field> validFields = board.getValidFields(p, true);
                             if (validFields.contains(board.getField(x, y))) {
                                 p.makeMove(board.index(x, y), p.getPrimaryPieces().get(size).get(0), board);
+                                for (Player player : playerMap.keySet()) {
+                                    playerMap.get(player).sendDoneMove(currentPlayer.getName(), x, y, size, color);
+                                }
                             } else {
                                 playerMap.get(p).sendError(ClientHandler.INVALID_MOVE, "");
                                 return;
@@ -101,6 +110,9 @@ public class ServerGame {
                             List<Field> validFields = board.getValidFields(p, false);
                             if (validFields.contains(board.getField(x, y))) {
                                 p.makeMove(board.index(x, y), p.getSecondaryPieces().get(size).get(0), board);
+                                for (Player player : playerMap.keySet()) {
+                                    playerMap.get(player).sendDoneMove(currentPlayer.getName(), x, y, size, color);
+                                }
                             } else {
                                 playerMap.get(p).sendError(ClientHandler.INVALID_MOVE, "");
                                 return;
@@ -140,7 +152,12 @@ public class ServerGame {
                 if (board.gameOver(notGameOver.get(i))) {
                     notGameOver.remove(i);
                     if (notGameOver.isEmpty()) {
+                        List<ClientHandler> chList = new ArrayList<>();
+                        for (ClientHandler ch : playerMap.values()) {
+                            chList.add(ch);
+                        }
                         gameFinished();
+                        server.gameFinished(chList);
                         return;
                     }
                 }

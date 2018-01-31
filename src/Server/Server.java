@@ -39,16 +39,16 @@ public class Server extends Thread {
             System.err.println("Error: could not create ServerSocket on port " + port);
         }
         /*
-        * Running server loop that accept incoming clients and creates
-        * a ClientHandler thread for them.
-        */
+         * Running server loop that accept incoming clients and creates
+         * a ClientHandler thread for them.
+         */
         while (true) {
             try {
                 Socket socket = ss.accept();
                 ClientHandler ch = new ClientHandler(this, socket);
                 addHandler(ch);
                 ch.start();
-            } catch(IOException e) {
+            } catch (IOException e) {
                 System.err.println("Error: failed to accept new client");
             }
         }
@@ -112,7 +112,7 @@ public class Server extends Thread {
     private void startGame(List<ClientHandler> chList) {
         mui.addMessage("Game started with: ");
         String names = "";
-        ServerGame serverGame = new ServerGame(chList);
+        ServerGame serverGame = new ServerGame(chList, this);
         for (ClientHandler ch : chList) {
             names = names + " " + ch.getClientName();
             ch.setInGame(true);
@@ -123,13 +123,24 @@ public class Server extends Thread {
             ch.sendStart(names);
         }
         serverGame.playGame();
-        // when game is over
+
+
+    }
+
+    public void gameFinished(List<ClientHandler> chList) {
         mui.addMessage("A game just finished");
         for (ClientHandler ch : chList) {
             ch.setInGame(false);
+            synchronized (games) {
+                for (Integer n : games.keySet()) {
+                    for (List<ClientHandler> l : games.get(n)) {
+                        if (l.contains(ch)) {
+                            l.remove(ch);
+                        }
+                    }
+                }
+            }
         }
-        // TODO: when game is over empty the corresponding list in map games
-
     }
 
     // Add player to games and wait for enough players to start
