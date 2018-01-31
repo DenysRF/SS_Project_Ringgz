@@ -17,7 +17,6 @@ public class ServerGUI extends JFrame implements ActionListener, MessageUI {
     private JButton bListen;
     private JTextField tfPort;
     private JTextArea taMessages;
-    private Server server;
 
     public ServerGUI() {
         super("Ringgz Server");
@@ -37,7 +36,7 @@ public class ServerGUI extends JFrame implements ActionListener, MessageUI {
         });
     }
 
-    public void buildGUI() {
+    private void buildGUI() {
         setSize(460, 400);
 
         // Panel p1 - Listen
@@ -112,7 +111,7 @@ public class ServerGUI extends JFrame implements ActionListener, MessageUI {
         tfPort.setEditable(false);
         bListen.setEnabled(false);
 
-        server = new Server(port, this);
+        Server server = new Server(port, this);
         server.start();
 
         addMessage("Started listening on port " + port + "...");

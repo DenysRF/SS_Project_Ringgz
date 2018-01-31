@@ -36,7 +36,7 @@ public class Field {
 
     /**
      * This method places a piece in this field if there is space for this piece
-     * @param piece
+     * @param piece the piece to be placed in the field
      * this is a piece which has an owner, boolean to select the color and the size
      */
     public void setFieldContent(Piece piece) {
@@ -51,15 +51,11 @@ public class Field {
 
     /**
      * this method returns true if a specified piece can be placed in this field
-     * @param piece
+     * @param piece the piece you want put in this field
      * @return true if the piece can be placed
      */
     public boolean isValidMove(Piece piece) {
-        if (isEmpty() || piece.getSize() == Piece.BASE && isEmpty() || piece.getSize() != Piece.BASE && ((fieldContent[piece.getSize()] == null) && (fieldContent[Piece.BASE] == null) && (fieldContent[Piece.START] == null))) {
-            return true;
-        } else {
-            return false;
-        }
+        return isEmpty() || piece.getSize() == Piece.BASE && isEmpty() || piece.getSize() != Piece.BASE && ((fieldContent[piece.getSize()] == null) && (fieldContent[Piece.BASE] == null) && (fieldContent[Piece.START] == null));
     }
 
 
@@ -87,7 +83,7 @@ public class Field {
 
     /**
      * This method checks who is the winner of a field
-     * @param noOfPlayers
+     * @param noOfPlayers the number of players playing the game
      * @return Player || null. player if there is a winner, null if there is no winner on this field
      */
     public Player majority(int noOfPlayers) {
@@ -95,7 +91,6 @@ public class Field {
         Player owner;
         Player extraColour = new HumanPlayer("extraColour", 3);
         int colour;
-        int[] amount = {0, 0};
         int tempHighscore = 0;
         Player tempWinner = null;
         boolean hasWinner = false;

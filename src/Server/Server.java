@@ -72,20 +72,15 @@ public class Server extends Thread {
             for (Integer n : games.keySet()) {
                 for (List<ClientHandler> chList : games.get(n)) {
                     if (chList.contains(handler)) {
+                        for (ClientHandler ch : chList) {
+                            ch.sendPlayerLeft(handler.getClientName());
+                        }
                         chList.remove(handler);
                     }
                 }
             }
         }
     }
-
-    // Send message to all Clients
-//    public void broadcast(String msg) {
-//        mui.addMessage("BROADCAST: " + msg);
-//        for (ClientHandler ch : threads) {
-//            ch.sendMessage(msg);
-//        }
-//    }
 
     // Count all players that are connected to server but not in game
     public int getNotInGamePlayerCount() {
@@ -97,15 +92,6 @@ public class Server extends Thread {
             }
         }
         return i;
-    }
-
-    // Send message to specific client via ClientHandler
-    public void messageClient(String msg, String name) {
-        for (ClientHandler ch : threads) {
-            if (ch.getClientName().equals(name)) {
-                ch.sendMessage(msg);
-            }
-        }
     }
 
     // Start a game when enough players are ready

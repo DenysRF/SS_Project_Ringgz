@@ -9,7 +9,6 @@ import javafx.util.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class RandomStrategy implements Strategy {
 
@@ -64,9 +63,6 @@ public class RandomStrategy implements Strategy {
     }
 
     public Pair<Integer, Piece> doMove(int noOfPlayers, Player player, Board board) {
-        List<Integer> piece = new ArrayList<Integer>();
-        boolean move = false;
-        boolean color;
 
         if (noOfPlayers == 4) {
             Map<Field, List<Piece>> validMove = player.getValidMoves(true, board);
@@ -80,8 +76,7 @@ public class RandomStrategy implements Strategy {
                     break;
                 }
             }
-            Pair<Integer, Piece> chosenMove = new Pair<>(tempIndex, tempPiece);
-            return chosenMove;
+            return new Pair<>(tempIndex, tempPiece);
 
         } else if (noOfPlayers == 2 || noOfPlayers == 3) {
             Map<Field, List<Piece>> validMovePrimary = player.getValidMoves(true, board);
@@ -92,7 +87,7 @@ public class RandomStrategy implements Strategy {
                 Map<Field, List<Piece>> validMove = player.getValidMoves(isPrimeColour, board);
                 List<Field> keys = new ArrayList<>(validMove.keySet());
                 Field tempField = keys.get((int) (Math.random() * keys.size()));
-                Piece tempPiece = null;
+                Piece tempPiece;
                 tempPiece = validMove.get(tempField).get((int) (Math.random() * validMove.get(tempField).size()));
                 int tempIndex = 30;
                 for (int i = 0; i < Board.DIM * Board.DIM; i++) {
@@ -101,8 +96,7 @@ public class RandomStrategy implements Strategy {
                         break;
                     }
                 }
-                Pair<Integer, Piece> chosenMove = new Pair<>(tempIndex, tempPiece);
-                return chosenMove;
+                return new Pair<>(tempIndex, tempPiece);
             }
             if (!validMovePrimary.isEmpty()) {
                 Map<Field, List<Piece>> validMove = player.getValidMoves(true, board);
@@ -116,8 +110,7 @@ public class RandomStrategy implements Strategy {
                         break;
                     }
                 }
-                Pair<Integer, Piece> chosenMove = new Pair<>(tempIndex, tempPiece);
-                return chosenMove;
+                return new Pair<>(tempIndex, tempPiece);
             }
             if (!validMoveSecondary.isEmpty()) {
                 Map<Field, List<Piece>> validMove = player.getValidMoves(false, board);
@@ -131,8 +124,7 @@ public class RandomStrategy implements Strategy {
                         break;
                     }
                 }
-                Pair<Integer, Piece> chosenMove = new Pair<>(tempIndex, tempPiece);
-                return chosenMove;
+                return new Pair<>(tempIndex, tempPiece);
             }
         }
         return null;

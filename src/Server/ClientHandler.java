@@ -53,7 +53,7 @@ public class ClientHandler extends Thread {
     }
 
     // Send commands to client according to Protocol
-    public void sendMessage(String message) {
+    private void sendMessage(String message) {
         try {
             out.write(message + "\n");
             out.flush();
@@ -107,15 +107,15 @@ public class ClientHandler extends Thread {
 
     /*-PROTOCOL----------------------------------------------*/
 
-    public static final String EXTENSIONS = "";
+    private static final String EXTENSIONS = "";
     // chat challenge leaderboard security
 
     //                 Error codes
-    public static final int GENERAL = 0;
+    private static final int GENERAL = 0;
     public static final int INVALID_MOVE = 1;
     public static final int NOT_YOUR_TURN = 2;
-    public static final int NAME_IN_USE = 3;
-    public static final int INVALID_COMMAND = 4;
+    private static final int NAME_IN_USE = 3;
+    private static final int INVALID_COMMAND = 4;
 
     //              Extension names
     // Every extension has a seperate NAME constant that corresponds to their
@@ -123,20 +123,20 @@ public class ClientHandler extends Thread {
 
     //              Command keywords
     //				Server keywords
-    public static final String ERROR = "error";
-    public static final String DO_MOVE = "do_move";
-    public static final String DONE_MOVE = "done_move";
-    public static final String PLAYER_LEFT = "player_left";
-    public static final String RESULTS = "results";
+    private static final String ERROR = "error";
+    private static final String DO_MOVE = "do_move";
+    private static final String DONE_MOVE = "done_move";
+    private static final String PLAYER_LEFT = "player_left";
+    private static final String RESULTS = "results";
     //				Client keywords
-    public static final String MOVE = "move";
+    private static final String MOVE = "move";
     //				shared keywords (both client and server)
-    public static final String HELLO = "hello";
+    private static final String HELLO = "hello";
     public static final String START = "start";
 
     //              Commands
     // sending Commands (outgoing)
-    public void sendHello(int numberOfPlayers, String extensions) {
+    private void sendHello(int numberOfPlayers, String extensions) {
         sendMessage(HELLO + " " + numberOfPlayers + " " + extensions);
     }
 
@@ -167,7 +167,7 @@ public class ClientHandler extends Thread {
     }
 
     // receiving Commands (incoming)
-    public void receiveHello(String helloCommand) {
+    private void receiveHello(String helloCommand) {
         String[] hello = helloCommand.split(" ");
         if (hello.length >= 2) {
             // Check if name is valid or already in use
@@ -206,7 +206,7 @@ public class ClientHandler extends Thread {
         }
     }
 
-    public void receiveStart(String startCommand) {
+    private void receiveStart(String startCommand) {
         String[] start = startCommand.split(" ");
         if (start.length == 2) {
             server.print(clientName + " wants to start a game with " + start[1] + " players");
@@ -216,7 +216,7 @@ public class ClientHandler extends Thread {
         }
     }
 
-    public void receiveMove(String moveCommand) {
+    private void receiveMove(String moveCommand) {
         String[] move = moveCommand.split(" ");
         if (move.length == 5) {
             if (inGame) {

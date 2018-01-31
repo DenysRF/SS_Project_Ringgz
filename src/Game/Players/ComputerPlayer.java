@@ -9,7 +9,7 @@ public class ComputerPlayer extends Player {
 
     private Strategy strategy;
 
-    public ComputerPlayer(String name, int noOfPlayers, Strategy strategy) {
+    public ComputerPlayer(int noOfPlayers, Strategy strategy) {
         super(strategy.getName(), noOfPlayers);
         this.strategy = strategy;
     }

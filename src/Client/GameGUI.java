@@ -5,22 +5,24 @@ import Game.Model.Board;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import static java.lang.Thread.sleep;
 
-public class GameGUI extends JFrame implements ActionListener, Observer, Runnable {
+public class GameGUI extends JFrame implements Observer, Runnable {
 
     private JButton[] fields = new JButton[Board.DIM * Board.DIM];
 
     private Client client;
     private JTextArea taPieces;
     private JPanel p3;
-    private JRadioButton rbPrimary, rbSecondary, rbBase, rbSmall, rbMedium, rbBig, rbHuge, rbStart;
+    private JRadioButton rbPrimary;
+    private JRadioButton rbBase;
+    private JRadioButton rbSmall;
+    private JRadioButton rbMedium;
+    private JRadioButton rbBig;
+    private JRadioButton rbHuge;
     private ClientGame clientGame;
     private JLabel lbMessage;
 
@@ -105,12 +107,8 @@ public class GameGUI extends JFrame implements ActionListener, Observer, Runnabl
         JPanel pColors = new JPanel(new FlowLayout());
 
         rbPrimary = new JRadioButton("Primary");
-        rbPrimary.addActionListener(this);
-        rbPrimary.setActionCommand("0");
 
-        rbSecondary = new JRadioButton("Secondary");
-        rbPrimary.addActionListener(this);
-        rbPrimary.setActionCommand("1");
+        JRadioButton rbSecondary = new JRadioButton("Secondary");
 
         ButtonGroup bgColorGroup = new ButtonGroup();
         bgColorGroup.add(rbPrimary);
@@ -129,21 +127,7 @@ public class GameGUI extends JFrame implements ActionListener, Observer, Runnabl
         rbMedium = new JRadioButton("Medium");
         rbBig = new JRadioButton("Big");
         rbHuge = new JRadioButton("Huge");
-        rbStart = new JRadioButton("Start");
-
-        rbBase.addActionListener(this);
-        rbSmall.addActionListener(this);
-        rbMedium.addActionListener(this);
-        rbBig.addActionListener(this);
-        rbHuge.addActionListener(this);
-        rbStart.addActionListener(this);
-
-        rbBase.setActionCommand("0");
-        rbSmall.setActionCommand("1");
-        rbMedium.setActionCommand("2");
-        rbBig.setActionCommand("3");
-        rbHuge.setActionCommand("4");
-        rbStart.setActionCommand("5");
+        JRadioButton rbStart = new JRadioButton("Start");
 
         ButtonGroup bgPieceGroup = new ButtonGroup();
         bgPieceGroup.add(rbBase);
@@ -216,11 +200,6 @@ public class GameGUI extends JFrame implements ActionListener, Observer, Runnabl
             }
             client.sendMove(x, y, size, color);
         }
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        //Object src = e.getSource();
     }
 
     @Override

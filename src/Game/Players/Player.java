@@ -3,7 +3,6 @@ package Game.Players;
 import Game.Model.Board;
 import Game.Model.Field;
 import Game.Model.Piece;
-import javafx.util.Pair;
 
 import java.util.*;
 
@@ -16,11 +15,11 @@ public abstract class Player extends Observable {
     protected String name;
 
     // Array of available pieces consisting of rings and bases
-    protected Map<Integer, List<Piece>> primaryPieces;
-    protected Map<Integer, List<Piece>> secondaryPieces;
+    private Map<Integer, List<Piece>> primaryPieces;
+    private Map<Integer, List<Piece>> secondaryPieces;
 
     //max amount of copies of each piece
-    protected static final int MAX_PER_PIECE = 3;
+    private static final int MAX_PER_PIECE = 3;
 
     public Player(String name, int noOfPlayers) {
         this.name = name;
@@ -68,7 +67,7 @@ public abstract class Player extends Observable {
      * 2 players: a primary and secondary map is created
      * 3 players: primary pieces created and 1 of each secondary piece is created
      * 4 players: only the primary pieces map is created
-     * @param noOfPlayers
+     * @param noOfPlayers the number of players playing the game
      */
     private void makePieces(int noOfPlayers) {
         List<Piece> pBase = new ArrayList<>();
@@ -180,7 +179,7 @@ public abstract class Player extends Observable {
     /**
      * places the start piece on the board if the index is a valid start field
      * @param i the index of the specified field
-     * @param board
+     * @param board the board on which the start piece will be put
      */
     public void setStart(int i, Board board) {
         // start only at middle fields
@@ -190,36 +189,6 @@ public abstract class Player extends Observable {
         }
         setChanged();
         notifyObservers();
-    }
-
-
-    //@requires board != null;
-    //@requires temp != null;
-    //@requires piece != piece;
-    //@requires piece.getOwner().equals(this);
-    /*@pure*/
-
-    /**
-     * this method returns true if a move is valid when looking if the piece fits on the field
-     * and if you want to place a base and there is no base of
-     * the same color in an adjacent field
-     * @param board
-     * @param temp
-     * @param piece
-     * @return
-     */
-    public boolean isValidMove(Board board, int temp, Piece piece) {
-        boolean noAdjecentBase = true;
-        for (int i = 0; i < board.getAdjacentFields(board.getField(temp)).size(); i++) {
-            Field adjacent = board.getAdjacentFields(board.getField(temp)).get(i);
-            if (adjacent.getFieldContent()[Piece.BASE] != null &&
-                    adjacent.getFieldContent()[Piece.BASE].getOwner() == this &&
-                    adjacent.getFieldContent()[Piece.BASE].isPrimary() == piece.isPrimary()) {
-                noAdjecentBase = false;
-                break;
-            }
-        }
-        return noAdjecentBase;
     }
 
     //@requires board != null;
@@ -233,18 +202,18 @@ public abstract class Player extends Observable {
      * this method returns true if a move is valid when looking if the piece fits on the field
      * and if you want to place a base and there is no base of
      * the same color in an adjacent field
-     * @param board
-     * @param field
-     * @param color
-     * @return
+     * @param board the board on which we check if there is a valid move
+     * @param field the field for which we check if a piece can fit
+     * @param color to specify whether piece is this players primary or secondary color
+     * @return true if a piece from this player of said color fits in the field
      */
-    public boolean isValidMove(Board board, Field field, Boolean color) {
+    private boolean isValidMove(Board board, Field field, Boolean color) {
         boolean adjacentBase = false;
         List<Field> adjacentField = board.getAdjacentFields(field);
-        for (int i = 0; i < adjacentField.size(); i++) {
-            if (adjacentField.get(i).getFieldContent()[Piece.BASE] != null &&
-                    adjacentField.get(i).getFieldContent()[Piece.BASE].getOwner() == this &&
-                    adjacentField.get(i).getFieldContent()[Piece.BASE].isPrimary() == color) {
+        for (Field anAdjacentField : adjacentField) {
+            if (anAdjacentField.getFieldContent()[Piece.BASE] != null &&
+                    anAdjacentField.getFieldContent()[Piece.BASE].getOwner() == this &&
+                    anAdjacentField.getFieldContent()[Piece.BASE].isPrimary() == color) {
                 adjacentBase = true;
                 break;
             }
@@ -259,8 +228,8 @@ public abstract class Player extends Observable {
 
     /**
      * this method creates a map with all possible moves
-     * @param color
-     * @param board
+     * @param color to specify whether piece is this players primary or secondary color
+     * @param board the board on which we check if there is a valid move
      * @return a Map in the form Map<Field, List<Piece>>, a field with all the possible pieces that are available
      */
     public Map<Field, List<Piece>> getValidMoves(Boolean color, Board board) {
@@ -272,10 +241,10 @@ public abstract class Player extends Observable {
         for (Field field : validFields) {
             List<Piece> pieces = new ArrayList<>();
             boolean hasAdjacentBase;
-            List<Field> fields = board.getAdjacentFields(field);
             //iterate over the pieces
             hasAdjacentBase = isValidMove(board, field, color);
             for (int size = 0; size < Piece.START; size++) {
+                // TODO: rewrite to eliminate empty statement
                 if ((size == 0 && hasAdjacentBase)) {}
                 else {
                     if (color) {

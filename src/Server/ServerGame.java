@@ -156,10 +156,7 @@ public class ServerGame extends Thread {
                 if (board.gameOver(notGameOver.get(i))) {
                     notGameOver.remove(i);
                     if (notGameOver.isEmpty()) {
-                        List<ClientHandler> chList = new ArrayList<>();
-                        for (ClientHandler ch : playerMap.values()) {
-                            chList.add(ch);
-                        }
+                        List<ClientHandler> chList = new ArrayList<>(playerMap.values());
                         gameFinished(chList);
                         return;
                     }

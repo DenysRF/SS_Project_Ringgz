@@ -9,10 +9,6 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Arrays;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-import static java.util.Arrays.copyOfRange;
 
 public class Client extends Thread {
 
@@ -76,7 +72,7 @@ public class Client extends Thread {
         }
     }
 
-    public void sendMessage(String message) {
+    private void sendMessage(String message) {
         try {
             out.write(message + "\n");
             out.flush();
@@ -102,35 +98,35 @@ public class Client extends Thread {
 
     /*-PROTOCOL----------------------------------------------*/
     //                 Error codes
-    public static final int GENERAL = 0;
-    public static final int INVALID_MOVE = 1;
-    public static final int NOT_YOUR_TURN = 2;
-    public static final int NAME_IN_USE = 3;
-    public static final int INVALID_COMMAND = 4;
+    private static final int GENERAL = 0;
+    private static final int INVALID_MOVE = 1;
+    private static final int NOT_YOUR_TURN = 2;
+    private static final int NAME_IN_USE = 3;
+    private static final int INVALID_COMMAND = 4;
 
     //              Extension names
     // Every extension has a seperate NAME constant that corresponds to their
     // extension name.
-    public static final String EXTENSIONS = "";
+    private static final String EXTENSIONS = "";
     // chat challenge leaderboard security
 
     //              Command keywords
     // shared keywords (both client and server)
-    public static final String HELLO = "hello";
-    public static final String START = "start";
+    private static final String HELLO = "hello";
+    private static final String START = "start";
     // sent by server only
-    public static final String ERROR = "error";
-    public static final String DO_MOVE = "do_move";
-    public static final String DONE_MOVE = "done_move";
-    public static final String PLAYER_LEFT = "player_left";
-    public static final String RESULTS = "results";
+    private static final String ERROR = "error";
+    private static final String DO_MOVE = "do_move";
+    private static final String DONE_MOVE = "done_move";
+    private static final String PLAYER_LEFT = "player_left";
+    private static final String RESULTS = "results";
     // sent by client only
-    public static final String MOVE = "move";
+    private static final String MOVE = "move";
 
 
     //               Commands
     // sending Commands (outgoing)
-    public void sendHello(String name, String extensions) {
+    private void sendHello(String name, String extensions) {
         sendMessage(HELLO + " " + name + " " + extensions);
     }
 

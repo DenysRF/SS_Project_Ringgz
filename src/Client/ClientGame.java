@@ -6,7 +6,6 @@ import Game.Players.ComputerPlayer;
 import Game.Players.HumanPlayer;
 import Game.Players.Player;
 import Game.Strategies.RandomStrategy;
-import Game.Strategies.Strategy;
 import javafx.util.Pair;
 
 public class ClientGame {
@@ -20,7 +19,7 @@ public class ClientGame {
         players = new Player[names.length];
         for (int i = 0; i < players.length; i++) {
             if (names[i].contains("BOT")) {
-                players[i] = new ComputerPlayer(names[i],
+                players[i] = new ComputerPlayer(
                         players.length, new RandomStrategy(names[i]));
             } else {
                 players[i] = new HumanPlayer(names[i], players.length);

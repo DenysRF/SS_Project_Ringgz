@@ -12,6 +12,7 @@ import Game.Strategies.Strategy;
 import java.util.List;
 import java.util.Scanner;
 
+// Old local TUI view/controller
 public class Ringgz {
 
 //    private static void print(String s) {

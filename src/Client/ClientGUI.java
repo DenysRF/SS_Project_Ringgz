@@ -209,15 +209,15 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
 
     private void connect() {
         int noOfPlayers;
-        String pColor = (String) pColorList.getSelectedItem();
-        String sColor = "_";
+//        String pColor = (String) pColorList.getSelectedItem();
+//        String sColor = "_";
 
         if (rbTwoPlayers.isSelected()) {
             noOfPlayers = 2;
-            sColor = (String) sColorList.getSelectedItem();
+//            sColor = (String) sColorList.getSelectedItem();
         } else if (rbThreePlayers.isSelected()) {
             noOfPlayers = 3;
-            sColor = (String) sColorList.getSelectedItem();
+//            sColor = (String) sColorList.getSelectedItem();
         } else if (rbFourPlayers.isSelected()) {
             noOfPlayers = 4;
         } else {
@@ -262,11 +262,11 @@ public class ClientGUI extends JFrame implements ActionListener, MessageUI {
         bLookForGame.setEnabled(true);
 
         addMessage("Connected to server...");
-        if (noOfPlayers == 4) {
-            //addMessage("Your color: " + pColor);
-        } else {
-            //addMessage("Your colors: " + pColor + ", " + sColor);
-        }
+//        if (noOfPlayers == 4) {
+//            addMessage("Your color: " + pColor);
+//        } else {
+//            addMessage("Your colors: " + pColor + ", " + sColor);
+//        }
 
         client.start();
     }
