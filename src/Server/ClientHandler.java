@@ -98,10 +98,7 @@ public class ClientHandler extends Thread {
             }
         }
         // checks the name for comma's
-        if (hello[1].contains(",")) {
-            return false;
-        }
-        return true;
+        return !hello[1].contains(",");
     }
 
     public void setServerGame(ServerGame serverGame) {
@@ -147,22 +144,28 @@ public class ClientHandler extends Thread {
     public void sendStart(String names) {
         sendMessage(START + names);
     }
+
     public void sendError(int errorcode, String optionalMessage) {
         sendMessage(ERROR + " " + errorcode + " " + optionalMessage);
     }
+
     public void sendDoMove(String name) {
         sendMessage(DO_MOVE + " " + name);
     }
+
     public void sendDoneMove(String name, int x, int y, int size, int colour) {
         sendMessage(DONE_MOVE + " " + name + " " + x + " " + y + " " + size + " " + colour);
     }
+
     public void sendPlayerLeft(String name) {
         sendMessage(PLAYER_LEFT + " " + name);
     }
+
     public void sendResults(String results) {
         sendMessage(RESULTS + " " + results);
 
     }
+
     // receiving Commands (incoming)
     public void receiveHello(String helloCommand) {
         String[] hello = helloCommand.split(" ");
@@ -197,14 +200,12 @@ public class ClientHandler extends Thread {
             } else {
                 clientName = hello[1];
                 server.print("[" + clientName + " has entered]");
-                if (hello.length > 2) {
-                    // no extensions
-                }
             }
         } else {
             sendError(GENERAL, "Your sendHello() message has < 2 arguments");
         }
     }
+
     public void receiveStart(String startCommand) {
         String[] start = startCommand.split(" ");
         if (start.length == 2) {
@@ -219,13 +220,15 @@ public class ClientHandler extends Thread {
         String[] move = moveCommand.split(" ");
         if (move.length == 5) {
             if (inGame) {
-                serverGame.doneMove(clientName, Integer.parseInt(move[1]), Integer.parseInt(move[2]), Integer.parseInt(move[3]), Integer.parseInt(move[4]));
+                serverGame.doneMove(clientName, Integer.parseInt(move[1]),
+                        Integer.parseInt(move[2]), Integer.parseInt(move[3]), Integer.parseInt(move[4]));
 
             } else {
                 sendError(GENERAL, "You are not in game");
             }
         } else {
-            sendError(INVALID_COMMAND, "Number of arguments did not match expected number of arguments");
+            sendError(INVALID_COMMAND, "Number of arguments did not "
+                    + "match expected number of arguments");
         }
     }
 

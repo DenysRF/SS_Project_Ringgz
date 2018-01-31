@@ -63,7 +63,7 @@ public class GameGUI extends JFrame implements ActionListener, Observer, Runnabl
             c.gridx = x;
             c.gridy = y;
 
-            fields[i].setMargin(new Insets(0,0,0,0));
+            fields[i].setMargin(new Insets(0, 0, 0, 0));
             fields[i].setContentAreaFilled(false);
             fields[i].setFocusable(false);
             fields[i].setOpaque(true);
@@ -78,7 +78,7 @@ public class GameGUI extends JFrame implements ActionListener, Observer, Runnabl
 
         JPanel p2 = new JPanel(new GridLayout(1, 1));
 
-        taPieces = new JTextArea("Display pieces after Start Base has been set",15, 10);
+        taPieces = new JTextArea("Display pieces after Start Base has been set", 15, 10);
         taPieces.setEditable(false);
 
         p2.add(taPieces);
@@ -201,7 +201,7 @@ public class GameGUI extends JFrame implements ActionListener, Observer, Runnabl
                 size = 2;
             } else if (rbBig.isSelected()) {
                 size = 3;
-            } else if (rbHuge.isSelected()){
+            } else if (rbHuge.isSelected()) {
                 size = 4;
             } else {
                 size = 5;
@@ -240,7 +240,7 @@ public class GameGUI extends JFrame implements ActionListener, Observer, Runnabl
         } else {
             p3.setBackground(Color.RED);
         }
-        lbMessage.setText("It's "+ name + "'s turn");
+        lbMessage.setText("It's " + name + "'s turn");
     }
 
     public void updatePieces(String name) {

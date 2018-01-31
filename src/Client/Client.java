@@ -90,7 +90,7 @@ public class Client extends Thread {
         } catch (IOException e) {
             System.err.println("Error: failed to close client socket");
         }
-         mui.addMessage("Connection lost...");
+        mui.addMessage("Connection lost...");
     }
 
     public String getClientName() {
@@ -146,9 +146,6 @@ public class Client extends Thread {
     private void receiveHello(String helloCommand) {
         String[] hello = helloCommand.split(" ");
         if (hello.length >= 2) {
-            if (hello.length > 2) {
-                // handle extensions
-            }
             mui.addMessage("Server has " + hello[1] + " players waiting for games");
             sendHello(clientName, EXTENSIONS);
         } else {
@@ -164,7 +161,8 @@ public class Client extends Thread {
         } else if (start.length == 4) {
             mui.addMessage("Game started: " + start[1] + " " + start[2] + " " + start[3]);
         } else if (start.length == 5) {
-            mui.addMessage("Game started: " + start[1] + " " + start[2] + " " + start[3] + " " + start[4]);
+            mui.addMessage("Game started: " + start[1] + " "
+                    + start[2] + " " + start[3] + " " + start[4]);
         } else {
             mui.addMessage("ERROR: invalid amount of players: " + startCommand);
         }
@@ -212,7 +210,7 @@ public class Client extends Thread {
                 int y = (botMove.getKey() - x) / Board.DIM;
                 int size = botMove.getValue().getSize();
                 int color = botMove.getValue().isPrimary() ? 0 : 1;
-                sendMove(x ,y ,size, color);
+                sendMove(x, y, size, color);
             }
         } else {
             gameGUI.updateTurn(doMove[1], false);
@@ -222,7 +220,9 @@ public class Client extends Thread {
 
     private void receiveDoneMove(String doneMoveCommand) {
         String[] doneMove = doneMoveCommand.split(" ");
-        clientGame.doneMove(doneMove[1], Integer.parseInt(doneMove[2]), Integer.parseInt(doneMove[3]), Integer.parseInt(doneMove[4]), Integer.parseInt(doneMove[5]));
+        clientGame.doneMove(doneMove[1], Integer.parseInt(doneMove[2]),
+                Integer.parseInt(doneMove[3]), Integer.parseInt(doneMove[4]),
+                Integer.parseInt(doneMove[5]));
         gameGUI.updatePieces(clientName);
     }
 

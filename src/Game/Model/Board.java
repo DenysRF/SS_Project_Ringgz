@@ -72,12 +72,12 @@ public class Board {
                         adjacentFields.add(getField(x, y));
                         adjacentFields.add(getField(x, y + 1));
                         adjacentFields.add(getField(x + 1, y));
-                    } else if (x == 0 && (y > 0 && y < DIM-1)) {
+                    } else if (x == 0 && (y > 0 && y < DIM - 1)) {
                         adjacentFields.add(getField(x, y - 1));
                         adjacentFields.add(getField(x, y));
                         adjacentFields.add(getField(x, y + 1));
                         adjacentFields.add(getField(x + 1, y));
-                    } else if ((x > 0 && x < DIM-1) && y == 0) {
+                    } else if ((x > 0 && x < DIM - 1) && y == 0) {
                         adjacentFields.add(getField(x - 1, y));
                         adjacentFields.add(getField(x, y));
                         adjacentFields.add(getField(x + 1, y));
@@ -90,12 +90,12 @@ public class Board {
                         adjacentFields.add(getField(x, y - 1));
                         adjacentFields.add(getField(x, y));
                         adjacentFields.add(getField(x + 1, y));
-                    } else if (x == DIM - 1 && (y > 0 && y < DIM-1)) {
+                    } else if (x == DIM - 1 && (y > 0 && y < DIM - 1)) {
                         adjacentFields.add(getField(x, y - 1));
                         adjacentFields.add(getField(x, y));
                         adjacentFields.add(getField(x, y + 1));
                         adjacentFields.add(getField(x - 1, y));
-                    } else if ((x > 0 && x < DIM-1) && y == DIM - 1) {
+                    } else if ((x > 0 && x < DIM - 1) && y == DIM - 1) {
                         adjacentFields.add(getField(x - 1, y));
                         adjacentFields.add(getField(x, y));
                         adjacentFields.add(getField(x + 1, y));
@@ -134,10 +134,12 @@ public class Board {
                     //now you iterate over every
                     if ((getField(x, y).getFieldContent()[i] != null) &&
                             ((getField(x, y).getFieldContent()[i].getSize() == Piece.START) ||
-                                    (getField(x, y).getFieldContent()[i].getOwner().equals(player) && getField(x, y).getFieldContent()[i].isPrimary() == color))) {
+                             (getField(x, y).getFieldContent()[i].getOwner().equals(player) &&
+                              getField(x, y).getFieldContent()[i].isPrimary() == color))) {
                         for (int k = 0; k < getAdjacentFields(getField(x, y)).size(); k++) {
-                            for (int l = 0; l < validFields.size(); l++) {
-                                if (validFields.get(l).equals(getAdjacentFields(getField(x, y)).get(k))) {
+                            for (Field validField : validFields) {
+                                if (validField.equals(getAdjacentFields(getField(x, y)).
+                                        get(k))) {
                                     add = false;
                                 }
                             }
@@ -156,22 +158,19 @@ public class Board {
     // Return true if no players are able to make a move
 
     public boolean gameOver(Board board) {
-        int GameOverPlayers = 0;
+        int gameOverPlayers = 0;
         Player[] player = players;
         for (Player p : players) {
             if (p.getValidMoves(true, board).isEmpty() && p.getValidMoves(false, board).isEmpty()) {
-                GameOverPlayers++;
+                gameOverPlayers++;
             }
         }
-        return (GameOverPlayers == players.length);
+        return gameOverPlayers == players.length;
     }
 
     // Return true if this Player cannot make any moves
     public boolean gameOver(Player player) {
-        if (getValidFields(player, true).isEmpty() && getValidFields(player, false).isEmpty()) {
-            return true;
-        }
-        return false;
+        return getValidFields(player, true).isEmpty() && getValidFields(player, false).isEmpty();
     }
 
     // Return the current point score of a player
@@ -197,7 +196,7 @@ public class Board {
         return players;
     }
 
-    public void printBoard(Player[] players, String[][] colors) {
+    public void printBoard(Player[] activePlayers, String[][] colors) {
         for (int i = 0; i < DIM * DIM; i++) {
             System.out.print("[");
 
@@ -215,7 +214,7 @@ public class Board {
                         }
                     } else {
                         for (int o = 0; o < players.length; o++) {
-                            if (fields[i].getFieldContent()[j].getOwner() == players[o]) {
+                            if (fields[i].getFieldContent()[j].getOwner() == activePlayers[o]) {
                                 if (fields[i].getFieldContent()[j].isPrimary()) {
                                     mark = colors[o][0];
                                 } else if (!fields[i].getFieldContent()[j].isPrimary()) {
