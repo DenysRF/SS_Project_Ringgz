@@ -42,24 +42,24 @@ public class BoardTest {
         assertTrue(board.getField(2, 2) == field);
     }
 
-    @Test
-    public void testSetField() {
-        Piece before = board.getField(0).getFieldContent()[0];
-        Piece validBase = board.getPlayers()[0].getPrimaryPieces().get(Piece.BASE).get(0);
-        board.setField(validBase, 0);
-        Piece after = board.getField(0).getFieldContent()[0];
-        assertFalse(before == after);
-        assertTrue(validBase == after);
-
-        // The field already contains a Base, so placing a ring should not be possible
-        // TODO: check if a move is valid in Board.setField;
-        Piece invalidSmall = board.getPlayers()[1].getPrimaryPieces().get(Piece.SMALL).get(0);
-        board.setField(invalidSmall, 0);
-        Piece invalid = board.getField(0).getFieldContent()[1];
-        assertTrue(invalidSmall == invalid);
-
-
-    }
+//    @Test
+//    public void testSetField() {
+//        Piece before = board.getField(0).getFieldContent()[0];
+//        Piece validBase = board.getPlayers()[0].getPrimaryPieces().get(Piece.BASE).get(0);
+//        board.setField(validBase, 0);
+//        Piece after = board.getField(0).getFieldContent()[0];
+//        assertFalse(before == after);
+//        assertTrue(validBase == after);
+//
+//        // The field already contains a Base, so placing a ring should not be possible
+//        // TODO: check if a move is valid in Board.setField;
+//        Piece invalidSmall = board.getPlayers()[1].getPrimaryPieces().get(Piece.SMALL).get(0);
+//        board.setField(invalidSmall, 0);
+//        Piece invalid = board.getField(0).getFieldContent()[1];
+//        assertTrue(invalidSmall == invalid);
+//
+//
+//    }
 
     @Test
     public void testGetAdjacentFields() {

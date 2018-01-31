@@ -48,6 +48,6 @@ public class PlayerTest {
         assertEquals(fourPlayers.getPrimaryPieces().get(Piece.MEDIUM).size(), 3);
         assertEquals(fourPlayers.getPrimaryPieces().get(Piece.BIG).size(), 3);
         assertEquals(fourPlayers.getPrimaryPieces().get(Piece.HUGE).size(), 3);
-        assertEquals(fourPlayers.getSecondaryPieces(),null);
+        assertEquals(fourPlayers.getSecondaryPieces(), null);
     }
 }
