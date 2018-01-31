@@ -1,6 +1,6 @@
-package Server;
+package server;
 
-import Interface.MessageUI;
+import interfaces.MessageUI;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -96,7 +96,7 @@ public class Server extends Thread {
 
     // Start a game when enough players are ready
     private void startGame(List<ClientHandler> chList) {
-        mui.addMessage("Game started with: ");
+        mui.addMessage("game started with: ");
         StringBuilder names = new StringBuilder();
         ServerGame serverGame = new ServerGame(chList, this);
         for (ClientHandler ch : chList) {
@@ -145,7 +145,7 @@ public class Server extends Thread {
         }
     }
 
-    // Check if another Client already uses this name
+    // Check if another client already uses this name
     public boolean nameInUse(String name) {
         for (ClientHandler ch : threads) {
             if (ch.getClientName() != null) {

@@ -1,4 +1,4 @@
-package Server;
+package server;
 
 import java.io.*;
 import java.net.Socket;
@@ -63,7 +63,7 @@ public class ClientHandler extends Thread {
         }
     }
 
-    // If Client disconnects this gets triggered and cleans client from server
+    // If client disconnects this gets triggered and cleans client from server
     private void shutdown() {
         server.removeHandler(this);
         if (clientName != null) {
@@ -122,13 +122,13 @@ public class ClientHandler extends Thread {
     // extension name.
 
     //              Command keywords
-    //				Server keywords
+    //				server keywords
     private static final String ERROR = "error";
     private static final String DO_MOVE = "do_move";
     private static final String DONE_MOVE = "done_move";
     private static final String PLAYER_LEFT = "player_left";
     private static final String RESULTS = "results";
-    //				Client keywords
+    //				client keywords
     private static final String MOVE = "move";
     //				shared keywords (both client and server)
     private static final String HELLO = "hello";
@@ -140,7 +140,7 @@ public class ClientHandler extends Thread {
         sendMessage(HELLO + " " + numberOfPlayers + " " + extensions);
     }
 
-    // Server puts a space in front of names
+    // server puts a space in front of names
     public void sendStart(String names) {
         sendMessage(START + " " + names);
     }
@@ -221,7 +221,8 @@ public class ClientHandler extends Thread {
         if (move.length == 5) {
             if (inGame) {
                 serverGame.doneMove(clientName, Integer.parseInt(move[1]),
-                        Integer.parseInt(move[2]), Integer.parseInt(move[3]), Integer.parseInt(move[4]));
+                        Integer.parseInt(move[2]), Integer.parseInt(move[3]),
+                        Integer.parseInt(move[4]));
 
             } else {
                 sendError(GENERAL, "You are not in game");

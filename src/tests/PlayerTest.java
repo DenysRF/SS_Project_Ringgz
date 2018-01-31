@@ -1,12 +1,12 @@
-package Tests;
+package tests;
 
 /**
  * Created by Thomas Stouten on 17-Jan-18.
  */
 
-import Game.Model.Piece;
-import Game.Players.HumanPlayer;
-import Game.Players.Player;
+import game.model.Piece;
+import game.players.HumanPlayer;
+import game.players.Player;
 
 import org.junit.Test;
 

@@ -1,10 +1,10 @@
-package Server;
+package server;
 
-import Game.Model.Board;
-import Game.Model.Field;
-import Game.Model.Piece;
-import Game.Players.HumanPlayer;
-import Game.Players.Player;
+import game.model.Board;
+import game.model.Field;
+import game.model.Piece;
+import game.players.HumanPlayer;
+import game.players.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -85,7 +85,8 @@ public class ServerGame extends Thread {
                         }
                         p.setStart(board.index(x, y), board);
                         for (Player player : playerMap.keySet()) {
-                            playerMap.get(player).sendDoneMove(currentPlayer.getName(), x, y, size, color);
+                            playerMap.get(player).sendDoneMove(currentPlayer.getName(), x,
+                                    y, size, color);
                         }
                         start = false;
                         nextPlayer();

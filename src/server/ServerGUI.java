@@ -1,6 +1,6 @@
-package Server;
+package server;
 
-import Interface.MessageUI;
+import interfaces.MessageUI;
 
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
@@ -19,7 +19,7 @@ public class ServerGUI extends JFrame implements ActionListener, MessageUI {
     private JTextArea taMessages;
 
     public ServerGUI() {
-        super("Ringgz Server");
+        super("Ringgz server");
 
         buildGUI();
         setVisible(true);
@@ -67,7 +67,7 @@ public class ServerGUI extends JFrame implements ActionListener, MessageUI {
         JLabel lbMessages = new JLabel("Messages:");
         taMessages = new JTextArea("", 15, 30);
         taMessages.setEditable(false);
-        DefaultCaret caret = (DefaultCaret)taMessages.getCaret();
+        DefaultCaret caret = (DefaultCaret) taMessages.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
         JScrollPane spScroll = new JScrollPane(taMessages);

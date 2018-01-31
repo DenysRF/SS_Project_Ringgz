@@ -1,17 +1,17 @@
-package Tests;
+package tests;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
-import Game.Model.Field;
-import Game.Players.Player;
+import game.model.Field;
+import game.players.Player;
 import org.junit.Before;
 import org.junit.Test;
 
-import Game.Model.Board;
-import Game.Model.Piece;
-import Game.Players.HumanPlayer;
+import game.model.Board;
+import game.model.Piece;
+import game.players.HumanPlayer;
 
 import java.util.List;
 import java.util.Map;
@@ -129,8 +129,8 @@ public class BoardTest {
         Map<Field, List<Piece>> test3 = players2[1].getValidMoves(true, board2);
         Map<Field, List<Piece>> test4 = players2[1].getValidMoves(false, board2);
         players2[0].makeMove(7, players2[0].getPrimaryPieces().get(Piece.BASE).get(0), board2);
-        players2[0].makeMove(13,players2[0].getPrimaryPieces().get(Piece.BASE).get(0), board2);
-        players2[0].makeMove(9,players2[0].getSecondaryPieces().get(Piece.BASE).get(0), board2);
+        players2[0].makeMove(13, players2[0].getPrimaryPieces().get(Piece.BASE).get(0), board2);
+        players2[0].makeMove(9, players2[0].getSecondaryPieces().get(Piece.BASE).get(0), board2);
         test = players2[0].getValidMoves(true, board2);
         test2 = players2[0].getValidMoves(false, board2);
         test3 = players2[1].getValidMoves(true, board2);
@@ -149,23 +149,23 @@ public class BoardTest {
 
         assertFalse(board2.gameOver(players2[0]));
 
-        players2[0].makeMove(4,players2[0].getSecondaryPieces().get(Piece.BASE).get(0), board2);
-        players2[0].makeMove(14,players2[0].getPrimaryPieces().get(Piece.SMALL).get(0), board2);
-        players2[0].makeMove(14,players2[0].getPrimaryPieces().get(Piece.MEDIUM).get(0), board2);
-        players2[0].makeMove(14,players2[0].getPrimaryPieces().get(Piece.BIG).get(0), board2);
-        players2[0].makeMove(14,players2[0].getPrimaryPieces().get(Piece.HUGE).get(0), board2);
+        players2[0].makeMove(4, players2[0].getSecondaryPieces().get(Piece.BASE).get(0), board2);
+        players2[0].makeMove(14, players2[0].getPrimaryPieces().get(Piece.SMALL).get(0), board2);
+        players2[0].makeMove(14, players2[0].getPrimaryPieces().get(Piece.MEDIUM).get(0), board2);
+        players2[0].makeMove(14, players2[0].getPrimaryPieces().get(Piece.BIG).get(0), board2);
+        players2[0].makeMove(14, players2[0].getPrimaryPieces().get(Piece.HUGE).get(0), board2);
         //Now player[0] does not contain any possible moves for secondary
         assertFalse(board2.gameOver(players2[0]));
 
-        players2[0].makeMove(2,players2[0].getPrimaryPieces().get(Piece.SMALL).get(0), board2);
-        players2[0].makeMove(2,players2[0].getPrimaryPieces().get(Piece.MEDIUM).get(0), board2);
-        players2[0].makeMove(2,players2[0].getPrimaryPieces().get(Piece.BIG).get(0), board2);
-        players2[0].makeMove(2,players2[0].getPrimaryPieces().get(Piece.HUGE).get(0), board2);
+        players2[0].makeMove(2, players2[0].getPrimaryPieces().get(Piece.SMALL).get(0), board2);
+        players2[0].makeMove(2, players2[0].getPrimaryPieces().get(Piece.MEDIUM).get(0), board2);
+        players2[0].makeMove(2, players2[0].getPrimaryPieces().get(Piece.BIG).get(0), board2);
+        players2[0].makeMove(2, players2[0].getPrimaryPieces().get(Piece.HUGE).get(0), board2);
 
-        players2[0].makeMove(12,players2[0].getPrimaryPieces().get(Piece.SMALL).get(0), board2);
-        players2[0].makeMove(12,players2[0].getPrimaryPieces().get(Piece.MEDIUM).get(0), board2);
-        players2[0].makeMove(12,players2[0].getPrimaryPieces().get(Piece.BIG).get(0), board2);
-        players2[0].makeMove(12,players2[0].getPrimaryPieces().get(Piece.HUGE).get(0), board2);
+        players2[0].makeMove(12, players2[0].getPrimaryPieces().get(Piece.SMALL).get(0), board2);
+        players2[0].makeMove(12, players2[0].getPrimaryPieces().get(Piece.MEDIUM).get(0), board2);
+        players2[0].makeMove(12, players2[0].getPrimaryPieces().get(Piece.BIG).get(0), board2);
+        players2[0].makeMove(12, players2[0].getPrimaryPieces().get(Piece.HUGE).get(0), board2);
 
 
 

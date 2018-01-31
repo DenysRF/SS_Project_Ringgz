@@ -1,9 +1,9 @@
-package Tests;
+package tests;
 
-import Game.Model.Field;
-import Game.Model.Piece;
-import Game.Players.HumanPlayer;
-import Game.Players.Player;
+import game.model.Field;
+import game.model.Piece;
+import game.players.HumanPlayer;
+import game.players.Player;
 import org.junit.Before;
 import org.junit.Test;
 
