@@ -50,6 +50,14 @@ public class Server extends Thread {
                 ch.start();
             } catch (IOException e) {
                 System.err.println("Error: failed to accept new client");
+            } catch (NullPointerException e) {
+                mui.addMessage("Port in use\nExiting in 3s...");
+                try {
+                    sleep(3000);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+                System.exit(0);
             }
         }
     }
